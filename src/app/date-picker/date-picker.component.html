@@ -6,10 +6,10 @@
   <div [ngClass]="selectedDateRange() ? 'text-[0.64rem] flex-col items-start max-w-32' : 'text-xs'"
        class="w-fit font-medium leading-none whitespace-nowrap flex truncate">
     @if (selectedDateRange()) {
-      <span>{{ selectedDateRange()?.start | date: 'MMM d yyyy, HH:mm' }}</span>
-      <span>{{ selectedDateRange()?.end | date: 'MMM d yyyy, HH:mm' }}</span>
+      <span>{{ selectedDateRange()?.start | date: 'yyyy年M月d日 HH:mm' }}</span>
+      <span>{{ selectedDateRange()?.end | date: 'yyyy年M月d日 HH:mm' }}</span>
     } @else {
-      <span>Choose Dates</span>
+      <span>选择日期</span>
     }
   </div>
 

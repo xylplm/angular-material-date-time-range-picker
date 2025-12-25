@@ -80,7 +80,7 @@ selectedDateRange = model<DateRange<Date> | undefined>();
 
 ## 📄 许可证
 
-MIT License © 2025 Omidkh68
+MIT License © 2025 xylplm
 
 ---
 

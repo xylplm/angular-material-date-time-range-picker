@@ -1,11 +1,11 @@
-<container headerTitle="Date time selector"
+<container headerTitle="日期时间选择器"
            headerIcon="featherClock"
-           submitTitle="Apply"
+           submitTitle="应用"
            [disabledSubmit]="!selectedDateRange"
            [footerExtraContent]="footerExtraContent"
            (submit)="submit()"
            (dismiss)="dismiss()">
-  <!-- Left time ranges -->
+  <!-- 左侧时间范围 -->
   <div class="w-48 h-full overflow-y-auto hidden lg:block" dir="rtl">
     <div class="w-full flex justify-left rounded-lg" dir="ltr">
       <ul class="w-full text-gray-900">
@@ -27,13 +27,13 @@
       </ul>
     </div>
   </div>
-  <!-- End of Left time ranges -->
+  <!-- 左侧时间范围结束 -->
 
-  <!-- Calendar and Time range container -->
+  <!-- 日历和时间范围容器 -->
   <div class="w-full lg:w-[calc(100%-12rem)] h-full">
     <div
       class="w-full py-4 md:py-0 md:h-full flex flex-col md:flex-row bg-white dark:bg-zinc-700 shadow md:overflow-hidden">
-      <!-- Calendar Container -->
+      <!-- 日历容器 -->
       <section class="w-full md:w-1/2 flex-center border-r border-r-gray-200 dark:border-r-zinc-800">
         <div class="w-full md:h-80 mx-auto mb-2 flex-center flex-col p-4 gap-6">
           <mat-calendar [maxDate]="!future() ? now : undefined" [(selected)]="selectedDateRange"
@@ -43,19 +43,19 @@
             class="w-full flex items-start gap-1 leading-none text-xs text-amber-600 dark:text-orange-300 font-semibold">
             <ng-icon name="featherInfo" strokeWidth="2px" class="text-current shrink-0"/>
 
-            <span>Click twice on a day if you want to select exactly one day.</span>
+            <span>如果要选择一天，请双击该天。</span>
           </p>
         </div>
       </section>
-      <!-- End of Calendar Container -->
+      <!-- 日历容器结束 -->
 
-      <!-- Time range container -->
+      <!-- 时间范围容器 -->
       <section class="w-full md:w-1/2 md:overflow-y-auto md:overflow-x-hidden flex flex-col">
-        <!-- Start and End Input dates -->
+        <!-- 开始和结束输入日期 -->
         <div class="flex flex-col py-4">
-          <!-- From date -->
+          <!-- 从日期 -->
           <div class="flex flex-col gap-2 relative px-3 py-2">
-            <label class="text-xs text-stone-600 dark:text-zinc-100 font-medium">Start Date</label>
+            <label class="text-xs text-stone-600 dark:text-zinc-100 font-medium">开始日期</label>
 
             <div class="flex items-center rounded-lg overflow-hidden bg-white border border-gray-400">
               <div class="w-1/2 relative flex items-center">
@@ -83,11 +83,11 @@
               </div>
             </div>
           </div>
-          <!-- End of From date -->
+          <!-- 从日期结束 -->
 
-          <!-- to date -->
+          <!-- 到日期 -->
           <div class="flex flex-col gap-2 relative px-3 py-2">
-            <label class="text-xs text-stone-600 dark:text-zinc-100 font-medium">End Date</label>
+            <label class="text-xs text-stone-600 dark:text-zinc-100 font-medium">结束日期</label>
 
             <div class="flex items-center rounded-lg overflow-hidden bg-white border border-gray-400">
               <div class="w-1/2 relative flex items-center">
@@ -115,20 +115,20 @@
               </div>
             </div>
           </div>
-          <!-- End of to date -->
+          <!-- 到日期结束 -->
         </div>
-        <!-- End of Start and End Input dates -->
+        <!-- 开始和结束输入日期结束 -->
 
         @if (optionalFeatures()) {
-          <!-- Custom time -->
+          <!-- 自定义时间 -->
           <div class="flex flex-col gap-2 px-3 mb-2">
-            <!-- Custom days -->
+            <!-- 自定义天 -->
             <div class="flex flex-col gap-2 justify-between items-start">
-              <!-- All days checkbox -->
+              <!-- 所有天复选框 -->
               <mat-checkbox [(ngModel)]="allDays" class="relative -left-1">
-                <span class="text-xs whitespace-nowrap dark:text-zinc-200 font-semibold">All Days</span>
+                <span class="text-xs whitespace-nowrap dark:text-zinc-200 font-semibold">所有天</span>
               </mat-checkbox>
-              <!-- End of All days checkbox -->
+              <!-- 所有天复选框结束 -->
 
               @if (!allDays()) {
                 <div
@@ -143,10 +143,10 @@
                 </div>
               }
             </div>
-            <!-- End of Custom days -->
+            <!-- 自定义天结束 -->
 
             @if (!allDays()) {
-              <!-- Weekdays -->
+              <!-- 星期 -->
               <div class="w-full">
                 <div
                   class="flex justify-between overflow-hidden border border-stone-200 bg-white dark:bg-zinc-600 dark:border-zinc-700 divide-x divide-dark-stone dark:divide-zinc-800 rounded-lg">
@@ -159,20 +159,20 @@
                   }
                 </div>
               </div>
-              <!-- End of Weekdays -->
+              <!-- 星期结束 -->
             }
           </div>
-          <!-- End of Custom time -->
+          <!-- 自定义时间结束 -->
 
-            <!-- Custom Hours -->
+            <!-- 自定义小时 -->
           <div class="flex flex-col px-3">
-            <!-- Custom days -->
+            <!-- 自定义天 -->
             <div class="flex flex-col gap-2 justify-between">
-              <!-- All days checkbox -->
+              <!-- 所有天复选框 -->
               <mat-checkbox [(ngModel)]="allHours" class="relative -left-1">
-                <span class="text-xs whitespace-nowrap dark:text-zinc-200" font-semibold>All Hours</span>
+                <span class="text-xs whitespace-nowrap dark:text-zinc-200" font-semibold>所有小时</span>
               </mat-checkbox>
-              <!-- End of All days checkbox -->
+              <!-- 所有天复选框结束 -->
 
               @if (!allHours()) {
                 <div
@@ -187,24 +187,24 @@
                 </div>
               }
             </div>
-            <!-- End of Custom days -->
+            <!-- 自定义天结束 -->
           </div>
-          <!-- End of Custom Hours -->
+          <!-- 自定义小时结束 -->
         }
       </section>
-      <!-- End of Time range container -->
+      <!-- 时间范围容器结束 -->
     </div>
   </div>
-  <!-- End of Calendar and Time range container -->
+  <!-- 日历和时间范围容器结束 -->
 </container>
 <ng-template #footerExtraContent>
   <div class="flex items-center gap-1.5 text-xs mr-auto px-1">
-    <span class="hidden md:block text-gray-500 dark:text-gray-300">Range:</span>
+    <span class="hidden md:block text-gray-500 dark:text-gray-300">范围：</span>
 
     @if (selectedDateRange) {
       <div class="text-stone-600 dark:text-zinc-100 flex flex-col md:flex-row items-center md:gap-1.5 font-semibold">
         @if (selectedDateRange.start) {
-          <span>{{ selectedDateRange.start | date: 'MMM d yyyy, HH:mm' }}</span>
+          <span>{{ selectedDateRange.start | date: 'yyyy年M月d日 HH:mm' }}</span>
         }
 
         @if (selectedDateRange.start && selectedDateRange.end) {
@@ -212,7 +212,7 @@
         }
 
         @if (selectedDateRange.end) {
-          <span>{{ selectedDateRange.end | date: 'MMM d yyyy, HH:mm' }}</span>
+          <span>{{ selectedDateRange.end | date: 'yyyy年M月d日 HH:mm' }}</span>
         }
       </div>
     }

@@ -65,42 +65,42 @@ export class DateSelector implements OnInit {
   optionalFeatures = model<boolean>(true);
 
   relativeDurations = [
-    ['Last 5 minutes', '-5minutes'],
-    ['Last 15 minutes', '-15minutes'],
-    ['Last 30 minutes', '-30minutes'],
-    ['Last 1 hour', '-1hours'],
-    ['Last 3 hours', '-3hours'],
-    ['Last 6 hours', '-6hours'],
-    ['Last 12 hours', '-12hours'],
-    ['Last 24 hours', '-24hours'],
-    ['Last 2 days', '-2days'],
-    ['Last 7 days', '-7days'],
-    ['Last 30 days', '-30days'],
-    ['Last 90 days', '-90days'],
-    ['Last 6 months', '-6months'],
-    ['Last 1 year', '-1years'],
-    ['Last 2 years', '-2years'],
-    ['Last 5 years', '-5years'],
-    ['Last week', '-1weeks'],
-    ['Last month', '-1months'],
-    ['Last year', '-1years']
+    ['最近5分钟', '-5minutes'],
+    ['最近15分钟', '-15minutes'],
+    ['最近30分钟', '-30minutes'],
+    ['最近1小时', '-1hours'],
+    ['最近3小时', '-3hours'],
+    ['最近6小时', '-6hours'],
+    ['最近12小时', '-12hours'],
+    ['最近24小时', '-24hours'],
+    ['最近2天', '-2days'],
+    ['最近7天', '-7days'],
+    ['最近30天', '-30days'],
+    ['最近90天', '-90days'],
+    ['最近6个月', '-6months'],
+    ['最近1年', '-1years'],
+    ['最近2年', '-2years'],
+    ['最近5年', '-5years'],
+    ['上周', '-1weeks'],
+    ['上个月', '-1months'],
+    ['去年', '-1years']
   ];
 
   fixedDays = [
-    ['Yesterday', '-1days/day'],
-    ['Day before yesterday', '-2days/day'],
-    ['This day last week', '-7days/day'],
-    ['Previous week', '-1weeks/week'],
-    ['Previous month', '-1months/month'],
-    ['Previous year', '-1years/year'],
+    ['昨天', '-1days/day'],
+    ['前天', '-2days/day'],
+    ['上周同一天', '-7days/day'],
+    ['上周', '-1weeks/week'],
+    ['上个月', '-1months/month'],
+    ['去年', '-1years/year'],
   ];
 
   currentPeriods = [
-    ['Today', 'today', 'today'],
-    ['Today so far', 'today', 'now'],
-    ['This week so far', 'thisweek', 'now'],
-    ['This month so far', 'thismonth', 'now'],
-    ['This year so far', 'thisyear', 'now']
+    ['今天', 'today', 'today'],
+    ['今天至今', 'today', 'now'],
+    ['本周至今', 'thisweek', 'now'],
+    ['本月至今', 'thismonth', 'now'],
+    ['今年至今', 'thisyear', 'now']
   ];
 
   timeRanges = signal<TimeRange[]>([
@@ -124,28 +124,28 @@ export class DateSelector implements OnInit {
 
   allDays = model<boolean>(true);
   weekTypes = signal<WeekType[]>([
-    {label: 'ALL', value: 0},
-    {label: 'WORKING DAYS', value: 1},
-    {label: 'CUSTOM', value: 2},
+    {label: '全部', value: 0},
+    {label: '工作日', value: 1},
+    {label: '自定义', value: 2},
   ]);
   selectedWeekType = model<WeekType | undefined>(this.weekTypes()[0]);
   weekdays = model<Weekday[]>([
-    {label: 'Sat', data: 'Saturday', value: 0, selected: false},
-    {label: 'Sun', data: 'Sunday', value: 1, selected: false},
-    {label: 'Mon', data: 'Monday', value: 2, selected: false},
-    {label: 'Tue', data: 'Tuesday', value: 3, selected: false},
-    {label: 'Wed', data: 'Wednesday', value: 4, selected: false},
-    {label: 'Thu', data: 'Thursday', value: 5, selected: false},
-    {label: 'Fri', data: 'Friday', value: 6, selected: false},
+    {label: '六', data: 'Saturday', value: 0, selected: false},
+    {label: '日', data: 'Sunday', value: 1, selected: false},
+    {label: '一', data: 'Monday', value: 2, selected: false},
+    {label: '二', data: 'Tuesday', value: 3, selected: false},
+    {label: '三', data: 'Wednesday', value: 4, selected: false},
+    {label: '四', data: 'Thursday', value: 5, selected: false},
+    {label: '五', data: 'Friday', value: 6, selected: false},
   ]);
 
   selectedWeekday = model<Weekday | undefined>();
 
   allHours = model<boolean>(true);
   hourTypes = signal<HourType[]>([
-    {label: 'ALL', value: 0, selected: false},
-    {label: 'BUSY HOURS', value: 1, selected: false},
-    {label: 'CUSTOM', value: 2, selected: true}
+    {label: '全部', value: 0, selected: false},
+    {label: '忙碌时间', value: 1, selected: false},
+    {label: '自定义', value: 2, selected: true}
   ]);
   selectedHour = model<HourType | undefined>(this.hourTypes()[2]);
 
@@ -159,7 +159,7 @@ export class DateSelector implements OnInit {
       const picker = this.data.dateTimePicker;
 
       if (picker) {
-        // Initialize the date range
+        // 初始化日期范围
         if (picker.start_datetime && picker.end_datetime) {
           this.selectedDateRange = {
             start: new Date(picker.start_datetime),
@@ -168,19 +168,19 @@ export class DateSelector implements OnInit {
           this.initializeRange();
         }
 
-        // Initialize the days of the week
+        // 初始化星期几
         if (Array.isArray(picker.week_days) && picker.week_days.length) {
           this.initializeWeekdays(picker.week_days);
         }
 
-        // If start/end were specified, set the interval to the calendar as well
+        // 如果指定了开始/结束，也将间隔设置到日历
         if (this.selectedDateRange?.start && this.selectedDateRange?.end) {
           this.updateSelection(this.selectedDateRange.start, this.selectedDateRange.end);
         } else if (this.selectedDateRange?.start) {
           this.rangeChanged(this.selectedDateRange.start);
         }
 
-        // Initialize the hourly interval
+        // 初始化小时间隔
         if (picker.start_hour != null && picker.end_hour != null) {
           this.allHours.set(false);
 
@@ -214,18 +214,18 @@ export class DateSelector implements OnInit {
       this.optionalFeatures.set(this.data.optionalFeatures);
       this.future.set(this.data.future);
 
-      // If future is enabled, add future ranges
+      // 如果启用未来，添加未来范围
       if (this.future()) {
         const futureOffsets: TimeRange[] = [
-          {label: 'Next 1 day', start: 'offset:now', end: 'offset:+1days'},
-          {label: 'Next 1 week', start: 'offset:now', end: 'offset:+1weeks'},
-          {label: 'Next 1 month', start: 'offset:now', end: 'offset:+1months'},
-          {label: 'Next 3 months', start: 'offset:now', end: 'offset:+3months'}
+          {label: '未来1天', start: 'offset:now', end: 'offset:+1days'},
+          {label: '未来1周', start: 'offset:now', end: 'offset:+1weeks'},
+          {label: '未来1月', start: 'offset:now', end: 'offset:+1months'},
+          {label: '未来3月', start: 'offset:now', end: 'offset:+3months'}
         ];
         this.timeRanges.update(ranges => [...ranges, ...futureOffsets]);
       }
     } else {
-      // Default mode: choose one of the predefined ranges
+      // 默认模式：选择一个预定义范围
       this.selectTimeRange(this.timeRanges()[5]);
     }
 
@@ -323,7 +323,7 @@ export class DateSelector implements OnInit {
 
       this.startDate.set('');
       this.endDate.set('');
-      this.selectedDateRange = null; // Reset the selected range
+      this.selectedDateRange = null; // 重置选定的范围
     } else {
       this.selectedTimeRange.set(timeRange);
 
@@ -331,10 +331,10 @@ export class DateSelector implements OnInit {
       const start = new Date(startDate);
       const end = new Date(endDate);
 
-      // ISO format with time and timezone for both date times
+      // 两个日期时间的ISO格式，包括时间和时区
       this.startDate.set(start.toISOString());
       this.endDate.set(end.toISOString());
-      this.selectedDateRange = new DateRange<Date>(start, end); // Update calendar range
+      this.selectedDateRange = new DateRange<Date>(start, end); // 更新日历范围
     }
 
     this.allHours.set(true);
@@ -370,7 +370,7 @@ export class DateSelector implements OnInit {
           return startOfYear;
         }
 
-        // Handle relative offsets like +1days or -6months
+        // 处理相对偏移，如+1days或-6months
         const regex = /([+-]?)(\d+)(months?|days?|years?|weeks?|hours?|minutes?)/i;
         const match = regex.exec(offset);
 
@@ -429,9 +429,9 @@ export class DateSelector implements OnInit {
 
     this.weekdays.update(items =>
       items.map(item => {
-        // If custom selected, deselect all days
-        // If Working days selected, select all except Thu and Fri
-        // If All selected, select all days
+        // 如果选择自定义，取消选择所有天
+        // 如果选择工作日，选择除周四和周五外的所有天
+        // 如果选择全部，选择所有天
         const shouldSelect = type.value === 0 ? true : type.value === 1 ? ![5, 6].includes(item.value) : false;
 
         return {...item, selected: shouldSelect};
@@ -441,20 +441,20 @@ export class DateSelector implements OnInit {
 
   changeWeekdays(type: Weekday): void {
     this.weekdays.update(items => {
-      // Toggle the selected state of the clicked weekday
+      // 切换点击的星期的选中状态
       const updatedItems = items.map(item =>
         item.value === type.value ? {...item, selected: !type.selected} : item
       );
 
-      // Check if all weekdays are selected
+      // 检查是否所有星期都被选中
       const areAllSelected = updatedItems.every(item => item.selected);
 
       if (areAllSelected) {
-        // If all selected, set the first week type and unselect all
+        // 如果全部选中，设置第一个星期类型并取消选择所有
         this.selectedWeekType.set(this.weekTypes()[0]);
         // return updatedItems.map(item => ({...item, selected: false}));
       } else {
-        // Otherwise, set the last week type
+        // 否则，设置最后一个星期类型
         this.selectedWeekType.set(this.weekTypes()[this.weekTypes().length - 1]);
       }
 
@@ -471,11 +471,11 @@ export class DateSelector implements OnInit {
     const getTime = (value: number) => {
       switch (value) {
         case 0:
-          return {start: [0, 0], end: [23, 59]}; // ALL
+          return {start: [0, 0], end: [23, 59]}; // 全部
         case 1:
-          return {start: [20, 0], end: [23, 59]}; // BUSY
+          return {start: [20, 0], end: [23, 59]}; // 忙碌
         default:
-          return null; // CUSTOM
+          return null; // 自定义
       }
     };
 
