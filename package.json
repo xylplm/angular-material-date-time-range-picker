@@ -1,9 +1,9 @@
 {
-  "name": "material-tailwind-range-date-picker",
-  "version": "1.0.3",
+  "name": "angular-material-date-time-range-picker",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --port=4290",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

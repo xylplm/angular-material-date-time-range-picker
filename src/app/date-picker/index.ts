@@ -1,3 +1,3 @@
-export {DatePicker} from './date-picker';
-export {DateSelector} from './date-selector/date-selector';
-export type {DateTimePicker, DatePickerModel, TimeRange, Weekday, WeekType, HourType} from './model/datepicker';
+export {DatePicker} from './date-picker.component';
+export {DateSelector} from './date-selector/date-selector.component';
+export type {DateTimePicker, DatePickerModel, TimeRange, Weekday, WeekType, HourType} from './interfaces/datepicker';

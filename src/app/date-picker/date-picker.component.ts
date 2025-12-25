@@ -10,19 +10,19 @@ import {
   signal
 } from '@angular/core';
 import {take, tap} from 'rxjs';
-import {DateSelector} from './date-selector/date-selector';
+import {DateSelector} from './date-selector/date-selector.component';
 import {DatePipe, NgClass} from '@angular/common';
 import {SmartDialogService} from '../smart-dialog';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {NgIcon, provideIcons} from '@ng-icons/core';
 import {DateRange, MatDatepickerModule} from '@angular/material/datepicker';
-import {DatePickerModel, DateTimePicker} from './model/datepicker';
+import {DatePickerModel, DateTimePicker} from './interfaces/datepicker';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {featherCheck, featherCalendar, featherX} from '@ng-icons/feather-icons';
 
 @Component({
   selector: 'date-picker',
-  templateUrl: './date-picker.html',
+  templateUrl: './date-picker.component.html',
   styles: `:host {
     display: block;
   }`,

@@ -5,7 +5,7 @@ import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 
 @Component({
   selector: 'container',
-  templateUrl: './container.html',
+  templateUrl: './container.component.html',
   styles: `:host {height: 100%;}`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgIcon, NgClass, NgTemplateOutlet]

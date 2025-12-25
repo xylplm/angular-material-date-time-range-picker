@@ -9,7 +9,6 @@ import {
   signal
 } from '@angular/core';
 import {MatInput} from '@angular/material/input';
-import {Container} from '../../container';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {DatePipe, NgClass} from '@angular/common';
 import {SmartDialogService} from '../../smart-dialog';
@@ -17,7 +16,7 @@ import {MatTimepickerModule} from '@angular/material/timepicker';
 import {NgIcon, provideIcons} from '@ng-icons/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatNativeDateModule, provideNativeDateAdapter} from '@angular/material/core';
-import {DatePickerModel, DateTimePicker, HourType, TimeRange, Weekday, WeekType} from '../model/datepicker';
+import {DatePickerModel, DateTimePicker, HourType, TimeRange, Weekday, WeekType} from '../interfaces/datepicker';
 import {
   featherArrowRight,
   featherCalendar,
@@ -33,10 +32,11 @@ import {
   MatDatepickerModule,
   MatRangeDateSelectionModel
 } from '@angular/material/datepicker';
+import { Container } from '../container';
 
 @Component({
   selector: 'date-selector',
-  templateUrl: './date-selector.html',
+  templateUrl: './date-selector.component.html',
   styles: `:host {
     display: block;
     height: 100%;
