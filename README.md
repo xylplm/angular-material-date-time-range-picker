@@ -17,12 +17,18 @@
 
 ---
 
+## ⚠️ 注意
+
+本项目基于 [https://github.com/omidkh68/material-tailwind-range-date-picker](https://github.com/omidkh68/material-tailwind-range-date-picker) 二次开发，做了大量修改，适用于特定项目，不建议公众使用。建议使用原版！
+
+---
+
 ## 🚀 开始使用
 
 ### 克隆仓库
 ```bash
-git clone https://github.com/omidkh68/material-tailwind-range-date-picker.git
-cd material-tailwind-range-date-picker
+git clone https://github.com/xylplm/angular-material-date-time-range-picker.git
+cd angular-material-date-time-range-picker
 ```
 
 ### 安装依赖
@@ -69,22 +75,6 @@ selectedDateRange = model<DateRange<Date> | undefined>();
 所有日期时间内部使用偏移逻辑进行标准化（例如，UTC+X），使其适用于具有时区感知数据的系统。
 
 ---
-
-## 📷 截图
-### 深色视图
-![main-dark.png](public/screenshots/main-dark.png)
-### 浅色视图
-![main-light.png](public/screenshots/main-light.png)
-### 选定的日期
-![main-selected-dates.png](public/screenshots/main-selected-dates.png)
-### 深色视图中打开对话框
-![open-dialog-dark.png](public/screenshots/open-dialog-dark.png)
-### 浅色视图中打开对话框
-![open-dialog-light.png](public/screenshots/open-dialog-light.png)
-### 激活所有特性
-![open-dialog-all-features.png](public/screenshots/open-dialog-all-features.png)
-### 显示时间选择器
-![open-dialog-timepicker-dark.png](public/screenshots/open-dialog-timepicker-dark.png)
 
 ---
 

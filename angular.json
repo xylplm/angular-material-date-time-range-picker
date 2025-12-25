@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "material-tailwind-range-date-picker": {
+    "angular-material-date-time-range-picker": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -19,7 +19,7 @@
           "options": {
             "browser": "src/main.ts",
             "outputPath": "docs",
-            "baseHref": "/material-tailwind-range-date-picker/",
+            "baseHref": "/angular-material-date-time-range-picker/",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -61,10 +61,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "material-tailwind-range-date-picker:build:production"
+              "buildTarget": "angular-material-date-time-range-picker:build:production"
             },
             "development": {
-              "buildTarget": "material-tailwind-range-date-picker:build:development"
+              "buildTarget": "angular-material-date-time-range-picker:build:development"
             }
           },
           "defaultConfiguration": "development"
