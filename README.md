@@ -1,89 +1,261 @@
 # 📅 Angular Material Date Time Range Picker
 
-一个可定制的**日期范围选择器**，使用**Angular 20**、**Angular Material**和**Tailwind CSS v4**构建，支持**双向绑定**、**日期时间偏移**以及干净的深色/浅色现代UI。
+[![npm version](https://img.shields.io/npm/v/@luoxiao123/angular-material-date-time-range-picker.svg?style=flat-square)](https://www.npmjs.com/package/@luoxiao123/angular-material-date-time-range-picker)
+[![license](https://img.shields.io/npm/l/@luoxiao123/angular-material-date-time-range-picker.svg?style=flat-square)](LICENSE)
+[![downloads](https://img.shields.io/npm/dm/@luoxiao123/angular-material-date-time-range-picker?style=flat-square)]()
+[![GitHub stars](https://img.shields.io/github/stars/xylplm/angular-material-date-time-range-picker.svg?style=flat-square)](https://github.com/xylplm/angular-material-date-time-range-picker)
 
+一个强大而灵活的**日期时间范围选择器**组件库。
 
----
+[English](README.md) | [中文](README.zh.md)
 
-## ✨ 特性
+## 📚 目录
 
-- ✅ 使用**Angular v20**构建
-- 🎨 使用**Tailwind CSS v4**样式
-- 🧱 使用最新的**Angular Material**组件
-- 🕑 支持**日期和时间选择**
-- 🔄 使用Signal进行开始和结束日期时间的**双向绑定**
-- 🧭 处理**偏移**和时区调整
-- 📦 轻量级、响应式且易于集成
+- [描述](#描述)
+- [安装](#安装)
+- [快速开始](#快速开始)
+- [使用指南](#使用指南)
+- [API 文档](#api-文档)
+- [配置](#配置)
+- [Angular 版本兼容性](#angular-版本兼容性)
+- [贡献](#贡献)
+- [许可证](#许可证)
 
----
+## 描述
 
-## ⚠️ 注意
+基于 **Angular 21**、**Angular Material** 和 **Tailwind CSS v4** 构建，提供以下功能：
 
-本项目基于 [https://github.com/omidkh68/material-tailwind-range-date-picker](https://github.com/omidkh68/material-tailwind-range-date-picker) 二次开发，做了大量修改，适用于特定项目，不建议公众使用。建议使用原版！
+- 🎯 **直观的日期范围选择界面** - 支持快速预设和精确选择
+- 📱 **响应式设计** - 移动设备自动切换为 BottomSheet，桌面使用 Dialog
+- 🧭 **完整的时间选择** - 支持日期、小时、分钟的精确选择
+- 📅 **智能预设** - 相对时间、固定日期、当前周期快捷选择
+- ✨ **完全可定制** - 所有选项都可配置
+- 📖 **完整的类型定义** - 100% TypeScript 支持
+- 🎨 **深色/浅色主题** - 完整支持
 
----
+**快速链接：**
+- 📦 [NPM 包](https://www.npmjs.com/package/@luoxiao123/angular-material-date-time-range-picker)
+- 🎨 [在线演示](https://xylplm.github.io/angular-material-date-time-range-picker/)
+- 📖 [GitHub 仓库](https://github.com/xylplm/angular-material-date-time-range-picker)
 
-## 🚀 开始使用
+## 安装
 
-### 克隆仓库
-```bash
-git clone https://github.com/xylplm/angular-material-date-time-range-picker.git
-cd angular-material-date-time-range-picker
+通过 npm 安装：
+
+```sh
+npm install @luoxiao123/angular-material-date-time-range-picker --save
 ```
 
-### 安装依赖
-```bash
-npm install
+或使用 yarn：
+
+```sh
+yarn add @luoxiao123/angular-material-date-time-range-picker
 ```
 
-### 本地运行应用
-```bash
-ng serve
+## 快速开始
+
+### 使用 Standalone Components（推荐）
+
+```typescript
+import { Component } from '@angular/core';
+import { DatePickerComponent, DateTimePicker } from '@luoxiao123/angular-material-date-time-range-picker';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [DatePickerComponent],
+  template: `
+    <date-time-picker 
+      [(dateTimePicker)]="selectedRange"
+      [required]="true"
+      [optionalFeatures]="true"
+      (selectedDates)="onRangeSelected($event)"
+    />
+  `,
+})
+export class AppComponent {
+  selectedRange: DateTimePicker | undefined;
+
+  onRangeSelected(range: DateTimePicker | undefined) {
+    if (range) {
+      console.log('Start:', range.start_datetime);
+      console.log('End:', range.end_datetime);
+    }
+  }
+}
 ```
 
-然后访问 [http://localhost:4200](http://localhost:4200)
+### 使用 NgModule（传统方式）
 
----
+如果您使用基于 NgModule 的项目：
 
-## 🛠 使用的技术
+```typescript
+import { NgModule } from '@angular/core';
+import { DatePickerComponent } from '@luoxiao123/angular-material-date-time-range-picker';
 
-| 工具             | 版本 |
-|------------------|---------|
-| Angular          | ^21     |
-| Angular Material | ^21     |
-| Tailwind CSS     | ^4      |
-| Ng-icon          | ^31     |
-| TypeScript       | ^5      |
-
----
-
-## 📚 如何使用
-
-### 1. 在模板中添加 `DatePicker`
-```html
-<date-picker [(dateTimePicker)]="dateTimePicker"
-             [required]="true"
-             (selectedDates)="selectDates($event)"
+@NgModule({
+  imports: [DatePickerComponent],
+  exports: [DatePickerComponent],
+})
+export class DateRangeModule {}
 ```
 
-### 2. 在组件中绑定变量
-```ts
-selectedDateRange = model<DateRange<Date> | undefined>();
+## 使用指南
+
+### Standalone Components
+
+推荐用于现代 Angular 应用的方式。直接在组件 imports 中使用。
+
+### NgModule（传统）
+
+对于使用 NgModule 架构的老旧 Angular 项目，直接导入 `DatePickerComponent` 即可。
+
+## API 文档
+
+所有输入属性都是可选的。至少应该配置一个时间范围绑定。
+
+### 输入属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `dateTimePicker` | `DateTimePicker \| undefined` | - | 选中的日期时间范围（支持双向绑定） |
+| `required` | `boolean` | `false` | 是否为必填项 |
+| `disabled` | `boolean` | `false` | 是否禁用组件 |
+| `optionalFeatures` | `boolean` | `true` | 是否启用星期选择和小时范围选择 |
+| `future` | `boolean` | `false` | 是否允许选择未来日期 |
+
+### 输出事件
+
+| 属性 | 类型 | 说明 |
+|------|------|------|
+| `selectedDates` | `EventEmitter<DateTimePicker \| undefined>` | 日期范围选择完成时触发 |
+
+### 数据结构
+
+#### DateTimePicker
+
+| 属性 | 类型 | 说明 |
+|------|------|------|
+| `start_datetime` | `string` | 开始日期时间 (ISO 8601) |
+| `end_datetime` | `string` | 结束日期时间 (ISO 8601) |
+| `start_hour` | `number` | 开始小时 (0-23) |
+| `start_minute` | `number` | 开始分钟 (0-59) |
+| `end_hour` | `number` | 结束小时 (0-23) |
+| `end_minute` | `number` | 结束分钟 (0-59) |
+| `week_days` | `string[]` | 选中的星期 |
+
+#### TimeRange
+
+| 属性 | 类型 | 说明 |
+|------|------|------|
+| `label` | `string` | 显示标签 |
+| `start` | `string` | 开始时间表达式 |
+| `end` | `string` | 结束时间表达式 |
+
+## 配置
+
+### 基础示例
+
+```typescript
+<date-time-picker 
+  [(dateTimePicker)]="selectedRange"
+  [required]="true"
+  [disabled]="isLoading"
+  [optionalFeatures]="true"
+  [future]="false"
+  (selectedDates)="onRangeSelected($event)"
+/>
 ```
 
-### 3. 偏移支持
-所有日期时间内部使用偏移逻辑进行标准化（例如，UTC+X），使其适用于具有时区感知数据的系统。
+### 禁用组件
+
+```typescript
+<date-time-picker 
+  [(dateTimePicker)]="selectedRange"
+  [disabled]="isLoading"
+/>
+```
+
+### 设置初始值
+
+```typescript
+ngOnInit() {
+  this.selectedRange = {
+    start_datetime: new Date(2026, 0, 1).toISOString(),
+    end_datetime: new Date(2026, 0, 31).toISOString(),
+    start_hour: 9,
+    start_minute: 0,
+    end_hour: 17,
+    end_minute: 0
+  };
+}
+```
+
+### 启用未来日期选择
+
+```typescript
+<date-time-picker 
+  [(dateTimePicker)]="selectedRange"
+  [future]="true"
+/>
+```
+
+### 禁用可选功能
+
+```typescript
+<date-time-picker 
+  [(dateTimePicker)]="selectedRange"
+  [optionalFeatures]="false"
+/>
+```
+
+## Angular 版本兼容性
+
+| Angular 版本 | 支持情况 |
+|------------|--------|
+| 21.x | ✅ 完全支持 |
+| 20.x | ⚠️ 可能需要调整 |
+| < 20 | ❌ 不支持 |
+
+## 浏览器兼容性
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+## 常见问题
+
+### Q: 可以在 Angular 20 中使用吗？
+A: 本库针对 Angular 21+ 优化。使用 Angular 20 可能存在兼容性问题。
+
+### Q: 支持国际化吗？
+A: 当前版本使用中文界面。欢迎提交 PR 添加多语言支持。
+
+### Q: 可以自定义样式吗？
+A: 支持。使用 Tailwind CSS 和自定义 CSS 进行样式定制。
+
+### Q: 如何处理时区问题？
+A: 组件使用 ISO 8601 格式，完整支持时区信息。
+
+## 贡献
+
+欢迎提交 Issues 和 Pull Requests！
+
+### 报告 Bug
+请提交详细的 bug 报告，包括：
+- 重现步骤
+- 预期行为
+- 实际行为
+- 环境信息（Angular 版本、浏览器等）
+
+### 提交功能请求
+在提交功能请求前，请先检查是否已存在相关议题。
+
+## 许可证
+
+MIT License © 2025 [xylplm](https://github.com/xylplm)
 
 ---
 
----
-
-## 📄 许可证
-
-MIT License © 2025 xylplm
-
----
-
-## 🙌 贡献
-
-欢迎提交拉取请求。对于重大更改，请先打开问题讨论您想要更改的内容。
+**Made with ❤️ by [xylplm](https://github.com/xylplm)**
