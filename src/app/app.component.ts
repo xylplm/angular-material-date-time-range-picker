@@ -1,11 +1,11 @@
-import {Component, model, OnInit, signal, computed, effect, inject} from '@angular/core';
-import {DatePickerComponent, DateTimePickerValue} from '@luoxiao123/angular-material-date-time-range-picker';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatIconModule} from '@angular/material/icon';
-import {ReactiveFormsModule, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {FormsModule} from '@angular/forms';
-import {DOCUMENT} from '@angular/common';
+import { Component, model, OnInit, signal, computed, effect, inject } from '@angular/core';
+import { DatePickerComponent, DateTimePickerValue } from '@luoxiao123/angular-material-date-time-range-picker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-root',

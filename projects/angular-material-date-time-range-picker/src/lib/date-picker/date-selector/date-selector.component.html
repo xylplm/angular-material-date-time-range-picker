@@ -36,12 +36,7 @@
       <!-- 日历容器 -->
       <section class="date-selector-calendar-section">
         <div class="date-selector-calendar-wrapper">
-          <mat-calendar 
-            [maxDate]="!future() ? now : undefined" 
-            [(selected)]="selectedDateRange"
-            (selectedChange)="rangeChanged($event)" 
-            class="date-selector-calendar" 
-          />
+          <mat-calendar [maxDate]="!future() ? now : undefined" [(selected)]="selectedDateRange" (selectedChange)="rangeChanged($event)" class="date-selector-calendar" />
 
           <div class="date-selector-hint">
             <i-tabler name="info-circle" strokeWidth="2px" class="date-selector-hint-icon"></i-tabler>
@@ -92,12 +87,7 @@
               @if (!allDays()) {
                 <div class="date-selector-weekdays">
                   @for (day of weekdays(); track day.value) {
-                    <button
-                      type="button"
-                      (click)="day.selected = !day.selected"
-                      [class.selected]="day.selected"
-                      class="date-selector-weekday-btn"
-                    >
+                    <button type="button" (click)="day.selected = !day.selected" [class.selected]="day.selected" class="date-selector-weekday-btn">
                       {{ day.label }}
                     </button>
                   }

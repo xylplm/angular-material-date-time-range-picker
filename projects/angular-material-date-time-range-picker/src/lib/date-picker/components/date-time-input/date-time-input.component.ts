@@ -1,14 +1,8 @@
-import {
-  Component,
-  input,
-  output,
-  ChangeDetectionStrategy
-} from '@angular/core';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {FormsModule} from '@angular/forms';
-import {TablerIconComponent} from '@luoxiao123/angular-tabler-icons';
-import {IconCalendarDue} from '@luoxiao123/angular-tabler-icons/icons';
-import {DecimalPipe} from '@angular/common';
+import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { FormsModule } from '@angular/forms';
+import { TablerIconComponent } from '@luoxiao123/angular-tabler-icons';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'date-time-input',
@@ -16,12 +10,7 @@ import {DecimalPipe} from '@angular/common';
   styleUrls: ['./date-time-input.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    MatDatepickerModule,
-    FormsModule,
-    TablerIconComponent,
-    DecimalPipe
-  ]
+  imports: [MatDatepickerModule, FormsModule, TablerIconComponent, DecimalPipe]
 })
 export class DateTimeInputComponent {
   label = input<string>('');

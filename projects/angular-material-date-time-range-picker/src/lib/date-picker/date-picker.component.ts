@@ -1,42 +1,18 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  effect,
-  inject,
-  input,
-  model,
-  output,
-  signal,
-  ViewChild,
-  ElementRef,
-  Optional,
-  Input,
-  forwardRef
-} from '@angular/core';
-import {take, tap} from 'rxjs';
-import {DateSelector} from './date-selector';
-import {DatePipe} from '@angular/common';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {DateRange, MatDatepickerModule} from '@angular/material/datepicker';
-import {DatePickerModel, DateTimePickerValue} from './interfaces';
-import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {TablerIconComponent, provideTablerIcons} from '@luoxiao123/angular-tabler-icons';
-import {IconCalendarDue, IconX} from '@luoxiao123/angular-tabler-icons/icons';
-import {
-  ControlValueAccessor,
-  FormGroupDirective,
-  NG_VALUE_ACCESSOR,
-  NgControl,
-  NgForm
-} from '@angular/forms';
-import {
-  MatFormFieldControl,
-  MatFormField
-} from '@angular/material/form-field';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
-import {Subject} from 'rxjs';
-import {FocusMonitor} from '@angular/cdk/a11y';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, model, output, signal, ViewChild, ElementRef, Input, forwardRef } from '@angular/core';
+import { take, tap } from 'rxjs';
+import { DatePipe } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DateRange, MatDatepickerModule } from '@angular/material/datepicker';
+import { DatePickerModel, DateTimePickerValue } from './interfaces';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { TablerIconComponent, provideTablerIcons } from '@luoxiao123/angular-tabler-icons';
+import { IconCalendarDue, IconX } from '@luoxiao123/angular-tabler-icons/icons';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
+import { MatFormFieldControl, MatFormField } from '@angular/material/form-field';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { DateSelector } from './date-selector/date-selector.component';
 
 @Component({
   selector: 'date-time-picker',
@@ -46,7 +22,7 @@ import {FocusMonitor} from '@angular/cdk/a11y';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TablerIconComponent, MatDatepickerModule, DatePipe, MatDialogModule],
   providers: [
-    provideTablerIcons({IconCalendarDue, IconX}),
+    provideTablerIcons({ IconCalendarDue, IconX }),
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => DatePickerComponent),
@@ -63,7 +39,7 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   readonly #dialog = inject(MatDialog);
   readonly #focusMonitor = inject(FocusMonitor);
   readonly #elementRef = inject(ElementRef);
-  readonly #matFormField = inject(MatFormField, {optional: true});
+  readonly #matFormField = inject(MatFormField, { optional: true });
 
   protected destroyRef = inject(DestroyRef);
 
@@ -102,16 +78,17 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
 
   constructor() {
     // 监听 focus 事件
-    this.#focusMonitor.monitor(this.#elementRef, true).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(origin => {
-      const isFocused = !!origin;
-      this.#focusedSignal.set(isFocused);
-      this.stateChanges.next();
-      if (!isFocused) {
-        this.onTouched?.();
-      }
-    });
+    this.#focusMonitor
+      .monitor(this.#elementRef, true)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(origin => {
+        const isFocused = !!origin;
+        this.#focusedSignal.set(isFocused);
+        this.stateChanges.next();
+        if (!isFocused) {
+          this.onTouched?.();
+        }
+      });
   }
 
   ref = effect((): void => {
@@ -131,10 +108,7 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   });
 
   openDateDialogSelector(): void {
-    const isMobile = this.#breakpoints.isMatched([
-      Breakpoints.Handset,
-      Breakpoints.Tablet
-    ]);
+    const isMobile = this.#breakpoints.isMatched([Breakpoints.Handset, Breakpoints.Tablet]);
     const currentValue = this.#internalValue();
     const data: DatePickerModel = {
       optionalFeatures: this.optionalFeatures(),
@@ -143,7 +117,7 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
       dateFormat: this.dateFormat,
       valueFormat: this.valueFormat
     };
-    
+
     const dialogRef = this.#dialog.open(DateSelector, {
       width: isMobile ? '100%' : '850px',
       height: isMobile ? '90vh' : '520px',
@@ -154,40 +128,43 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
       panelClass: 'date-time-picker-dialog'
     });
 
-    dialogRef.afterOpened().pipe(
-      take(1),
-      takeUntilDestroyed(this.destroyRef),
-      tap(() => this.toggle.update((status: boolean) => !status))
-    ).subscribe();
+    dialogRef
+      .afterOpened()
+      .pipe(
+        take(1),
+        takeUntilDestroyed(this.destroyRef),
+        tap(() => this.toggle.update((status: boolean) => !status))
+      )
+      .subscribe();
 
-    dialogRef.afterClosed().pipe(
-      take(1),
-      takeUntilDestroyed(this.destroyRef),
-      tap((result: DatePickerModel | undefined): void => {
-        this.toggle.update((status: boolean) => !status);
+    dialogRef
+      .afterClosed()
+      .pipe(
+        take(1),
+        takeUntilDestroyed(this.destroyRef),
+        tap((result: DatePickerModel | undefined): void => {
+          this.toggle.update((status: boolean) => !status);
 
-        if (result && result.dateTimePicker) {
-          const rangeValue: DateTimePickerValue = {
-            start: result.dateTimePicker.start,
-            end: result.dateTimePicker.end
-          };
-          this.#internalValue.set(rangeValue);
-          // 更新显示用的日期范围
-          this.selectedDateRange.set(new DateRange(
-            new Date(result.dateTimePicker.start),
-            new Date(result.dateTimePicker.end)
-          ));
-          // 发出用户手动选择的值
-          this.selectionChange.emit(rangeValue);
-          // 通知表单控件
-          if (this.onChange) {
-            this.onChange(rangeValue);
+          if (result && result.dateTimePicker) {
+            const rangeValue: DateTimePickerValue = {
+              start: result.dateTimePicker.start,
+              end: result.dateTimePicker.end
+            };
+            this.#internalValue.set(rangeValue);
+            // 更新显示用的日期范围
+            this.selectedDateRange.set(new DateRange(new Date(result.dateTimePicker.start), new Date(result.dateTimePicker.end)));
+            // 发出用户手动选择的值
+            this.selectionChange.emit(rangeValue);
+            // 通知表单控件
+            if (this.onChange) {
+              this.onChange(rangeValue);
+            }
           }
-        }
 
-        this.onTouched?.();
-      })
-    ).subscribe();
+          this.onTouched?.();
+        })
+      )
+      .subscribe();
   }
 
   // ControlValueAccessor 实现
@@ -253,10 +230,7 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
       this.#internalValue.set(null);
     } else {
       this.#internalValue.set(val);
-      this.selectedDateRange.set(new DateRange(
-        new Date(val.start),
-        new Date(val.end)
-      ));
+      this.selectedDateRange.set(new DateRange(new Date(val.start), new Date(val.end)));
     }
     this.stateChanges.next();
   }

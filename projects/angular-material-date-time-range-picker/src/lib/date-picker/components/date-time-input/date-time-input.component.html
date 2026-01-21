@@ -28,12 +28,7 @@
     <!-- 时间部分 -->
     <div class="date-time-input-time">
       <!-- 小时 -->
-      <select
-        class="date-time-input-select date-time-input-select-hour"
-        [ngModel]="hourValue()"
-        (ngModelChange)="onHourChange($event)"
-        [attr.aria-label]="'小时'"
-      >
+      <select class="date-time-input-select date-time-input-select-hour" [ngModel]="hourValue()" (ngModelChange)="onHourChange($event)" [attr.aria-label]="'小时'">
         <option [value]="null" disabled>--</option>
         @for (hour of hours(); track hour) {
           <option [value]="hour">{{ hour | number: '2.0-0' }}</option>
@@ -44,12 +39,7 @@
       <span class="date-time-input-separator">:</span>
 
       <!-- 分钟 -->
-      <select
-        class="date-time-input-select date-time-input-select-minute"
-        [ngModel]="minuteValue()"
-        (ngModelChange)="onMinuteChange($event)"
-        [attr.aria-label]="'分钟'"
-      >
+      <select class="date-time-input-select date-time-input-select-minute" [ngModel]="minuteValue()" (ngModelChange)="onMinuteChange($event)" [attr.aria-label]="'分钟'">
         <option [value]="null" disabled>--</option>
         @for (minute of minutes(); track minute) {
           <option [value]="minute">{{ minute | number: '2.0-0' }}</option>

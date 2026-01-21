@@ -1,14 +1,15 @@
-<div #dateRangeButton
-     [attr.id]="id"
-     [attr.aria-label]="'选择日期时间范围'"
-     [attr.aria-disabled]="disabled"
-     (click)="!disabled && openDateDialogSelector()"
-     (keydown.enter)="!disabled && openDateDialogSelector()"
-     (keydown.space)="!disabled && openDateDialogSelector()"
-     tabindex="0"
-     [attr.role]="'button'"
-     class="date-range-container">
-
+<div
+  #dateRangeButton
+  [attr.id]="id"
+  [attr.aria-label]="'选择日期时间范围'"
+  [attr.aria-disabled]="disabled"
+  (click)="!disabled && openDateDialogSelector()"
+  (keydown.enter)="!disabled && openDateDialogSelector()"
+  (keydown.space)="!disabled && openDateDialogSelector()"
+  tabindex="0"
+  [attr.role]="'button'"
+  class="date-range-container"
+>
   @if (selectedDateRange()) {
     <div class="date-range-content">
       <div class="date-range-primary">
@@ -25,18 +26,20 @@
   }
 
   <div class="date-range-actions">
-    <i-tabler name="calendar-due" strokeWidth="2px" size="18px" class="date-range-icon"/>
+    <i-tabler name="calendar-due" strokeWidth="2px" size="18px" class="date-range-icon" />
 
     @if (selectedDateRange()) {
-      <button (click)="selectedDateRange.set(undefined); $event.stopPropagation()"
-              type="button"
-              class="date-range-clear-btn"
-              [attr.aria-label]="'清除日期选择'"
-              tabindex="0"
-              (keydown.enter)="selectedDateRange.set(undefined); $event.stopPropagation()"
-              (keydown.space)="selectedDateRange.set(undefined); $event.stopPropagation()"
-              [attr.role]="'button'">
-        <i-tabler name="x" strokeWidth="2.5px" size="18px" class="date-range-icon"/>
+      <button
+        (click)="selectedDateRange.set(undefined); $event.stopPropagation()"
+        type="button"
+        class="date-range-clear-btn"
+        [attr.aria-label]="'清除日期选择'"
+        tabindex="0"
+        (keydown.enter)="selectedDateRange.set(undefined); $event.stopPropagation()"
+        (keydown.space)="selectedDateRange.set(undefined); $event.stopPropagation()"
+        [attr.role]="'button'"
+      >
+        <i-tabler name="x" strokeWidth="2.5px" size="18px" class="date-range-icon" />
       </button>
     }
   </div>

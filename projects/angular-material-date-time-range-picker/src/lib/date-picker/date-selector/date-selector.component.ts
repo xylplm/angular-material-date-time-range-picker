@@ -1,49 +1,42 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  inject,
-  model,
-  OnInit,
-  signal
-} from '@angular/core';
-import {MatInput} from '@angular/material/input';
-import {MatCheckbox} from '@angular/material/checkbox';
-import {DatePipe, DecimalPipe} from '@angular/common';
-import {MatTimepickerModule} from '@angular/material/timepicker';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatNativeDateModule, provideNativeDateAdapter} from '@angular/material/core';
-import {DatePickerModel, DateTimePickerValue, HourType, TimeRange, Weekday} from '../interfaces';
-import {TablerIconComponent} from '@luoxiao123/angular-tabler-icons';
-import {
-  DateRange,
-  DefaultMatCalendarRangeStrategy,
-  MatCalendar,
-  MatDatepickerModule,
-  MatRangeDateSelectionModel
-} from '@angular/material/datepicker';
-import {Container} from '../components';
-import {DateTimeInputComponent} from '../components';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, model, OnInit, signal } from '@angular/core';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { DatePipe } from '@angular/common';
+import { MatTimepickerModule } from '@angular/material/timepicker';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
+import { DatePickerModel, DateTimePickerValue, HourType, TimeRange, Weekday } from '../interfaces';
+import { TablerIconComponent } from '@luoxiao123/angular-tabler-icons';
+import { DateRange, DefaultMatCalendarRangeStrategy, MatCalendar, MatDatepickerModule, MatRangeDateSelectionModel } from '@angular/material/datepicker';
+import { Container } from '../components';
+import { DateTimeInputComponent } from '../components';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'date-time-picker-selector',
   templateUrl: './date-selector.component.html',
   styleUrls: ['./date-selector.component.scss'],
-  styles: `:host {
-    display: block;
-    height: 100%;
-  }`,
+  styles: `
+    :host {
+      display: block;
+      height: 100%;
+    }
+  `,
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    provideNativeDateAdapter(),
-    DefaultMatCalendarRangeStrategy, MatRangeDateSelectionModel
-  ],
+  providers: [provideNativeDateAdapter(), DefaultMatCalendarRangeStrategy, MatRangeDateSelectionModel],
   imports: [
-    MatCalendar, TablerIconComponent, MatDatepickerModule, MatNativeDateModule, ReactiveFormsModule, FormsModule,
-    MatCheckbox, DatePipe, MatTimepickerModule, Container, DateTimeInputComponent
-  ],
+    MatCalendar,
+    TablerIconComponent,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatCheckbox,
+    DatePipe,
+    MatTimepickerModule,
+    Container,
+    DateTimeInputComponent
+  ]
 })
 export class DateSelector implements OnInit {
   readonly #cdr = inject(ChangeDetectorRef);
@@ -96,7 +89,7 @@ export class DateSelector implements OnInit {
     ['上周同一天', '-7days/day'],
     ['上周', '-1weeks/week'],
     ['上个月', '-1months/month'],
-    ['去年', '-1years/year'],
+    ['去年', '-1years/year']
   ];
 
   currentPeriods = [
@@ -128,20 +121,20 @@ export class DateSelector implements OnInit {
 
   allDays = model<boolean>(true);
   weekdays = model<Weekday[]>([
-    {label: '六', data: 'Saturday', value: 0, selected: false},
-    {label: '日', data: 'Sunday', value: 1, selected: false},
-    {label: '一', data: 'Monday', value: 2, selected: false},
-    {label: '二', data: 'Tuesday', value: 3, selected: false},
-    {label: '三', data: 'Wednesday', value: 4, selected: false},
-    {label: '四', data: 'Thursday', value: 5, selected: false},
-    {label: '五', data: 'Friday', value: 6, selected: false},
+    { label: '六', data: 'Saturday', value: 0, selected: false },
+    { label: '日', data: 'Sunday', value: 1, selected: false },
+    { label: '一', data: 'Monday', value: 2, selected: false },
+    { label: '二', data: 'Tuesday', value: 3, selected: false },
+    { label: '三', data: 'Wednesday', value: 4, selected: false },
+    { label: '四', data: 'Thursday', value: 5, selected: false },
+    { label: '五', data: 'Friday', value: 6, selected: false }
   ]);
 
   allHours = model<boolean>(true);
   hourTypes = signal<HourType[]>([
-    {label: '全部', value: 0, selected: false},
-    {label: '忙碌时间', value: 1, selected: false},
-    {label: '自定义', value: 2, selected: true}
+    { label: '全部', value: 0, selected: false },
+    { label: '忙碌时间', value: 1, selected: false },
+    { label: '自定义', value: 2, selected: true }
   ]);
 
   selectedDateRange: DateRange<Date> | null = null;
@@ -161,7 +154,7 @@ export class DateSelector implements OnInit {
             start: new Date(picker.start),
             end: new Date(picker.end)
           } as DateRange<Date>;
-          
+
           // 初始化时间值
           const startDate = new Date(picker.start);
           const endDate = new Date(picker.end);
@@ -174,10 +167,10 @@ export class DateSelector implements OnInit {
 
       if (this.future()) {
         const futureOffsets: TimeRange[] = [
-          {label: '未来1天', start: 'offset:now', end: 'offset:+1days'},
-          {label: '未来1周', start: 'offset:now', end: 'offset:+1weeks'},
-          {label: '未来1月', start: 'offset:now', end: 'offset:+1months'},
-          {label: '未来3月', start: 'offset:now', end: 'offset:+3months'}
+          { label: '未来1天', start: 'offset:now', end: 'offset:+1days' },
+          { label: '未来1周', start: 'offset:now', end: 'offset:+1weeks' },
+          { label: '未来1月', start: 'offset:now', end: 'offset:+1months' },
+          { label: '未来3月', start: 'offset:now', end: 'offset:+3months' }
         ];
         this.timeRanges.update(ranges => [...ranges, ...futureOffsets]);
       }
@@ -188,7 +181,7 @@ export class DateSelector implements OnInit {
 
   selectTimeRange(timeRange: TimeRange): void {
     this.selectedTimeRange.set(timeRange);
-    const {startDate, endDate} = this.processTimeRange(timeRange);
+    const { startDate, endDate } = this.processTimeRange(timeRange);
     const start = new Date(startDate);
     const end = new Date(endDate);
 
@@ -201,7 +194,7 @@ export class DateSelector implements OnInit {
     this.selectedDateRange = new DateRange<Date>(start, end);
   }
 
-  private processTimeRange(timeRange: TimeRange): { startDate: string, endDate: string } {
+  private processTimeRange(timeRange: TimeRange): { startDate: string; endDate: string } {
     const now = new Date();
     const parseTime = (time: string): Date => {
       if (!time) return new Date(now);
@@ -262,7 +255,7 @@ export class DateSelector implements OnInit {
     if (!date) return;
 
     let dateObj: Date;
-    
+
     if (typeof date === 'string') {
       // 如果是字符串，尝试解析它
       dateObj = new Date(date);
@@ -328,9 +321,10 @@ export class DateSelector implements OnInit {
       const start = this.#selectionModel.selection.start;
       if (!start) return;
 
-      const range = start.toDateString() === selectedDate.toDateString()
-        ? new DateRange(start, start)
-        : new DateRange(start < selectedDate ? start : selectedDate, start < selectedDate ? selectedDate : start);
+      const range =
+        start.toDateString() === selectedDate.toDateString()
+          ? new DateRange(start, start)
+          : new DateRange(start < selectedDate ? start : selectedDate, start < selectedDate ? selectedDate : start);
 
       this.updateSelection(range.start, range.end);
       this.selectingStart = true;
@@ -360,7 +354,7 @@ export class DateSelector implements OnInit {
       end: endISO
     };
 
-    this.data = {...this.data, dateTimePicker: result};
+    this.data = { ...this.data, dateTimePicker: result };
     this.#dialogRef.close(this.data);
   }
 
@@ -369,18 +363,18 @@ export class DateSelector implements OnInit {
   }
 
   getHours(): number[] {
-    return Array.from({length: 24}, (_, i) => i);
+    return Array.from({ length: 24 }, (_, i) => i);
   }
 
   getMinutes(): number[] {
-    return Array.from({length: 60}, (_, i) => i);
+    return Array.from({ length: 60 }, (_, i) => i);
   }
 
   updateStartTime(): void {
     if (this.selectedDateRange?.start && this.startHour() !== null && this.startMinute() !== null) {
       const startDate = new Date(this.selectedDateRange.start);
       startDate.setHours(this.startHour() ?? 0, this.startMinute() ?? 0, 0, 0);
-      
+
       let endDate = this.selectedDateRange.end;
       const range = new DateRange(startDate, endDate);
       this.selectedDateRange = range;
@@ -393,7 +387,7 @@ export class DateSelector implements OnInit {
     if (this.selectedDateRange?.end && this.endHour() !== null && this.endMinute() !== null) {
       const endDate = new Date(this.selectedDateRange.end);
       endDate.setHours(this.endHour() ?? 0, this.endMinute() ?? 0, 0, 0);
-      
+
       let startDate = this.selectedDateRange.start;
       const range = new DateRange(startDate, endDate);
       this.selectedDateRange = range;

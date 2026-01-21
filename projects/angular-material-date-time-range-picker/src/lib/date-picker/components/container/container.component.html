@@ -35,30 +35,17 @@
 
       <div class="container-footer-actions">
         @if (hasDismiss()) {
-          <button mat-stroked-button (click)="dismiss.emit()" type="button">
-            取消
-          </button>
+          <button mat-stroked-button color="primary" (click)="dismiss.emit()" type="button"> 取消 </button>
         }
 
         @if (hasSecondaryButton()) {
-          <button 
-            mat-stroked-button
-            (click)="secondaryButton.emit()"
-            type="button"
-            [disabled]="disabledSecondaryButton()"
-          >
+          <button mat-stroked-button color="primary" (click)="secondaryButton.emit()" type="button" [disabled]="disabledSecondaryButton()">
             {{ secondaryButtonTitle() }}
           </button>
         }
 
         @if (hasSubmit()) {
-          <button
-            mat-raised-button
-            color="primary"
-            (click)="submit.emit()"
-            type="button"
-            [disabled]="disabledSubmit()"
-          >
+          <button mat-raised-button color="primary" (click)="submit.emit()" type="button" [disabled]="disabledSubmit()">
             {{ submitTitle() }}
           </button>
         }
