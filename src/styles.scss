@@ -40,10 +40,10 @@ body {
     calendar-header-text-size: 14px,
     calendar-body-label-text-weight: 600,
     calendar-header-text-weight: 700,
-    calendar-container-background-color: #27272a,
+    calendar-container-background-color: white,
     calendar-date-hover-state-background-color: #a8a29e,
     calendar-date-in-range-state-background-color: #fff7ed,
-    calendar-date-selected-state-background-color: #f9731,
+    calendar-date-selected-state-background-color: #f97316,
   ));
 
   @include mat.timepicker-overrides((
@@ -130,6 +130,11 @@ body {
       outline-color: #27272a,
     ));
 
+    @include mat.datepicker-overrides((
+      calendar-container-background-color: #27272a,
+      calendar-date-selected-state-background-color: #f97316,
+    ));
+
     @include mat.table-overrides((
       background-color: #303035,
       row-item-outline-color: #18181b
@@ -171,7 +176,7 @@ body {
       calendar-container-background-color: white,
       calendar-date-hover-state-background-color: #a8a29e,
       calendar-date-in-range-state-background-color: #fff7ed,
-      calendar-date-selected-state-background-color: #f9731,
+      calendar-date-selected-state-background-color: #f97316,
     ));
 
     @include mat.timepicker-overrides((
@@ -245,6 +250,11 @@ html.dark {
     inactive-hover-label-text-color: #d4d4d8,
   ));
 
+  @include mat.datepicker-overrides((
+    calendar-container-background-color: #27272a,
+    calendar-date-selected-state-background-color: #f97316,
+  ));
+
   @include mat.table-overrides((
     background-color: #303035,
     row-item-outline-color: #18181b
@@ -265,6 +275,49 @@ html.dark {
 
   .mat-calendar-body-in-range .mat-calendar-body-cell-content {
     color: #18181b;
+  }
+
+  /* date-time-input 深色模式 */
+  date-time-input {
+    .flex.items-center.rounded-lg.overflow-hidden.bg-white.border {
+      @apply bg-zinc-700 border-zinc-600;
+    }
+
+    input {
+      @apply bg-zinc-700 text-zinc-100 placeholder-zinc-400;
+
+      &::placeholder {
+        color: #71717a;
+      }
+    }
+
+    select {
+      @apply bg-zinc-700 text-zinc-100;
+
+      option {
+        @apply bg-zinc-700 text-zinc-100;
+      }
+    }
+
+    label {
+      @apply text-zinc-300;
+    }
+  }
+
+  /* date-range-container 深色模式 */
+  .date-range-container {
+    --date-picker-border-color: #3f3f46 !important;
+    --date-picker-border-hover-color: #52525b !important;
+    --date-picker-focus-color: #60a5fa !important;
+    --date-picker-bg-color: #27272a !important;
+
+    border-color: var(--date-picker-border-color) !important;
+    background-color: var(--date-picker-bg-color) !important;
+    color: #f1f1f1;
+
+    &:hover {
+      border-color: var(--date-picker-border-hover-color) !important;
+    }
   }
 }
 
