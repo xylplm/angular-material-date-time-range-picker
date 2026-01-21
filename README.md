@@ -7,7 +7,7 @@
 
 一个强大而灵活的**日期时间范围选择器**组件库。
 
-[English](README.md) | [中文](README.zh.md)
+[English](README.en.md) | [中文](README.md)
 
 ## 📚 目录
 
@@ -252,10 +252,10 @@ A: 组件使用 ISO 8601 格式，完整支持时区信息。
 ### 提交功能请求
 在提交功能请求前，请先检查是否已存在相关议题。
 
+## 致谢
+
+本项目基于 [material-tailwind-range-date-picker](https://github.com/omidkh68/material-tailwind-range-date-picker) 二次开发重构，感谢原作者的杰出工作！
+
 ## 许可证
 
-MIT License © 2025 [xylplm](https://github.com/xylplm)
-
----
-
-**Made with ❤️ by [xylplm](https://github.com/xylplm)**
+MIT License © 2026 [xylplm](https://github.com/xylplm)
