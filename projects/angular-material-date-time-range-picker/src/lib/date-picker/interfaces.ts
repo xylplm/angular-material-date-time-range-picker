@@ -1,17 +1,14 @@
-export interface DateTimePicker {
-  start_datetime: string;
-  end_datetime: string;
-  start_hour?: number;
-  start_minute?: number;
-  end_hour?: number;
-  end_minute?: number;
-  week_days?: string[];
+export interface DateTimePickerValue {
+  start: string;
+  end: string;
 }
 
 export interface DatePickerModel {
   optionalFeatures: boolean;
-  dateTimePicker?: DateTimePicker;
+  dateTimePicker?: DateTimePickerValue | null;
   future: boolean;
+  dateFormat?: string;
+  valueFormat?: string;
 }
 
 export interface TimeRange {

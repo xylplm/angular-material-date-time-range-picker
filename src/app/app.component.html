@@ -32,17 +32,18 @@
         <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400">选择您需要的日期时间范围</p>
       </div>
 
-      <!-- 日期选择器部分 -->
+      <!-- 日期选择器部分（基础用法） -->
       <div class="space-y-3">
-        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">📅 选择日期范围</label>
+        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">📅 基础用法</label>
         <div class="p-4 sm:p-6 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-zinc-700 dark:to-zinc-800 rounded-xl border border-blue-200 dark:border-zinc-600 overflow-y-auto max-h-96">
-          <date-time-picker [(dateTimePicker)]="dateTimePicker"
+          <date-time-picker [(ngModel)]="dateTimePicker"
                             [required]="true"
-                            (selectedDates)="selectDates($event)"
+                            (selectionChange)="selectDates($event)"
                             class="w-full h-fit" />
         </div>
         @if (selectedDateRange()) {
-          <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+          <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800 flex items-start gap-3">
+            <span class="text-xl">✅</span>
             <p class="text-xs sm:text-sm text-green-700 dark:text-green-300">
               <span class="font-semibold">已选择：</span> {{ selectedDateRange() }}
             </p>
@@ -50,16 +51,52 @@
         }
       </div>
 
+      <!-- Material Form Field 演示部分 -->
+      <div class="space-y-3 pt-6 border-t border-stone-200 dark:border-zinc-700">
+        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">📝 响应式表单集成</label>
+        <div class="space-y-4" [formGroup]="dateRangeForm">
+          <mat-form-field class="w-full" appearance="outline">
+            <mat-label>日期时间范围</mat-label>
+            <date-time-picker formControlName="dateRange"
+                              (selectionChange)="onDateRangeSelected($event)"
+                              matInput />
+          </mat-form-field>
+
+          @if (dateRangeForm.get('dateRange')?.hasError('required') && dateRangeForm.get('dateRange')?.touched) {
+            <div class="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800 flex items-start gap-3">
+              <span class="text-xl">⚠️</span>
+              <p class="text-xs sm:text-sm text-red-700 dark:text-red-300">
+                请选择日期时间范围
+              </p>
+            </div>
+          }
+
+          @if (selectedDateRangeFormField() && dateRangeForm.valid) {
+            <div class="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800 flex items-start gap-3">
+              <span class="text-xl">🎉</span>
+              <div class="flex-1 space-y-1">
+                <p class="text-xs sm:text-sm text-purple-700 dark:text-purple-300">
+                  <span class="font-semibold">选择的日期范围：</span> {{ selectedDateRangeFormField() }}
+                </p>
+                <p class="text-xs text-purple-600 dark:text-purple-400">该演示展示如何使用响应式表单与日期选择器集成</p>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
       <!-- 主题选择部分 -->
-      <div class="space-y-4">
+      <div class="space-y-4 pt-6 border-t border-stone-200 dark:border-zinc-700">
         <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">🎨 选择主题</label>
-        <div class="inline-flex w-full bg-stone-100 dark:bg-zinc-700 rounded-xl p-1 gap-1">
+        <div class="grid grid-cols-2 gap-2">
           @for (theme of themes(); track $index) {
             <button (click)="changeTheme(theme)"
-                    [class]="getThemeButtonClass(theme) + ' flex-1 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg font-medium transition-all duration-300 flex items-center justify-center gap-2 text-xs sm:text-sm hover:scale-105 active:scale-95'"
-                    [attr.aria-pressed]="selectedTheme() === theme">
-              <span class="text-lg">{{ theme === 'light' ? '☀️' : '🌙' }}</span>
-              <span class="hidden sm:inline">{{ theme === 'light' ? '浅色' : '深色' }}</span>
+                    [class]="getThemeButtonClass(theme) + ' px-4 sm:px-6 py-3 sm:py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-3 text-sm sm:text-base shadow-sm hover:shadow-md hover:scale-105 active:scale-95 border-2'"
+                    [attr.aria-pressed]="selectedTheme() === theme"
+                    [class.border-blue-500]="selectedTheme() === theme"
+                    [class.border-transparent]="selectedTheme() !== theme">
+              <span class="text-2xl">{{ theme === 'light' ? '☀️' : '🌙' }}</span>
+              <span>{{ theme === 'light' ? '浅色模式' : '深色模式' }}</span>
             </button>
           }
         </div>

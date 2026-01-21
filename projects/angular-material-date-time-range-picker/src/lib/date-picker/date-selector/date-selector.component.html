@@ -12,19 +12,11 @@
       <ul class="w-full text-gray-900">
         @for (timeRangeItem of timeRanges(); track timeRangeItem) {
           <li
-            [ngClass]="
-              selectedTimeRange() && selectedTimeRange()?.start === timeRangeItem.start && selectedTimeRange()?.end === timeRangeItem.end ? 'bg-gray-100 dark:bg-zinc-700/40' : ''
-            "
-            class="w-full group hover:bg-gray-100 dark:hover:bg-zinc-700/40 transition-all"
+            [class]="selectedTimeRange() && selectedTimeRange()?.start === timeRangeItem.start && selectedTimeRange()?.end === timeRangeItem.end ? 'w-full group hover:bg-gray-100 dark:hover:bg-zinc-700/40 transition-all bg-gray-100 dark:bg-zinc-700/40' : 'w-full group hover:bg-gray-100 dark:hover:bg-zinc-700/40 transition-all'"
           >
             <button
               (click)="selectTimeRange(timeRangeItem)"
-              [ngClass]="
-                selectedTimeRange() && selectedTimeRange()?.start === timeRangeItem.start && selectedTimeRange()?.end === timeRangeItem.end
-                  ? 'text-green-600 pl-4 font-bold'
-                  : 'text-stone-700 dark:text-zinc-200'
-              "
-              class="w-full px-2 py-2 text-xs font-semibold group-hover:pl-4 transition-all whitespace-nowrap flex items-center gap-2"
+              [class]="selectedTimeRange() && selectedTimeRange()?.start === timeRangeItem.start && selectedTimeRange()?.end === timeRangeItem.end ? 'w-full px-2 py-2 text-xs font-semibold group-hover:pl-4 transition-all whitespace-nowrap flex items-center gap-2 text-green-600 pl-4 font-bold' : 'w-full px-2 py-2 text-xs font-semibold group-hover:pl-4 transition-all whitespace-nowrap flex items-center gap-2 text-stone-700 dark:text-zinc-200'"
             >
               <span>{{ timeRangeItem.label }}</span>
             </button>
@@ -41,7 +33,12 @@
       <!-- 日历容器 -->
       <section class="w-full md:w-1/2 flex-center border-r border-r-gray-200 dark:border-r-zinc-800">
         <div class="w-full md:h-80 mx-auto mb-2 flex-center flex-col p-4 gap-6">
-          <mat-calendar [maxDate]="!future() ? now : undefined" [(selected)]="selectedDateRange" (selectedChange)="changeDatePart('start', $event)" class="w-full" />
+          <mat-calendar 
+            [maxDate]="!future() ? now : undefined" 
+            [(selected)]="selectedDateRange"
+            (selectedChange)="rangeChanged($event)" 
+            class="w-full" 
+          />
 
           <p class="w-full flex items-start gap-1 leading-none text-xs text-amber-600 dark:text-orange-300 font-semibold">
             <i-tabler name="info-circle" strokeWidth="2px" class="text-current shrink-0"></i-tabler>
@@ -57,25 +54,28 @@
         <!-- 开始和结束输入日期 -->
         <div class="flex flex-col py-4">
           <!-- 从日期 -->
-          <div class="flex flex-col gap-2 relative px-3 py-2">
-            <label class="text-xs text-stone-600 dark:text-zinc-100 font-medium">开始日期</label>
+          <date-time-input
+            label="开始日期"
+            [dateValue]="startDate()"
+            [hourValue]="startHour()"
+            [minuteValue]="startMinute()"
+            [hours]="getHours()"
+            [minutes]="getMinutes()"
+            (dateChange)="changeDatePart('start', $event)"
+            (timeChange)="updateStartTime()"
+          />
 
-            <div class="flex items-center rounded-lg overflow-hidden bg-white border border-gray-400">
-              <div class="w-full relative flex items-center">
-                <input
-                  type="text"
-                  matInput
-                  [(ngModel)]="startDate"
-                  placeholder="yyyy-MM-dd"
-                  class="w-full pl-2 pr-5 h-[35px] text-sm focus:outline-none focus:ring-0"
-                />
-
-                <button class="w-8 h-8 absolute right-0 pointer-events-none inset-y-auto">
-                  <i-tabler name="calendar-due" strokeWidth="2px" size="15px" class="text-gray-500" />
-                </button>
-              </div>
-            </div>
-          </div>
+          <!-- 结束日期 -->
+          <date-time-input
+            label="结束日期"
+            [dateValue]="endDate()"
+            [hourValue]="endHour()"
+            [minuteValue]="endMinute()"
+            [hours]="getHours()"
+            [minutes]="getMinutes()"
+            (dateChange)="changeDatePart('end', $event)"
+            (timeChange)="updateEndTime()"
+          />
         </div>
 
         @if (optionalFeatures()) {
@@ -93,12 +93,7 @@
                 @for (day of weekdays(); track day.value) {
                   <button
                     (click)="day.selected = !day.selected"
-                    [ngClass]="
-                      day.selected
-                        ? 'bg-amber-600 dark:bg-amber-500 hover:bg-amber-700 dark:hover:bg-amber-600 text-white'
-                        : 'bg-white dark:bg-zinc-500 dark:hover:bg-zinc-600 text-gray-600 dark:text-zinc-200 hover:bg-gray-100'
-                    "
-                    class="w-[calc(100%/7)] px-1.5 py-2 text-xs text-center leading-3 font-medium transition-colors duration-200 whitespace-nowrap"
+                    [class]="day.selected ? 'w-[calc(100%/7)] px-1.5 py-2 text-xs text-center leading-3 font-medium transition-colors duration-200 whitespace-nowrap bg-amber-600 dark:bg-amber-500 hover:bg-amber-700 dark:hover:bg-amber-600 text-white' : 'w-[calc(100%/7)] px-1.5 py-2 text-xs text-center leading-3 font-medium transition-colors duration-200 whitespace-nowrap bg-white dark:bg-zinc-500 dark:hover:bg-zinc-600 text-gray-600 dark:text-zinc-200 hover:bg-gray-100'"
                   >
                     {{ day.label }}
                   </button>
@@ -127,7 +122,7 @@
     @if (selectedDateRange) {
       <div class="text-stone-600 dark:text-zinc-100 flex flex-col md:flex-row items-center md:gap-1.5 font-semibold">
         @if (selectedDateRange.start) {
-          <span>{{ selectedDateRange.start | date: 'yyyy年M月d日 HH:mm' }}</span>
+          <span>{{ selectedDateRange.start | date: dateFormat }}</span>
         }
 
         @if (selectedDateRange.start && selectedDateRange.end) {
@@ -135,7 +130,7 @@
         }
 
         @if (selectedDateRange.end) {
-          <span>{{ selectedDateRange.end | date: 'yyyy年M月d日 HH:mm' }}</span>
+          <span>{{ selectedDateRange.end | date: dateFormat }}</span>
         }
       </div>
     }

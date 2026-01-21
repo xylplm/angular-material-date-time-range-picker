@@ -27,8 +27,11 @@ Built with **Angular 21**, **Angular Material**, and **Tailwind CSS v4**, provid
 
 - 🎯 **Intuitive Date Range Selection Interface** - Support for quick presets and precise selection
 - 📱 **Responsive Design** - Automatically switches to BottomSheet on mobile, uses Dialog on desktop
-- 🧭 **Complete Time Selection** - Support for precise selection of dates, hours, and minutes
+- 🧭 **Complete Time Selection** - Support for precise selection of dates, hours, and minutes (24-hour format)
 - 📅 **Smart Presets** - Quick selection for relative time, fixed dates, and current periods
+- 💾 **Two-Way Data Binding** - Supports ControlValueAccessor and ngModel
+- 🏗️ **mat-form-field Integration** - Perfect compatibility with Angular Material forms
+- 🎨 **Customizable Formats** - Custom date and value formats
 - ✨ **Fully Customizable** - All options are configurable
 - 📖 **Complete Type Definitions** - 100% TypeScript support
 - 🎨 **Dark/Light Theme** - Full support for both themes
@@ -58,7 +61,7 @@ yarn add @luoxiao123/angular-material-date-time-range-picker
 
 ```typescript
 import { Component } from '@angular/core';
-import { DatePickerComponent, DateTimePicker } from '@luoxiao123/angular-material-date-time-range-picker';
+import { DatePickerComponent, DateTimePickerValue } from '@luoxiao123/angular-material-date-time-range-picker';
 
 @Component({
   selector: 'app-root',
@@ -66,23 +69,64 @@ import { DatePickerComponent, DateTimePicker } from '@luoxiao123/angular-materia
   imports: [DatePickerComponent],
   template: `
     <date-time-picker 
-      [(dateTimePicker)]="selectedRange"
+      [(ngModel)]="selectedRange"
       [required]="true"
+      [dateFormat]="'MMM d, yyyy HH:mm'"
       [optionalFeatures]="true"
-      (selectedDates)="onRangeSelected($event)"
+      (selectionChange)="onRangeSelected($event)"
     />
   `,
 })
 export class AppComponent {
-  selectedRange: DateTimePicker | undefined;
+  selectedRange: DateTimePickerValue | undefined;
 
-  onRangeSelected(range: DateTimePicker | undefined) {
+  onRangeSelected(range: DateTimePickerValue | undefined) {
     if (range) {
-      console.log('Start:', range.start_datetime);
-      console.log('End:', range.end_datetime);
+      console.log('Start:', range.start);  // ISO 8601 format
+      console.log('End:', range.end);      // ISO 8601 format
     }
   }
 }
+```
+
+### Using with mat-form-field
+
+```typescript
+<mat-form-field>
+  <mat-label>Select Date Time Range</mat-label>
+  <date-time-picker
+    matInput
+    [(ngModel)]="selectedRange"
+    [required]="true"
+    [dateFormat]="'yyyy-MM-dd HH:mm'"
+  />
+  @if (formControl.hasError('required')) {
+    <mat-error>This field is required</mat-error>
+  }
+</mat-form-field>
+```
+
+### Using Reactive Forms
+
+```typescript
+import { FormControl } from '@angular/forms';
+
+export class AppComponent {
+  rangeControl = new FormControl<DateTimePickerValue | null>(null, Validators.required);
+
+  onSubmit() {
+    if (this.rangeControl.valid) {
+      const range = this.rangeControl.value;
+      console.log('Selected range:', range);
+    }
+  }
+}
+
+// Template
+<date-time-picker 
+  [formControl]="rangeControl"
+  [dateFormat]="'yyyy-MM-dd HH:mm'"
+/>
 ```
 
 ### Using NgModule (Legacy Approach)
@@ -106,21 +150,25 @@ export class DateRangeModule {}
 
 The recommended approach for modern Angular applications. Use it directly in your component's imports.
 
-### NgModule (Legacy)
+### mat-form-field Integration
 
-For older Angular projects using NgModule architecture, simply import the `DatePickerComponent`.
+The component is perfectly compatible with Angular Material's `mat-form-field` and automatically applies form styles and error messages.
+
+### Two-Way Data Binding
+
+Supports both `[(ngModel)]` and reactive forms with `[formControl]`.
 
 ## API Documentation
-
-All input properties are optional. At least one time range binding should be configured.
 
 ### Input Properties
 
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
-| `dateTimePicker` | `DateTimePicker \| undefined` | - | Selected date time range (supports two-way binding) |
+| `ngModel` / `formControl` | `DateTimePickerValue \| null` | - | Selected date time range (supports two-way binding) |
 | `required` | `boolean` | `false` | Whether the field is required |
 | `disabled` | `boolean` | `false` | Whether the component is disabled |
+| `dateFormat` | `string` | `'MMM d, yyyy HH:mm'` | Date display format (DatePipe format) |
+| `valueFormat` | `string` | `'yyyy-MM-dd HH:mm:ss'` | Output value format (DatePipe format) |
 | `optionalFeatures` | `boolean` | `true` | Whether to enable week selection and hour range selection |
 | `future` | `boolean` | `false` | Whether to allow selecting future dates |
 
@@ -128,21 +176,16 @@ All input properties are optional. At least one time range binding should be con
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `selectedDates` | `EventEmitter<DateTimePicker \| undefined>` | Triggered when date range selection is completed |
+| `selectionChange` | `EventEmitter<DateTimePickerValue \| undefined>` | Triggered when date range selection is completed |
 
 ### Data Structures
 
-#### DateTimePicker
+#### DateTimePickerValue
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `start_datetime` | `string` | Start date time (ISO 8601) |
-| `end_datetime` | `string` | End date time (ISO 8601) |
-| `start_hour` | `number` | Start hour (0-23) |
-| `start_minute` | `number` | Start minute (0-59) |
-| `end_hour` | `number` | End hour (0-23) |
-| `end_minute` | `number` | End minute (0-59) |
-| `week_days` | `string[]` | Selected week days |
+| `start` | `string` | Start date time (ISO 8601) |
+| `end` | `string` | End date time (ISO 8601) |
 
 #### TimeRange
 
@@ -158,53 +201,73 @@ All input properties are optional. At least one time range binding should be con
 
 ```typescript
 <date-time-picker 
-  [(dateTimePicker)]="selectedRange"
+  [(ngModel)]="selectedRange"
   [required]="true"
   [disabled]="isLoading"
   [optionalFeatures]="true"
   [future]="false"
-  (selectedDates)="onRangeSelected($event)"
+  [dateFormat]="'yyyy-MM-dd HH:mm'"
+  (selectionChange)="onRangeSelected($event)"
 />
 ```
 
-### Disable Component
+### Customize Date Format
 
 ```typescript
-<date-time-picker 
-  [(dateTimePicker)]="selectedRange"
-  [disabled]="isLoading"
-/>
+// Chinese format
+[dateFormat]="'yyyy年M月d日 HH:mm'"
+
+// English format
+[dateFormat]="'MMM d, yyyy HH:mm'"
+
+// Standard format
+[dateFormat]="'yyyy-MM-dd HH:mm:ss'"
+
+// Date only
+[dateFormat]="'yyyy-MM-dd'"
+
+// Time only
+[dateFormat]="'HH:mm'"
 ```
 
 ### Set Initial Value
 
 ```typescript
 ngOnInit() {
+  const now = new Date();
+  const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+  const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  
   this.selectedRange = {
-    start_datetime: new Date(2026, 0, 1).toISOString(),
-    end_datetime: new Date(2026, 0, 31).toISOString(),
-    start_hour: 9,
-    start_minute: 0,
-    end_hour: 17,
-    end_minute: 0
+    start: startDate.toISOString(),
+    end: endDate.toISOString()
   };
 }
+```
+
+### Disable Component
+
+```typescript
+<date-time-picker 
+  [(ngModel)]="selectedRange"
+  [disabled]="isLoading"
+/>
 ```
 
 ### Enable Future Date Selection
 
 ```typescript
 <date-time-picker 
-  [(dateTimePicker)]="selectedRange"
+  [(ngModel)]="selectedRange"
   [future]="true"
 />
 ```
 
-### Disable Optional Features
+### Disable Optional Features (Week and Hour Selection)
 
 ```typescript
 <date-time-picker 
-  [(dateTimePicker)]="selectedRange"
+  [(ngModel)]="selectedRange"
   [optionalFeatures]="false"
 />
 ```

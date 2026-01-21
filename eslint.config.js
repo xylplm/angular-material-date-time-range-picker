@@ -22,12 +22,7 @@ export default defineConfig([
         },
       ],
       "@angular-eslint/component-selector": [
-        "error",
-        {
-          type: "element",
-          prefix: ["lib", "app"],
-          style: "kebab-case",
-        },
+        "off"
       ],
     },
   },

@@ -27,8 +27,11 @@
 
 - 🎯 **直观的日期范围选择界面** - 支持快速预设和精确选择
 - 📱 **响应式设计** - 移动设备自动切换为 BottomSheet，桌面使用 Dialog
-- 🧭 **完整的时间选择** - 支持日期、小时、分钟的精确选择
+- 🧭 **完整的时间选择** - 支持日期、小时、分钟的精确选择（24小时制）
 - 📅 **智能预设** - 相对时间、固定日期、当前周期快捷选择
+- 💾 **双向数据绑定** - 支持 ControlValueAccessor 和 ngModel
+- 🏗️ **mat-form-field 集成** - 完美适配 Angular Material 表单
+- 🎨 **可定制化格式** - 自定义日期和值格式
 - ✨ **完全可定制** - 所有选项都可配置
 - 📖 **完整的类型定义** - 100% TypeScript 支持
 - 🎨 **深色/浅色主题** - 完整支持
@@ -58,7 +61,7 @@ yarn add @luoxiao123/angular-material-date-time-range-picker
 
 ```typescript
 import { Component } from '@angular/core';
-import { DatePickerComponent, DateTimePicker } from '@luoxiao123/angular-material-date-time-range-picker';
+import { DatePickerComponent, DateTimePickerValue } from '@luoxiao123/angular-material-date-time-range-picker';
 
 @Component({
   selector: 'app-root',
@@ -66,23 +69,64 @@ import { DatePickerComponent, DateTimePicker } from '@luoxiao123/angular-materia
   imports: [DatePickerComponent],
   template: `
     <date-time-picker 
-      [(dateTimePicker)]="selectedRange"
+      [(ngModel)]="selectedRange"
       [required]="true"
+      [dateFormat]="'yyyy年M月d日 HH:mm'"
       [optionalFeatures]="true"
-      (selectedDates)="onRangeSelected($event)"
+      (selectionChange)="onRangeSelected($event)"
     />
   `,
 })
 export class AppComponent {
-  selectedRange: DateTimePicker | undefined;
+  selectedRange: DateTimePickerValue | undefined;
 
-  onRangeSelected(range: DateTimePicker | undefined) {
+  onRangeSelected(range: DateTimePickerValue | undefined) {
     if (range) {
-      console.log('Start:', range.start_datetime);
-      console.log('End:', range.end_datetime);
+      console.log('Start:', range.start);  // ISO 8601 format
+      console.log('End:', range.end);      // ISO 8601 format
     }
   }
 }
+```
+
+### 在 mat-form-field 中使用
+
+```typescript
+<mat-form-field>
+  <mat-label>选择日期时间范围</mat-label>
+  <date-time-picker
+    matInput
+    [(ngModel)]="selectedRange"
+    [required]="true"
+    [dateFormat]="'yyyy-MM-dd HH:mm'"
+  />
+  @if (formControl.hasError('required')) {
+    <mat-error>此字段为必填</mat-error>
+  }
+</mat-form-field>
+```
+
+### 使用响应式表单
+
+```typescript
+import { FormControl } from '@angular/forms';
+
+export class AppComponent {
+  rangeControl = new FormControl<DateTimePickerValue | null>(null, Validators.required);
+
+  onSubmit() {
+    if (this.rangeControl.valid) {
+      const range = this.rangeControl.value;
+      console.log('Selected range:', range);
+    }
+  }
+}
+
+// 模板
+<date-time-picker 
+  [formControl]="rangeControl"
+  [dateFormat]="'yyyy-MM-dd HH:mm'"
+/>
 ```
 
 ### 使用 NgModule（传统方式）
@@ -106,21 +150,25 @@ export class DateRangeModule {}
 
 推荐用于现代 Angular 应用的方式。直接在组件 imports 中使用。
 
-### NgModule（传统）
+### mat-form-field 集成
 
-对于使用 NgModule 架构的老旧 Angular 项目，直接导入 `DatePickerComponent` 即可。
+组件完美适配 Angular Material 的 `mat-form-field`，可自动应用表单样式和错误提示。
+
+### 双向数据绑定
+
+支持 `[(ngModel)]` 和响应式表单 `[formControl]`。
 
 ## API 文档
-
-所有输入属性都是可选的。至少应该配置一个时间范围绑定。
 
 ### 输入属性
 
 | 属性 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
-| `dateTimePicker` | `DateTimePicker \| undefined` | - | 选中的日期时间范围（支持双向绑定） |
+| `ngModel` / `formControl` | `DateTimePickerValue \| null` | - | 选中的日期时间范围（支持双向绑定） |
 | `required` | `boolean` | `false` | 是否为必填项 |
 | `disabled` | `boolean` | `false` | 是否禁用组件 |
+| `dateFormat` | `string` | `'yyyy年M月d日 HH:mm'` | 日期显示格式（DatePipe 格式） |
+| `valueFormat` | `string` | `'yyyy-MM-dd HH:mm:ss'` | 值的输出格式（DatePipe 格式） |
 | `optionalFeatures` | `boolean` | `true` | 是否启用星期选择和小时范围选择 |
 | `future` | `boolean` | `false` | 是否允许选择未来日期 |
 
@@ -128,21 +176,16 @@ export class DateRangeModule {}
 
 | 属性 | 类型 | 说明 |
 |------|------|------|
-| `selectedDates` | `EventEmitter<DateTimePicker \| undefined>` | 日期范围选择完成时触发 |
+| `selectionChange` | `EventEmitter<DateTimePickerValue \| undefined>` | 日期范围选择完成时触发 |
 
 ### 数据结构
 
-#### DateTimePicker
+#### DateTimePickerValue
 
 | 属性 | 类型 | 说明 |
 |------|------|------|
-| `start_datetime` | `string` | 开始日期时间 (ISO 8601) |
-| `end_datetime` | `string` | 结束日期时间 (ISO 8601) |
-| `start_hour` | `number` | 开始小时 (0-23) |
-| `start_minute` | `number` | 开始分钟 (0-59) |
-| `end_hour` | `number` | 结束小时 (0-23) |
-| `end_minute` | `number` | 结束分钟 (0-59) |
-| `week_days` | `string[]` | 选中的星期 |
+| `start` | `string` | 开始日期时间 (ISO 8601) |
+| `end` | `string` | 结束日期时间 (ISO 8601) |
 
 #### TimeRange
 
@@ -158,53 +201,73 @@ export class DateRangeModule {}
 
 ```typescript
 <date-time-picker 
-  [(dateTimePicker)]="selectedRange"
+  [(ngModel)]="selectedRange"
   [required]="true"
   [disabled]="isLoading"
   [optionalFeatures]="true"
   [future]="false"
-  (selectedDates)="onRangeSelected($event)"
+  [dateFormat]="'yyyy-MM-dd HH:mm'"
+  (selectionChange)="onRangeSelected($event)"
 />
 ```
 
-### 禁用组件
+### 自定义日期格式
 
 ```typescript
-<date-time-picker 
-  [(dateTimePicker)]="selectedRange"
-  [disabled]="isLoading"
-/>
+// 中文格式
+[dateFormat]="'yyyy年M月d日 HH:mm'"
+
+// 英文格式
+[dateFormat]="'MMM d, yyyy HH:mm'"
+
+// 标准格式
+[dateFormat]="'yyyy-MM-dd HH:mm:ss'"
+
+// 仅显示日期
+[dateFormat]="'yyyy-MM-dd'"
+
+// 仅显示时间
+[dateFormat]="'HH:mm'"
 ```
 
 ### 设置初始值
 
 ```typescript
 ngOnInit() {
+  const now = new Date();
+  const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+  const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  
   this.selectedRange = {
-    start_datetime: new Date(2026, 0, 1).toISOString(),
-    end_datetime: new Date(2026, 0, 31).toISOString(),
-    start_hour: 9,
-    start_minute: 0,
-    end_hour: 17,
-    end_minute: 0
+    start: startDate.toISOString(),
+    end: endDate.toISOString()
   };
 }
+```
+
+### 禁用组件
+
+```typescript
+<date-time-picker 
+  [(ngModel)]="selectedRange"
+  [disabled]="isLoading"
+/>
 ```
 
 ### 启用未来日期选择
 
 ```typescript
 <date-time-picker 
-  [(dateTimePicker)]="selectedRange"
+  [(ngModel)]="selectedRange"
   [future]="true"
 />
 ```
 
-### 禁用可选功能
+### 禁用可选功能（星期和小时选择）
 
 ```typescript
 <date-time-picker 
-  [(dateTimePicker)]="selectedRange"
+  [(ngModel)]="selectedRange"
   [optionalFeatures]="false"
 />
 ```

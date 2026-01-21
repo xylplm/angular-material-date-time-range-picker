@@ -5,19 +5,18 @@ import {
   inject,
   model,
   OnInit,
-  output,
   signal
 } from '@angular/core';
 import {MatInput} from '@angular/material/input';
 import {MatCheckbox} from '@angular/material/checkbox';
-import {DatePipe, NgClass} from '@angular/common';
+import {DatePipe, DecimalPipe} from '@angular/common';
 import {SmartDialogService} from '../../shared';
 import {MatTimepickerModule} from '@angular/material/timepicker';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatNativeDateModule, provideNativeDateAdapter} from '@angular/material/core';
-import {DatePickerModel, DateTimePicker, HourType, TimeRange, Weekday, WeekType} from '../interfaces';
-import {TablerIconComponent, provideTablerIcons} from '@luoxiao123/angular-tabler-icons';
-import {IconCheck, IconInfoCircle, IconCalendarDue, IconClock} from '@luoxiao123/angular-tabler-icons/icons';
+import {DatePickerModel, DateTimePickerValue, HourType, TimeRange, Weekday} from '../interfaces';
+import {TablerIconComponent} from '@luoxiao123/angular-tabler-icons';
+import {IconInfoCircle, IconCalendarDue} from '@luoxiao123/angular-tabler-icons/icons';
 import {
   DateRange,
   DefaultMatCalendarRangeStrategy,
@@ -26,6 +25,7 @@ import {
   MatRangeDateSelectionModel
 } from '@angular/material/datepicker';
 import {Container} from '../components';
+import {DateTimeInputComponent} from '../components';
 
 @Component({
   selector: 'date-time-picker-selector',
@@ -34,14 +34,15 @@ import {Container} from '../components';
     display: block;
     height: 100%;
   }`,
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     provideNativeDateAdapter(),
     DefaultMatCalendarRangeStrategy, MatRangeDateSelectionModel
   ],
   imports: [
-    MatCalendar, TablerIconComponent, MatDatepickerModule, MatNativeDateModule, ReactiveFormsModule, FormsModule, NgClass,
-    MatCheckbox, DatePipe, MatInput, MatTimepickerModule, Container
+    MatCalendar, TablerIconComponent, MatDatepickerModule, MatNativeDateModule, ReactiveFormsModule, FormsModule,
+    MatCheckbox, DatePipe, MatTimepickerModule, Container, DateTimeInputComponent
   ],
 })
 export class DateSelector implements OnInit {
@@ -50,8 +51,17 @@ export class DateSelector implements OnInit {
   readonly #selectionModel = inject(MatRangeDateSelectionModel<Date>);
   public data = this.#smartDialog.getData() as DatePickerModel;
 
+  // 从 data 中获取格式，如果没有则使用默认值
+  dateFormat = this.data?.dateFormat ?? 'yyyy年M月d日 HH:mm';
+  valueFormat = this.data?.valueFormat ?? 'yyyy-MM-dd HH:mm:ss';
+
   startDate = model<string>('');
   endDate = model<string>('');
+
+  startHour = model<number | null>(null);
+  startMinute = model<number | null>(null);
+  endHour = model<number | null>(null);
+  endMinute = model<number | null>(null);
 
   future = model<boolean>(false);
   optionalFeatures = model<boolean>(true);
@@ -115,12 +125,6 @@ export class DateSelector implements OnInit {
   selectedTimeRange = model<TimeRange | undefined>(undefined);
 
   allDays = model<boolean>(true);
-  weekTypes = signal<WeekType[]>([
-    {label: '全部', value: 0},
-    {label: '工作日', value: 1},
-    {label: '自定义', value: 2},
-  ]);
-  selectedWeekType = model<WeekType | undefined>(this.weekTypes()[0]);
   weekdays = model<Weekday[]>([
     {label: '六', data: 'Saturday', value: 0, selected: false},
     {label: '日', data: 'Sunday', value: 1, selected: false},
@@ -131,18 +135,14 @@ export class DateSelector implements OnInit {
     {label: '五', data: 'Friday', value: 6, selected: false},
   ]);
 
-  selectedWeekday = model<Weekday | undefined>();
-
   allHours = model<boolean>(true);
   hourTypes = signal<HourType[]>([
     {label: '全部', value: 0, selected: false},
     {label: '忙碌时间', value: 1, selected: false},
     {label: '自定义', value: 2, selected: true}
   ]);
-  selectedHour = model<HourType | undefined>(this.hourTypes()[2]);
 
-  selectedDates = output<string[]>();
-  selectedDateRange!: DateRange<Date> | null;
+  selectedDateRange: DateRange<Date> | null = null;
   now = new Date();
   selectingStart = true;
 
@@ -154,31 +154,19 @@ export class DateSelector implements OnInit {
       const picker = this.data.dateTimePicker;
 
       if (picker) {
-        if (picker.start_datetime && picker.end_datetime) {
+        if (picker.start && picker.end) {
           this.selectedDateRange = {
-            start: new Date(picker.start_datetime),
-            end: new Date(picker.end_datetime)
+            start: new Date(picker.start),
+            end: new Date(picker.end)
           } as DateRange<Date>;
-        }
-
-        if (Array.isArray(picker.week_days) && picker.week_days.length) {
-          this.allDays.set(false);
-          const selectedDays = new Set(picker.week_days.map(d => d.toLowerCase()));
-          this.weekdays.update(days => days.map(day => ({...day, selected: selectedDays.has(day.data.toLowerCase())})));
-        }
-
-        if (picker.start_hour != null && picker.end_hour != null) {
-          this.allHours.set(false);
-          const start = this.selectedDateRange?.start;
-          const end = this.selectedDateRange?.end;
-
-          if (start && end) {
-            start.setHours(picker.start_hour, picker.start_minute ?? 0, 0, 0);
-            end.setHours(picker.end_hour, picker.end_minute ?? 59, 0, 0);
-            this.selectedDateRange = new DateRange(start, end);
-          }
-
-          this.selectedHour.set(this.hourTypes()[2]);
+          
+          // 初始化时间值
+          const startDate = new Date(picker.start);
+          const endDate = new Date(picker.end);
+          this.startHour.set(startDate.getHours());
+          this.startMinute.set(startDate.getMinutes());
+          this.endHour.set(endDate.getHours());
+          this.endMinute.set(endDate.getMinutes());
         }
       }
 
@@ -194,8 +182,6 @@ export class DateSelector implements OnInit {
     } else {
       this.selectTimeRange(this.timeRanges()[5]);
     }
-
-    this.#cdr.detectChanges();
   }
 
   selectTimeRange(timeRange: TimeRange): void {
@@ -206,9 +192,11 @@ export class DateSelector implements OnInit {
 
     this.startDate.set(start.toISOString());
     this.endDate.set(end.toISOString());
+    this.startHour.set(start.getHours());
+    this.startMinute.set(start.getMinutes());
+    this.endHour.set(end.getHours());
+    this.endMinute.set(end.getMinutes());
     this.selectedDateRange = new DateRange<Date>(start, end);
-    this.allHours.set(true);
-    this.selectedHour.set(this.hourTypes()[2]);
   }
 
   private processTimeRange(timeRange: TimeRange): { startDate: string, endDate: string } {
@@ -271,10 +259,34 @@ export class DateSelector implements OnInit {
   changeDatePart(part: 'start' | 'end', date: Date | string): void {
     if (!date) return;
 
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
-    if (isNaN(dateObj.getTime())) return;
+    let dateObj: Date;
+    
+    if (typeof date === 'string') {
+      // 如果是字符串，尝试解析它
+      dateObj = new Date(date);
+      // 如果不能解析为有效日期，返回
+      if (isNaN(dateObj.getTime())) return;
+    } else {
+      dateObj = new Date(date);
+    }
 
-    dateObj.setHours(0, 0, 0, 0);
+    // 保持原有的时间部分（只修改日期部分）
+    if (part === 'start') {
+      const currentStart = this.selectedDateRange?.start;
+      if (currentStart) {
+        dateObj.setHours(currentStart.getHours(), currentStart.getMinutes(), currentStart.getSeconds());
+      } else {
+        dateObj.setHours(0, 0, 0, 0);
+      }
+    } else {
+      const currentEnd = this.selectedDateRange?.end;
+      if (currentEnd) {
+        dateObj.setHours(currentEnd.getHours(), currentEnd.getMinutes(), currentEnd.getSeconds());
+      } else {
+        dateObj.setHours(0, 0, 0, 0);
+      }
+    }
+
     this.selectedTimeRange.set(undefined);
 
     let start = this.selectedDateRange?.start ?? null;
@@ -296,27 +308,55 @@ export class DateSelector implements OnInit {
     this.endDate.set(end?.toISOString() ?? '');
   }
 
+  rangeChanged(selectedDate: Date | null): void {
+    if (!selectedDate) return;
+
+    if (this.selectingStart) {
+      this.startDate.set(selectedDate.toISOString());
+      this.endDate.set('');
+      this.startHour.set(selectedDate.getHours());
+      this.startMinute.set(selectedDate.getMinutes());
+      this.endHour.set(null);
+      this.endMinute.set(null);
+      this.selectedTimeRange.set(undefined);
+      this.selectedDateRange = null;
+      this.#selectionModel.updateSelection(new DateRange(selectedDate, null), this);
+      this.selectingStart = false;
+    } else {
+      const start = this.#selectionModel.selection.start;
+      if (!start) return;
+
+      const range = start.toDateString() === selectedDate.toDateString()
+        ? new DateRange(start, start)
+        : new DateRange(start < selectedDate ? start : selectedDate, start < selectedDate ? selectedDate : start);
+
+      this.updateSelection(range.start, range.end);
+      this.selectingStart = true;
+    }
+  }
+
+  updateSelection(start: Date, end: Date): void {
+    const range = new DateRange(start, end);
+    this.selectedDateRange = range;
+    this.#selectionModel.updateSelection(range, this);
+    this.startDate.set(start.toISOString());
+    this.endDate.set(end.toISOString());
+    this.startHour.set(start.getHours());
+    this.startMinute.set(start.getMinutes());
+    this.endHour.set(end.getHours());
+    this.endMinute.set(end.getMinutes());
+  }
+
   submit(): void {
     const start = new Date(this.selectedDateRange?.start ?? '');
     const end = new Date(this.selectedDateRange?.end ?? '');
+    const startISO = start.toISOString();
+    const endISO = end.toISOString();
 
-    const result: DateTimePicker = {
-      start_datetime: start.toISOString(),
-      end_datetime: end.toISOString()
+    const result: DateTimePickerValue = {
+      start: startISO,
+      end: endISO
     };
-
-    if (this.data.optionalFeatures) {
-      if (!this.allDays()) {
-        result.week_days = this.weekdays().filter(day => day.selected).map(day => day.data);
-      }
-
-      if (!this.allHours()) {
-        result.start_hour = start.getHours();
-        result.start_minute = start.getMinutes();
-        result.end_hour = end.getHours();
-        result.end_minute = end.getMinutes();
-      }
-    }
 
     this.data = {...this.data, dateTimePicker: result};
     this.#smartDialog.close(this.data);
@@ -324,5 +364,39 @@ export class DateSelector implements OnInit {
 
   dismiss(): void {
     this.#smartDialog.close(undefined);
+  }
+
+  getHours(): number[] {
+    return Array.from({length: 24}, (_, i) => i);
+  }
+
+  getMinutes(): number[] {
+    return Array.from({length: 60}, (_, i) => i);
+  }
+
+  updateStartTime(): void {
+    if (this.selectedDateRange?.start && this.startHour() !== null && this.startMinute() !== null) {
+      const startDate = new Date(this.selectedDateRange.start);
+      startDate.setHours(this.startHour() ?? 0, this.startMinute() ?? 0, 0, 0);
+      
+      let endDate = this.selectedDateRange.end;
+      const range = new DateRange(startDate, endDate);
+      this.selectedDateRange = range;
+      this.#selectionModel.updateSelection(range, this);
+      this.startDate.set(startDate.toISOString());
+    }
+  }
+
+  updateEndTime(): void {
+    if (this.selectedDateRange?.end && this.endHour() !== null && this.endMinute() !== null) {
+      const endDate = new Date(this.selectedDateRange.end);
+      endDate.setHours(this.endHour() ?? 0, this.endMinute() ?? 0, 0, 0);
+      
+      let startDate = this.selectedDateRange.start;
+      const range = new DateRange(startDate, endDate);
+      this.selectedDateRange = range;
+      this.#selectionModel.updateSelection(range, this);
+      this.endDate.set(endDate.toISOString());
+    }
   }
 }
