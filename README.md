@@ -49,8 +49,8 @@ ng serve
 
 | 工具             | 版本 |
 |------------------|---------|
-| Angular          | ^20     |
-| Angular Material | ^20     |
+| Angular          | ^21     |
+| Angular Material | ^21     |
 | Tailwind CSS     | ^4      |
 | Ng-icon          | ^31     |
 | TypeScript       | ^5      |

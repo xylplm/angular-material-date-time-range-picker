@@ -14,11 +14,11 @@ import {DateSelector} from './date-selector/date-selector.component';
 import {DatePipe, NgClass} from '@angular/common';
 import {SmartDialogService} from '../smart-dialog';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {NgIcon, provideIcons} from '@ng-icons/core';
 import {DateRange, MatDatepickerModule} from '@angular/material/datepicker';
 import {DatePickerModel, DateTimePicker} from './interfaces/datepicker';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {featherCheck, featherCalendar, featherX} from '@ng-icons/feather-icons';
+import {TablerIconComponent, provideTablerIcons} from '@luoxiao123/angular-tabler-icons';
+import {IconCalendarDue, IconX} from '@luoxiao123/angular-tabler-icons/icons';
 
 @Component({
   selector: 'date-picker',
@@ -27,10 +27,8 @@ import {featherCheck, featherCalendar, featherX} from '@ng-icons/feather-icons';
     display: block;
   }`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIcon, NgClass, MatDatepickerModule, DatePipe],
-  providers: [
-    provideIcons({featherCheck, featherCalendar, featherX})
-  ]
+  imports: [TablerIconComponent, NgClass, MatDatepickerModule, DatePipe],
+  providers: [provideTablerIcons({IconCalendarDue, IconX})]
 })
 export class DatePicker {
   readonly #breakpoints = inject(BreakpointObserver);

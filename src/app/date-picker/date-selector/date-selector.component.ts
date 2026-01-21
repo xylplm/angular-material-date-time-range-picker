@@ -13,18 +13,11 @@ import {MatCheckbox} from '@angular/material/checkbox';
 import {DatePipe, NgClass} from '@angular/common';
 import {SmartDialogService} from '../../smart-dialog';
 import {MatTimepickerModule} from '@angular/material/timepicker';
-import {NgIcon, provideIcons} from '@ng-icons/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatNativeDateModule, provideNativeDateAdapter} from '@angular/material/core';
 import {DatePickerModel, DateTimePicker, HourType, TimeRange, Weekday, WeekType} from '../interfaces/datepicker';
-import {
-  featherArrowRight,
-  featherCalendar,
-  featherCheck,
-  featherClock,
-  featherInfo,
-  featherX
-} from '@ng-icons/feather-icons';
+import {TablerIconComponent, provideTablerIcons} from '@luoxiao123/angular-tabler-icons';
+import {IconCheck, IconInfoCircle, IconCalendarDue, IconClock} from '@luoxiao123/angular-tabler-icons/icons';
 import {
   DateRange,
   DefaultMatCalendarRangeStrategy,
@@ -44,11 +37,10 @@ import { Container } from '../container';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     provideNativeDateAdapter(),
-    provideIcons({featherCheck, featherArrowRight, featherX, featherClock, featherInfo, featherCalendar}),
     DefaultMatCalendarRangeStrategy, MatRangeDateSelectionModel
   ],
   imports: [
-    MatCalendar, NgIcon, MatDatepickerModule, MatNativeDateModule, ReactiveFormsModule, FormsModule, NgClass,
+    MatCalendar, TablerIconComponent, MatDatepickerModule, MatNativeDateModule, ReactiveFormsModule, FormsModule, NgClass,
     MatCheckbox, DatePipe, MatInput, MatTimepickerModule, Container
   ],
 })

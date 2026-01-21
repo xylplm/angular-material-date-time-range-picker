@@ -1,26 +1,32 @@
-<container headerTitle="日期时间选择器"
-           headerIcon="featherClock"
-           submitTitle="应用"
-           [disabledSubmit]="!selectedDateRange"
-           [footerExtraContent]="footerExtraContent"
-           (submit)="submit()"
-           (dismiss)="dismiss()">
+<container
+  headerTitle="日期时间选择器"
+  submitTitle="应用"
+  [disabledSubmit]="!selectedDateRange"
+  [footerExtraContent]="footerExtraContent"
+  (submit)="submit()"
+  (dismiss)="dismiss()"
+>
   <!-- 左侧时间范围 -->
   <div class="w-48 h-full overflow-y-auto hidden lg:block" dir="rtl">
     <div class="w-full flex justify-left rounded-lg" dir="ltr">
       <ul class="w-full text-gray-900">
         @for (timeRangeItem of timeRanges(); track timeRangeItem) {
           <li
-            [ngClass]="selectedTimeRange() && selectedTimeRange()?.start === timeRangeItem.start && selectedTimeRange()?.end === timeRangeItem.end ? 'bg-gray-100 dark:bg-zinc-700/40' : ''"
-            class="w-full group hover:bg-gray-100 dark:hover:bg-zinc-700/40 transition-all">
-            <button (click)="selectTimeRange(timeRangeItem)"
-                    [ngClass]="selectedTimeRange() && selectedTimeRange()?.start === timeRangeItem.start && selectedTimeRange()?.end === timeRangeItem.end ? 'text-green-600 pl-4 font-bold' : 'text-stone-700 dark:text-zinc-200'"
-                    class="w-full px-2 py-2 text-xs font-semibold group-hover:pl-4 transition-all whitespace-nowrap flex items-center gap-2">
+            [ngClass]="
+              selectedTimeRange() && selectedTimeRange()?.start === timeRangeItem.start && selectedTimeRange()?.end === timeRangeItem.end ? 'bg-gray-100 dark:bg-zinc-700/40' : ''
+            "
+            class="w-full group hover:bg-gray-100 dark:hover:bg-zinc-700/40 transition-all"
+          >
+            <button
+              (click)="selectTimeRange(timeRangeItem)"
+              [ngClass]="
+                selectedTimeRange() && selectedTimeRange()?.start === timeRangeItem.start && selectedTimeRange()?.end === timeRangeItem.end
+                  ? 'text-green-600 pl-4 font-bold'
+                  : 'text-stone-700 dark:text-zinc-200'
+              "
+              class="w-full px-2 py-2 text-xs font-semibold group-hover:pl-4 transition-all whitespace-nowrap flex items-center gap-2"
+            >
               <span>{{ timeRangeItem.label }}</span>
-
-              @if (selectedTimeRange() && selectedTimeRange()?.start === timeRangeItem.start && selectedTimeRange()?.end === timeRangeItem.end) {
-                <ng-icon name="featherCheck" strokeWidth="3px" size="12px" class="text-green-600"/>
-              }
             </button>
           </li>
         }
@@ -31,17 +37,14 @@
 
   <!-- 日历和时间范围容器 -->
   <div class="w-full lg:w-[calc(100%-12rem)] h-full">
-    <div
-      class="w-full py-4 md:py-0 md:h-full flex flex-col md:flex-row bg-white dark:bg-zinc-700 shadow md:overflow-hidden">
+    <div class="w-full py-4 md:py-0 md:h-full flex flex-col md:flex-row bg-white dark:bg-zinc-700 shadow md:overflow-hidden">
       <!-- 日历容器 -->
       <section class="w-full md:w-1/2 flex-center border-r border-r-gray-200 dark:border-r-zinc-800">
         <div class="w-full md:h-80 mx-auto mb-2 flex-center flex-col p-4 gap-6">
-          <mat-calendar [maxDate]="!future() ? now : undefined" [(selected)]="selectedDateRange"
-                        (selectedChange)="rangeChanged($event)" class="w-full"/>
+          <mat-calendar [maxDate]="!future() ? now : undefined" [(selected)]="selectedDateRange" (selectedChange)="rangeChanged($event)" class="w-full" />
 
-          <p
-            class="w-full flex items-start gap-1 leading-none text-xs text-amber-600 dark:text-orange-300 font-semibold">
-            <ng-icon name="featherInfo" strokeWidth="2px" class="text-current shrink-0"/>
+          <p class="w-full flex items-start gap-1 leading-none text-xs text-amber-600 dark:text-orange-300 font-semibold">
+            <i-tabler name="info-circle" strokeWidth="2px" class="text-current shrink-0"></i-tabler>
 
             <span>如果要选择一天，请双击该天。</span>
           </p>
@@ -59,58 +62,23 @@
 
             <div class="flex items-center rounded-lg overflow-hidden bg-white border border-gray-400">
               <div class="w-1/2 relative flex items-center">
-                <input type="text" matInput [(ngModel)]="startDate" (ngModelChange)="changeDatePart('start', $event)"
-                       [matDatepicker]="startDatePicker" [max]="!future() ? now : undefined"
-                       (click)="startDatePicker.open()" (focus)="startDatePicker.open()"
-                       placeholder="dd-mm-YYYY"
-                       class="w-full pl-2 pr-5 h-[35px] text-sm border-r border-l-0 border-y-0 border-r-gray-400 focus:outline-none focus:ring-0">
+                <input
+                  type="text"
+                  matInput
+                  [(ngModel)]="startDate"
+                  (ngModelChange)="changeDatePart('start', $event)"
+                  [matDatepicker]="startDatePicker"
+                  [max]="!future() ? now : undefined"
+                  (click)="startDatePicker.open()"
+                  (focus)="startDatePicker.open()"
+                  placeholder="dd-mm-YYYY"
+                  class="w-full pl-2 pr-5 h-[35px] text-sm border-r border-l-0 border-y-0 border-r-gray-400 focus:outline-none focus:ring-0"
+                />
                 <mat-datepicker #startDatePicker></mat-datepicker>
 
                 <button class="w-8 h-8 absolute right-0 pointer-events-none inset-y-auto">
-                  <ng-icon name="featherCalendar" strokeWidth="2px" size="15px" class="text-gray-500"/>
-                </button>
-              </div>
-
-              <div class="w-1/2 relative flex items-center">
-                <input matInput [matTimepicker]="startTimePicker" placeholder="00:00"
-                       [(ngModel)]="startDate" (ngModelChange)="changeDatePart('start', $event, true)"
-                       class="w-full pl-2 pr-5 h-[35px] text-sm border-none focus:outline-none focus:ring-0">
-                <mat-timepicker #startTimePicker interval="5min"/>
-
-                <button class="w-8 h-8 absolute right-0 pointer-events-none inset-y-auto">
-                  <ng-icon name="featherClock" strokeWidth="2px" size="15px" class="text-gray-500"/>
-                </button>
-              </div>
-            </div>
-          </div>
-          <!-- 从日期结束 -->
-
-          <!-- 到日期 -->
-          <div class="flex flex-col gap-2 relative px-3 py-2">
-            <label class="text-xs text-stone-600 dark:text-zinc-100 font-medium">结束日期</label>
-
-            <div class="flex items-center rounded-lg overflow-hidden bg-white border border-gray-400">
-              <div class="w-1/2 relative flex items-center">
-                <input type="text" matInput [ngModel]="endDate()" (ngModelChange)="changeDatePart('end', $event)"
-                       [matDatepicker]="endDatePicker" [max]="!future() ? now : undefined"
-                       (click)="endDatePicker.open()" (focus)="endDatePicker.open()"
-                       placeholder="dd-mm-YYYY"
-                       class="w-full pl-2 pr-5 h-[35px] text-sm border-r border-l-0 border-y-0 border-r-gray-400 focus:outline-none focus:ring-0">
-                <mat-datepicker #endDatePicker></mat-datepicker>
-
-                <button class="w-8 h-8 absolute right-0 pointer-events-none inset-y-auto">
-                  <ng-icon name="featherCalendar" strokeWidth="2px" size="15px" class="text-gray-500"/>
-                </button>
-              </div>
-
-              <div class="w-1/2 relative flex items-center">
-                <input matInput [matTimepicker]="endTimePicker" placeholder="00:00"
-                       [(ngModel)]="endDate" (ngModelChange)="changeDatePart('end', $event, true)"
-                       class="w-full pl-2 pr-5 h-[35px] text-sm border-none focus:outline-none focus:ring-0">
-                <mat-timepicker #endTimePicker interval="5min"/>
-
-                <button class="w-8 h-8 absolute right-0 pointer-events-none inset-y-auto">
-                  <ng-icon name="featherClock" strokeWidth="2px" size="15px" class="text-gray-500"/>
+                  <i-tabler name="calendar-due" strokeWidth="2px" size="15px" class="text-gray-500" />-due" strokeWidth="2px" size="15px" class="text-gray-500"/> strokeWidth="2px"
+                  size="15px" class="text-gray-500"/>
                 </button>
               </div>
             </div>
@@ -132,11 +100,18 @@
 
               @if (!allDays()) {
                 <div
-                  class="w-fit flex justify-between overflow-hidden border border-stone-200 bg-white dark:bg-zinc-600 dark:border-zinc-700 divide-x divide-dark-stone dark:divide-zinc-800 rounded-lg">
+                  class="w-fit flex justify-between overflow-hidden border border-stone-200 bg-white dark:bg-zinc-600 dark:border-zinc-700 divide-x divide-dark-stone dark:divide-zinc-800 rounded-lg"
+                >
                   @for (type of weekTypes(); track type.value) {
-                    <button (click)="changeWeekType(type)"
-                            [ngClass]="selectedWeekType()?.value === type.value ? 'bg-amber-600 dark:bg-amber-500 hover:bg-amber-700 dark:hover:bg-amber-600 text-white' : 'bg-white dark:bg-zinc-500 dark:hover:bg-zinc-600 text-gray-600 dark:text-zinc-200 hover:bg-gray-100'"
-                            class="px-1.5 py-2 text-xs leading-3 font-medium transition-colors duration-200 whitespace-nowrap">
+                    <button
+                      (click)="changeWeekType(type)"
+                      [ngClass]="
+                        selectedWeekType()?.value === type.value
+                          ? 'bg-amber-600 dark:bg-amber-500 hover:bg-amber-700 dark:hover:bg-amber-600 text-white'
+                          : 'bg-white dark:bg-zinc-500 dark:hover:bg-zinc-600 text-gray-600 dark:text-zinc-200 hover:bg-gray-100'
+                      "
+                      class="px-1.5 py-2 text-xs leading-3 font-medium transition-colors duration-200 whitespace-nowrap"
+                    >
                       {{ type.label }}
                     </button>
                   }
@@ -149,11 +124,18 @@
               <!-- 星期 -->
               <div class="w-full">
                 <div
-                  class="flex justify-between overflow-hidden border border-stone-200 bg-white dark:bg-zinc-600 dark:border-zinc-700 divide-x divide-dark-stone dark:divide-zinc-800 rounded-lg">
+                  class="flex justify-between overflow-hidden border border-stone-200 bg-white dark:bg-zinc-600 dark:border-zinc-700 divide-x divide-dark-stone dark:divide-zinc-800 rounded-lg"
+                >
                   @for (type of weekdays(); track type.value) {
-                    <button (click)="changeWeekdays(type)"
-                            [ngClass]="type.selected ? 'bg-amber-600 dark:bg-amber-500 hover:bg-amber-700 dark:hover:bg-amber-600 text-white' : 'bg-white dark:bg-zinc-500 dark:hover:bg-zinc-600 text-gray-600 dark:text-zinc-200 hover:bg-gray-100'"
-                            class="w-[calc(100%/7)] px-1.5 py-2 text-xs text-center leading-3 font-medium transition-colors duration-200 whitespace-nowrap">
+                    <button
+                      (click)="changeWeekdays(type)"
+                      [ngClass]="
+                        type.selected
+                          ? 'bg-amber-600 dark:bg-amber-500 hover:bg-amber-700 dark:hover:bg-amber-600 text-white'
+                          : 'bg-white dark:bg-zinc-500 dark:hover:bg-zinc-600 text-gray-600 dark:text-zinc-200 hover:bg-gray-100'
+                      "
+                      class="w-[calc(100%/7)] px-1.5 py-2 text-xs text-center leading-3 font-medium transition-colors duration-200 whitespace-nowrap"
+                    >
                       {{ type.label }}
                     </button>
                   }
@@ -164,7 +146,7 @@
           </div>
           <!-- 自定义时间结束 -->
 
-            <!-- 自定义小时 -->
+          <!-- 自定义小时 -->
           <div class="flex flex-col px-3">
             <!-- 自定义天 -->
             <div class="flex flex-col gap-2 justify-between">
@@ -176,11 +158,18 @@
 
               @if (!allHours()) {
                 <div
-                  class="w-fit flex justify-between overflow-hidden border border-stone-200 bg-white dark:bg-zinc-600 dark:border-zinc-700 divide-x divide-dark-stone dark:divide-zinc-800 rounded-lg">
+                  class="w-fit flex justify-between overflow-hidden border border-stone-200 bg-white dark:bg-zinc-600 dark:border-zinc-700 divide-x divide-dark-stone dark:divide-zinc-800 rounded-lg"
+                >
                   @for (type of hourTypes(); track type.value) {
-                    <button (click)="applyHourPreset(type)"
-                            [ngClass]="selectedHour()?.value === type.value ? 'bg-amber-600 dark:bg-amber-500 hover:bg-amber-700 dark:hover:bg-amber-600 text-white' : 'bg-white dark:bg-zinc-500 dark:hover:bg-zinc-600 text-gray-600 dark:text-zinc-200 hover:bg-gray-100'"
-                            class="px-1.5 py-2 text-xs leading-3 font-medium transition-colors duration-200 whitespace-nowrap">
+                    <button
+                      (click)="applyHourPreset(type)"
+                      [ngClass]="
+                        selectedHour()?.value === type.value
+                          ? 'bg-amber-600 dark:bg-amber-500 hover:bg-amber-700 dark:hover:bg-amber-600 text-white'
+                          : 'bg-white dark:bg-zinc-500 dark:hover:bg-zinc-600 text-gray-600 dark:text-zinc-200 hover:bg-gray-100'
+                      "
+                      class="px-1.5 py-2 text-xs leading-3 font-medium transition-colors duration-200 whitespace-nowrap"
+                    >
                       {{ type.label }}
                     </button>
                   }

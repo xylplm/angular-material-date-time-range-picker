@@ -1,28 +1,30 @@
-import {ChangeDetectionStrategy, Component, inject, model, output, TemplateRef} from '@angular/core';
-import {NgIcon} from '@ng-icons/core';
-import {NgClass, NgTemplateOutlet} from '@angular/common';
-import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
+import { ChangeDetectionStrategy, Component, inject, model, output, TemplateRef } from '@angular/core';
+import { TablerIconComponent, provideTablerIcons } from '@luoxiao123/angular-tabler-icons';
+import { IconX, IconClock, IconCalendarDue, IconInfoCircle } from '@luoxiao123/angular-tabler-icons/icons';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'container',
   templateUrl: './container.component.html',
-  styles: `:host {height: 100%;}`,
+  styles: `
+    :host {
+      height: 100%;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIcon, NgClass, NgTemplateOutlet]
+  imports: [TablerIconComponent, NgClass, NgTemplateOutlet],
+  providers: [provideTablerIcons({ IconInfoCircle, IconCalendarDue, IconX, IconClock })]
 })
 export class Container {
   readonly #breakpoints = inject(BreakpointObserver);
 
-  public isMobile = this.#breakpoints.isMatched([
-    Breakpoints.Handset,
-    Breakpoints.Tablet
-  ]);
+  public isMobile = this.#breakpoints.isMatched([Breakpoints.Handset, Breakpoints.Tablet]);
 
   hasHeader = model<boolean | undefined>(true);
   hasFooter = model<boolean | undefined>(true);
-
-  headerIcon = model<string>('');
   headerTitle = model<string>('');
+
   headerExtraContent = model<TemplateRef<any> | undefined>();
 
   footerExtraContent = model<TemplateRef<any> | undefined>();
@@ -32,7 +34,6 @@ export class Container {
   submitBg = model<string>('bg-green-700');
   submitColor = model<string>('text-white');
   submitTitleColor = model<string>('text-white');
-  submitIcon = model<string>('feather-check');
   disabledSubmit = model<boolean | undefined>(false);
 
   hasSecondaryButton = model<boolean | undefined>(false);
@@ -40,7 +41,6 @@ export class Container {
   secondaryButtonBg = model<string>('');
   secondaryButtonColor = model<string>('text-white');
   secondaryButtonTitleColor = model<string>('text-white');
-  secondaryButtonIcon = model<string>('');
   disabledSecondaryButton = model<boolean | undefined>(false);
 
   dismiss = output<void>();
