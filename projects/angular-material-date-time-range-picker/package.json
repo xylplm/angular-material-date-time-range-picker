@@ -1,0 +1,35 @@
+{
+  "name": "@luoxiao123/angular-material-date-time-range-picker",
+  "version": "1.0.0",
+  "description": "An Angular Material date-time range picker library component",
+  "type": "module",
+  "keywords": [
+    "angular",
+    "material",
+    "date-picker",
+    "date-time-picker",
+    "range-picker",
+    "date-range"
+  ],
+  "author": "xylplm",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xylplm/angular-material-date-time-range-picker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/xylplm/angular-material-date-time-range-picker/issues"
+  },
+  "homepage": "https://github.com/xylplm/angular-material-date-time-range-picker",
+  "peerDependencies": {
+    "@angular/common": "21",
+    "@angular/core": "21",
+    "@angular/material": "21",
+    "@angular/cdk": "21"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public",
+    "provenance": true
+  }
+}
