@@ -103,7 +103,7 @@
 }
 
 // 在 mat-form-field 内时，让 Material 处理样式
-:host([matinput]) {
+:host(.mat-mdc-form-field) {
   .date-range-container {
     border: none;
     border-radius: 0;
@@ -114,6 +114,23 @@
     &:focus-within {
       border-color: transparent;
       box-shadow: none;
+    }
+  }
+}
+
+// 当前缀有 .mat-mdc-form-field 时，或者当设置了 hide-default-styles 属性时，隐藏默认样式
+:host-context(.mat-mdc-form-field),
+:host([hide-default-styles]) {
+  .date-range-container {
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+
+    &:hover,
+    &:focus-within {
+      border-color: transparent !important;
+      box-shadow: none !important;
     }
   }
 }
