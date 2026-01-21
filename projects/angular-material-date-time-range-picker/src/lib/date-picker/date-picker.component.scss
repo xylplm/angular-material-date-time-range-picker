@@ -6,19 +6,19 @@
     align-items: center;
     gap: 12px;
     padding: 8px 12px;
-    border: 1px solid rgba(0, 0, 0, 0.12);
+    border: 1px solid var(--mat-divider-color, rgba(0, 0, 0, 0.12));
     border-radius: 4px;
     background-color: var(--mat-sys-surface-container-lowest);
     cursor: pointer;
     transition: border-color 0.2s ease;
 
     &:hover {
-      border-color: rgba(0, 0, 0, 0.24);
+      border-color: var(--mat-divider-color, rgba(0, 0, 0, 0.24));
     }
 
     &:focus-within {
-      border-color: #1976d2;
-      box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+      border-color: var(--mat-sys-primary, #1976d2);
+      box-shadow: 0 0 0 3px var(--mat-sys-primary-container, rgba(25, 118, 210, 0.1));
     }
 
     &[aria-disabled="true"] {
@@ -37,7 +37,7 @@
     font-size: 0.875rem;
     font-weight: 500;
     line-height: 1.5;
-    color: rgba(0, 0, 0, 0.87);
+    color: var(--mat-sys-on-surface, rgba(0, 0, 0, 0.87));
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -46,7 +46,7 @@
   .date-range-secondary {
     font-size: 0.75rem;
     line-height: 1.5;
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.6));
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -60,7 +60,7 @@
   .date-range-placeholder {
     flex: 1;
     font-size: 0.875rem;
-    color: rgba(0, 0, 0, 0.4);
+    color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.4));
   }
 
   .date-range-actions {
@@ -71,7 +71,7 @@
   }
 
   .date-range-icon {
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.6));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -89,14 +89,14 @@
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.2s ease;
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.6));
 
     &:hover {
-      background-color: rgba(0, 0, 0, 0.08);
+      background-color: var(--mat-sys-surface-variant, rgba(0, 0, 0, 0.08));
     }
 
     &:focus-visible {
-      outline: 2px solid #1976d2;
+      outline: 2px solid var(--mat-sys-primary, #1976d2);
       outline-offset: 2px;
     }
   }
@@ -126,6 +126,7 @@
     border-radius: 0 !important;
     padding: 0 !important;
     box-shadow: none !important;
+    background-color: var(--mat-sys-surface, rgba(0, 0, 0, 0));
 
     &:hover,
     &:focus-within {

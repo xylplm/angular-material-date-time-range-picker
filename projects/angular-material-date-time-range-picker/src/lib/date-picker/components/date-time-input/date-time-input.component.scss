@@ -13,7 +13,7 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.6));
   }
 
   .date-time-input-container {
@@ -21,20 +21,20 @@
     align-items: center;
     width: 100%;
     max-width: 100%;
-    border: 1px solid rgba(0, 0, 0, 0.12);
+    border: 1px solid var(--mat-divider-color, rgba(0, 0, 0, 0.12));
     border-radius: 4px;
     overflow: hidden;
-    background-color: rgba(0, 0, 0, 0.02);
+    background-color: var(--mat-sys-surface-container-low, rgba(0, 0, 0, 0.02));
     transition: border-color 0.2s ease;
     box-sizing: border-box;
 
     &:hover {
-      border-color: rgba(0, 0, 0, 0.24);
+      border-color: var(--mat-divider-color, rgba(0, 0, 0, 0.24));
     }
 
     &:focus-within {
-      border-color: #1976d2;
-      background-color: #fff;
+      border-color: var(--mat-sys-primary, #1976d2);
+      background-color: var(--mat-sys-surface, #fff);
     }
   }
 
@@ -54,14 +54,14 @@
     padding: 0;
     border: none;
     background: transparent;
-    color: rgba(0, 0, 0, 0.87);
+    color: var(--mat-sys-on-surface, rgba(0, 0, 0, 0.87));
     font-size: 0.875rem;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
 
     &::placeholder {
-      color: rgba(0, 0, 0, 0.4);
+      color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.4));
     }
 
     &:focus {
@@ -80,14 +80,14 @@
     justify-content: center;
     background: transparent;
     border: none;
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.6));
     pointer-events: none;
   }
 
   .date-time-input-divider {
     width: 1px;
     height: 20px;
-    background-color: rgba(0, 0, 0, 0.12);
+    background-color: var(--mat-divider-color, rgba(0, 0, 0, 0.12));
   }
 
   .date-time-input-time {
@@ -104,7 +104,7 @@
     height: 36px;
     border: none;
     background: transparent;
-    color: rgba(0, 0, 0, 0.87);
+    color: var(--mat-sys-on-surface, rgba(0, 0, 0, 0.87));
     font-size: 0.875rem;
     font-weight: 500;
     padding: 0 2px;
@@ -117,7 +117,7 @@
   }
 
   .date-time-input-separator {
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.6));
     font-weight: 500;
     padding: 0 2px;
     user-select: none;
