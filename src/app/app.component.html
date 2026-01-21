@@ -90,7 +90,7 @@
         <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">🎨 选择主题</label>
         <div class="grid grid-cols-2 gap-2">
           @for (theme of themes(); track $index) {
-            <button (click)="changeTheme(theme)"
+            <button (click)="selectedTheme.set(theme)"
                     [class]="getThemeButtonClass(theme) + ' px-4 sm:px-6 py-3 sm:py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-3 text-sm sm:text-base shadow-sm hover:shadow-md hover:scale-105 active:scale-95 border-2'"
                     [attr.aria-pressed]="selectedTheme() === theme"
                     [class.border-blue-500]="selectedTheme() === theme"

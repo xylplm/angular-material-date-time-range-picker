@@ -1,7 +1,7 @@
 <div class="flex flex-col gap-2 relative px-3 py-2">
-  <label class="text-xs text-stone-600 dark:text-zinc-100 font-medium">{{ label() }}</label>
+  <label class="text-xs font-medium">{{ label() }}</label>
 
-  <div class="flex items-center rounded-lg overflow-hidden bg-white border border-gray-400">
+  <div class="flex items-center rounded-lg overflow-hidden border">
     <!-- 日期部分 -->
     <div class="w-1/2 relative flex items-center">
       <input
@@ -13,12 +13,12 @@
         (click)="datePicker.open()"
         (focus)="datePicker.open()"
         placeholder="yyyy-MM-dd"
-        class="w-full pl-2 pr-5 h-[35px] text-sm focus:outline-none focus:ring-0 border-r border-r-gray-400"
+        class="w-full pl-2 pr-5 h-[35px] text-sm focus:outline-none focus:ring-0 border-r"
       />
       <mat-datepicker #datePicker></mat-datepicker>
 
       <button class="w-8 h-8 absolute right-0 pointer-events-none inset-y-auto">
-        <i-tabler name="calendar-due" strokeWidth="2px" size="15px" class="text-gray-500" />
+        <i-tabler name="calendar-due" strokeWidth="2px" size="15px" />
       </button>
     </div>
 
@@ -26,7 +26,7 @@
     <div class="w-1/2 flex items-center gap-1 px-2">
       <!-- 小时 -->
       <select
-        class="w-1/2 h-[35px] text-sm border-0 focus:outline-none focus:ring-0 bg-white"
+        class="w-1/2 h-[35px] text-sm border-0 focus:outline-none focus:ring-0"
         [ngModel]="hourValue()"
         (ngModelChange)="onHourChange($event)"
       >
@@ -37,11 +37,11 @@
       </select>
 
       <!-- 分隔符 -->
-      <span class="text-gray-400">:</span>
+      <span>:</span>
 
       <!-- 分钟 -->
       <select
-        class="w-1/2 h-[35px] text-sm border-0 focus:outline-none focus:ring-0 bg-white"
+        class="w-1/2 h-[35px] text-sm border-0 focus:outline-none focus:ring-0"
         [ngModel]="minuteValue()"
         (ngModelChange)="onMinuteChange($event)"
       >

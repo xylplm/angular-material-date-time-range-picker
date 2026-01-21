@@ -2,33 +2,30 @@
   display: block;
 
   .date-range-container {
-    border: 1px solid var(--date-picker-border-color, #d0d0d0);
-    border-radius: var(--date-picker-border-radius, 4px);
-    padding: var(--date-picker-padding, 8px 12px);
-    background-color: var(--date-picker-bg-color, #fff);
+    border: 1px solid var(--date-picker-border-color, #ccc);
+    border-radius: 4px;
+    padding: 8px 12px;
+    background-color: transparent;
+    cursor: pointer;
 
-    &:not([aria-disabled="true"]) {
-      cursor: pointer;
+    &:hover {
+      border-color: var(--date-picker-border-hover-color, #999);
+    }
 
-      &:hover {
-        border-color: var(--date-picker-border-hover-color, #999);
-      }
+    &:focus-within {
+      outline: 2px solid var(--date-picker-focus-color, #1976d2);
+      outline-offset: 1px;
     }
 
     &[aria-disabled="true"] {
       cursor: not-allowed;
       opacity: 0.5;
-    }
-
-    &:focus-within {
-      border: none;
-      outline: var(--date-picker-focus-outline-width, 2px) solid var(--date-picker-focus-color, #1976d2);
-      outline-offset: 1px;
+      pointer-events: none;
     }
   }
 }
 
-// 在 mat-form-field 内时（有 matinput 属性），移除边框等样式
+// 在 mat-form-field 内时，让 Material 处理样式
 :host([matinput]) .date-range-container {
   border: none;
   border-radius: 0;

@@ -9,14 +9,14 @@
   <!-- 左侧时间范围 -->
   <div class="w-48 h-full overflow-y-auto hidden lg:block" dir="rtl">
     <div class="w-full flex justify-left rounded-lg" dir="ltr">
-      <ul class="w-full text-gray-900">
+      <ul class="w-full">
         @for (timeRangeItem of timeRanges(); track timeRangeItem) {
           <li
-            [class]="selectedTimeRange() && selectedTimeRange()?.start === timeRangeItem.start && selectedTimeRange()?.end === timeRangeItem.end ? 'w-full group hover:bg-gray-100 dark:hover:bg-zinc-700/40 transition-all bg-gray-100 dark:bg-zinc-700/40' : 'w-full group hover:bg-gray-100 dark:hover:bg-zinc-700/40 transition-all'"
+            [class]="selectedTimeRange() && selectedTimeRange()?.start === timeRangeItem.start && selectedTimeRange()?.end === timeRangeItem.end ? 'w-full group transition-all selected' : 'w-full group transition-all'"
           >
             <button
               (click)="selectTimeRange(timeRangeItem)"
-              [class]="selectedTimeRange() && selectedTimeRange()?.start === timeRangeItem.start && selectedTimeRange()?.end === timeRangeItem.end ? 'w-full px-2 py-2 text-xs font-semibold group-hover:pl-4 transition-all whitespace-nowrap flex items-center gap-2 text-green-600 pl-4 font-bold' : 'w-full px-2 py-2 text-xs font-semibold group-hover:pl-4 transition-all whitespace-nowrap flex items-center gap-2 text-stone-700 dark:text-zinc-200'"
+              [class]="selectedTimeRange() && selectedTimeRange()?.start === timeRangeItem.start && selectedTimeRange()?.end === timeRangeItem.end ? 'w-full px-2 py-2 text-xs font-semibold group-hover:pl-4 transition-all whitespace-nowrap flex items-center gap-2 pl-4 font-bold selected-item' : 'w-full px-2 py-2 text-xs font-semibold group-hover:pl-4 transition-all whitespace-nowrap flex items-center gap-2'"
             >
               <span>{{ timeRangeItem.label }}</span>
             </button>
@@ -29,9 +29,9 @@
 
   <!-- 日历和时间范围容器 -->
   <div class="w-full lg:w-[calc(100%-12rem)] h-full">
-    <div class="w-full py-4 md:py-0 md:h-full flex flex-col md:flex-row bg-white dark:bg-zinc-700 shadow md:overflow-hidden">
+    <div class="w-full py-4 md:py-0 md:h-full flex flex-col md:flex-row shadow md:overflow-hidden">
       <!-- 日历容器 -->
-      <section class="w-full md:w-1/2 flex-center border-r border-r-gray-200 dark:border-r-zinc-800">
+      <section class="w-full md:w-1/2 flex-center border-r">
         <div class="w-full md:h-80 mx-auto mb-2 flex-center flex-col p-4 gap-6">
           <mat-calendar 
             [maxDate]="!future() ? now : undefined" 
@@ -40,7 +40,7 @@
             class="w-full" 
           />
 
-          <p class="w-full flex items-start gap-1 leading-none text-xs text-amber-600 dark:text-orange-300 font-semibold">
+          <p class="w-full flex items-start gap-1 leading-none text-xs font-semibold">
             <i-tabler name="info-circle" strokeWidth="2px" class="text-current shrink-0"></i-tabler>
 
             <span>如果要选择一天，请双击该天。</span>
@@ -83,17 +83,17 @@
           <div class="flex flex-col gap-2 px-3 mb-2">
             <!-- 所有天复选框 -->
             <mat-checkbox [(ngModel)]="allDays" class="relative -left-1">
-              <span class="text-xs whitespace-nowrap dark:text-zinc-200 font-semibold">所有天</span>
+              <span class="text-xs whitespace-nowrap font-semibold">所有天</span>
             </mat-checkbox>
 
             @if (!allDays()) {
               <div
-                class="w-fit flex justify-between overflow-hidden border border-stone-200 bg-white dark:bg-zinc-600 dark:border-zinc-700 divide-x divide-stone-200 dark:divide-zinc-800 rounded-lg"
+                class="w-fit flex justify-between overflow-hidden border divide-x rounded-lg"
               >
                 @for (day of weekdays(); track day.value) {
                   <button
                     (click)="day.selected = !day.selected"
-                    [class]="day.selected ? 'w-[calc(100%/7)] px-1.5 py-2 text-xs text-center leading-3 font-medium transition-colors duration-200 whitespace-nowrap bg-amber-600 dark:bg-amber-500 hover:bg-amber-700 dark:hover:bg-amber-600 text-white' : 'w-[calc(100%/7)] px-1.5 py-2 text-xs text-center leading-3 font-medium transition-colors duration-200 whitespace-nowrap bg-white dark:bg-zinc-500 dark:hover:bg-zinc-600 text-gray-600 dark:text-zinc-200 hover:bg-gray-100'"
+                    [class]="day.selected ? 'w-[calc(100%/7)] px-1.5 py-2 text-xs text-center leading-3 font-medium transition-colors duration-200 whitespace-nowrap selected-day-button' : 'w-[calc(100%/7)] px-1.5 py-2 text-xs text-center leading-3 font-medium transition-colors duration-200 whitespace-nowrap'"
                   >
                     {{ day.label }}
                   </button>
@@ -106,7 +106,7 @@
           <div class="flex flex-col px-3">
             <!-- 所有小时复选框 -->
             <mat-checkbox [(ngModel)]="allHours" class="relative -left-1">
-              <span class="text-xs whitespace-nowrap dark:text-zinc-200 font-semibold">所有小时</span>
+              <span class="text-xs whitespace-nowrap font-semibold">所有小时</span>
             </mat-checkbox>
           </div>
         }
@@ -117,10 +117,10 @@
 
 <ng-template #footerExtraContent>
   <div class="flex items-center gap-1.5 text-xs mr-auto px-1">
-    <span class="hidden md:block text-gray-500 dark:text-gray-300">范围：</span>
+    <span class="hidden md:block">范围：</span>
 
     @if (selectedDateRange) {
-      <div class="text-stone-600 dark:text-zinc-100 flex flex-col md:flex-row items-center md:gap-1.5 font-semibold">
+      <div class="flex flex-col md:flex-row items-center md:gap-1.5 font-semibold">
         @if (selectedDateRange.start) {
           <span>{{ selectedDateRange.start | date: dateFormat }}</span>
         }

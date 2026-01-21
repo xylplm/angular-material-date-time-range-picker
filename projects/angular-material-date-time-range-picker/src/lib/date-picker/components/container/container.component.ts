@@ -31,16 +31,16 @@ export class Container {
   hasDismiss = model<boolean | undefined>(true);
   hasSubmit = model<boolean | undefined>(true);
   submitTitle = model<string>('Save');
-  submitBg = model<string>('bg-green-700');
-  submitColor = model<string>('text-white');
-  submitTitleColor = model<string>('text-white');
+  submitBg = model<string>('');
+  submitColor = model<string>('');
+  submitTitleColor = model<string>('');
   disabledSubmit = model<boolean | undefined>(false);
 
   hasSecondaryButton = model<boolean | undefined>(false);
   secondaryButtonTitle = model<string>('');
   secondaryButtonBg = model<string>('');
-  secondaryButtonColor = model<string>('text-white');
-  secondaryButtonTitleColor = model<string>('text-white');
+  secondaryButtonColor = model<string>('');
+  secondaryButtonTitleColor = model<string>('');
   disabledSecondaryButton = model<boolean | undefined>(false);
 
   dismiss = output<void>();
