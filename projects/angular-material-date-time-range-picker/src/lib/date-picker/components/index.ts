@@ -1,2 +1,2 @@
-export { Container } from './container';
-export { DateTimeInputComponent } from './date-time-input';
+export { Container } from './container/container.component';
+export { DateTimeInputComponent } from './date-time-input/date-time-input.component';
