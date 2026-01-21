@@ -5,7 +5,7 @@ import {DatePicker, DateTimePicker} from './date-picker';
 @Component({
   selector: 'app-root',
   imports: [DatePicker, NgClass],
-  templateUrl: './app.html'
+  templateUrl: './app.component.html'
 })
 export class App implements OnInit, OnDestroy {
   mediaQueryList!: MediaQueryList;
