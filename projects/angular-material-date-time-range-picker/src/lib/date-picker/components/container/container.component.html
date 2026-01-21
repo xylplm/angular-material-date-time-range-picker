@@ -1,64 +1,68 @@
-<aside class="w-full h-full flex flex-col justify-between overflow-hidden">
+<aside class="container-wrapper">
   @if (hasHeader()) {
-    <header class="w-full py-3 md:py-1.5 select-none flex gap-x-3 justify-between items-center pl-3">
-      <i-tabler name="clock" strokeWidth="2px" size="15px" class="text-current" />
+    <header class="container-header">
+      <div class="container-header-start">
+        <i-tabler name="clock" strokeWidth="2px" size="18px" class="container-header-icon" />
 
-      @if (headerTitle()) {
-        <h3 class="text-sm font-semibold">{{ headerTitle() }}</h3>
-      }
+        @if (headerTitle()) {
+          <h2 class="container-header-title">{{ headerTitle() }}</h2>
+        }
+      </div>
 
       @if (headerExtraContent()) {
-        <div class="flex items-center gap-1.5 text-xs flex-1 px-1">
+        <div class="container-header-extra">
           <ng-container *ngTemplateOutlet="headerExtraContent() ?? null"></ng-container>
         </div>
       }
 
-      <button (click)="dismiss.emit()" type="button" class="rounded-full ml-auto px-3 py-3 md:py-1.5 flex-center">
-        <i-tabler name="x" strokeWidth="3px" size="15px" class="text-current" />
+      <button (click)="dismiss.emit()" type="button" class="container-header-close" [attr.aria-label]="'关闭'" tabindex="0">
+        <i-tabler name="x" strokeWidth="2.5px" size="18px" class="container-header-close-icon" />
       </button>
     </header>
   }
 
-  <main class="w-full flex-1 flex overflow-y-auto border-y">
+  <main class="container-main">
     <ng-content />
   </main>
 
   @if (hasFooter()) {
-    <footer class="w-full select-none flex gap-x-3 justify-end items-center px-6 md:px-3 py-3 md:py-2.5">
+    <footer class="container-footer">
       @if (footerExtraContent()) {
-        <div class="flex items-center gap-1.5 text-xs mr-auto px-1">
+        <div class="container-footer-extra">
           <ng-container *ngTemplateOutlet="footerExtraContent() ?? null"></ng-container>
         </div>
       }
 
-      @if (hasDismiss()) {
-        <button (click)="dismiss.emit()" type="button" class="text-sm/6 leading-none px-3 md:px-2 py-3 md:py-1.5">
-          <span class="text-xs leading-none font-semibold">取消</span>
-        </button>
-      }
+      <div class="container-footer-actions">
+        @if (hasDismiss()) {
+          <button mat-stroked-button (click)="dismiss.emit()" type="button">
+            取消
+          </button>
+        }
 
-      @if (hasSecondaryButton()) {
-        <button
-          (click)="secondaryButton.emit()"
-          type="button"
-          [style.backgroundColor]="secondaryButtonBg()"
-          [class]="secondaryButtonColor() + ' rounded-lg px-3 md:px-2 py-3 md:py-1.5 text-sm/6 font-bold flex items-center gap-x-2'"
-        >
-          <span [class]="secondaryButtonTitleColor() + ' text-xs leading-none font-semibold'">{{ secondaryButtonTitle() }}</span>
-        </button>
-      }
+        @if (hasSecondaryButton()) {
+          <button 
+            mat-stroked-button
+            (click)="secondaryButton.emit()"
+            type="button"
+            [disabled]="disabledSecondaryButton()"
+          >
+            {{ secondaryButtonTitle() }}
+          </button>
+        }
 
-      @if (hasSubmit()) {
-        <button
-          (click)="submit.emit()"
-          type="button"
-          [disabled]="disabledSubmit()"
-          [style.backgroundColor]="submitBg()"
-          [class]="submitColor() + ' rounded-lg px-3 md:px-2 py-3 md:py-1.5 text-sm/6 font-bold flex items-center gap-x-2'"
-        >
-          <span [class]="submitTitleColor() + ' text-xs leading-none font-semibold'">{{ submitTitle() }}</span>
-        </button>
-      }
+        @if (hasSubmit()) {
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="submit.emit()"
+            type="button"
+            [disabled]="disabledSubmit()"
+          >
+            {{ submitTitle() }}
+          </button>
+        }
+      </div>
     </footer>
   }
 </aside>

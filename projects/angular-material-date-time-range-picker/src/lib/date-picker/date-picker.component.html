@@ -7,28 +7,37 @@
      (keydown.space)="!disabled && openDateDialogSelector()"
      tabindex="0"
      [attr.role]="'button'"
-     class="date-range-container flex items-center gap-2">
+     class="date-range-container">
 
   @if (selectedDateRange()) {
-    <div class="flex-1 truncate text-sm">
-      <div class="text-[0.875rem] leading-tight">
-        <span>{{ selectedDateRange()?.start | date: dateFormat }}</span>
+    <div class="date-range-content">
+      <div class="date-range-primary">
+        {{ selectedDateRange()?.start | date: dateFormat }}
       </div>
-      <div class="text-[0.75rem] leading-tight opacity-75">
-        <span>{{ selectedDateRange()?.end | date: dateFormat }}</span>
+      <div class="date-range-secondary">
+        {{ selectedDateRange()?.end | date: dateFormat }}
       </div>
     </div>
+  } @else if (placeholder) {
+    <span class="date-range-placeholder">{{ placeholder }}</span>
+  } @else {
+    <div class="date-range-content"></div>
   }
 
-  <i-tabler name="calendar-due" strokeWidth="2px" size="15px" class="text-current shrink-0 ml-auto"/>
+  <div class="date-range-actions">
+    <i-tabler name="calendar-due" strokeWidth="2px" size="18px" class="date-range-icon"/>
 
-  @if (selectedDateRange()) {
-    <i-tabler (click)="selectedDateRange.set(undefined); $event.stopPropagation()"
-             name="x" strokeWidth="3px" size="15px" class="text-current cursor-pointer shrink-0"
-             [attr.aria-label]="'清除日期选择'"
-             tabindex="0"
-             (keydown.enter)="selectedDateRange.set(undefined); $event.stopPropagation()"
-             (keydown.space)="selectedDateRange.set(undefined); $event.stopPropagation()"
-             [attr.role]="'button'"/>
-  }
+    @if (selectedDateRange()) {
+      <button (click)="selectedDateRange.set(undefined); $event.stopPropagation()"
+              type="button"
+              class="date-range-clear-btn"
+              [attr.aria-label]="'清除日期选择'"
+              tabindex="0"
+              (keydown.enter)="selectedDateRange.set(undefined); $event.stopPropagation()"
+              (keydown.space)="selectedDateRange.set(undefined); $event.stopPropagation()"
+              [attr.role]="'button'">
+        <i-tabler name="x" strokeWidth="2.5px" size="18px" class="date-range-icon"/>
+      </button>
+    }
+  </div>
 </div>

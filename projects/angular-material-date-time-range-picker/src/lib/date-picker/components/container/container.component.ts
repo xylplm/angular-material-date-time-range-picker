@@ -3,17 +3,19 @@ import { TablerIconComponent, provideTablerIcons } from '@luoxiao123/angular-tab
 import { IconX, IconClock, IconCalendarDue, IconInfoCircle } from '@luoxiao123/angular-tabler-icons/icons';
 import { NgTemplateOutlet } from '@angular/common';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'date-time-picker-container',
   templateUrl: './container.component.html',
+  styleUrls: ['./container.component.scss'],
   styles: `
     :host {
       height: 100%;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TablerIconComponent, NgTemplateOutlet],
+  imports: [TablerIconComponent, NgTemplateOutlet, MatButtonModule],
   providers: [provideTablerIcons({ IconInfoCircle, IconCalendarDue, IconX, IconClock })]
 })
 export class Container {

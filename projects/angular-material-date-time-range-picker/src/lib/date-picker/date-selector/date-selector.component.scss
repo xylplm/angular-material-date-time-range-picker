@@ -1,0 +1,306 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+/* 左侧快捷选择面板 */
+.date-selector-sidebar {
+  width: 12rem;
+  height: 100%;
+  display: none;
+  background-color: #fafafa;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: 1024px) {
+    display: flex;
+  }
+}
+
+.date-selector-sidebar-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.date-selector-sidebar-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  background-color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.date-selector-sidebar-title {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.date-selector-sidebar-list {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.date-selector-sidebar-item {
+  margin: 0;
+  padding: 0;
+}
+
+.date-selector-sidebar-btn {
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+  text-align: left;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:hover {
+    background-color: rgba(25, 118, 210, 0.08);
+    color: #1976d2;
+    padding-left: 16px;
+  }
+
+  &.selected {
+    background-color: rgba(25, 118, 210, 0.16);
+    color: #1976d2;
+    font-weight: 600;
+    padding-left: 16px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #1976d2;
+    outline-offset: -2px;
+  }
+}
+
+.date-selector-sidebar-text {
+  display: block;
+}
+
+/* 主要内容区域 */
+.date-selector-main {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  background-color: #fff;
+
+  @media (min-width: 1024px) {
+    width: calc(100% - 12rem);
+  }
+}
+
+.date-selector-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+}
+
+/* 日历容器 */
+.date-selector-calendar-section {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+  box-sizing: border-box;
+
+  @media (min-width: 768px) {
+    width: 50%;
+  }
+
+  @media (max-width: 767px) {
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  }
+}
+
+.date-selector-calendar-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.date-selector-calendar {
+  width: 100%;
+}
+
+.date-selector-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 16px;
+  background-color: rgba(25, 118, 210, 0.08);
+  border: 1px solid rgba(25, 118, 210, 0.16);
+  border-radius: 4px;
+}
+
+.date-selector-hint-icon {
+  flex-shrink: 0;
+  color: #1976d2;
+  margin-top: 2px;
+}
+
+.date-selector-hint-text {
+  font-size: 0.75rem;
+  line-height: 1.25;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* 时间设置容器 */
+.date-selector-time-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  @media (min-width: 768px) {
+    width: 50%;
+  }
+}
+
+.date-selector-inputs {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+/* 自定义选项 */
+.date-selector-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 12px 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  background-color: #fafafa;
+}
+
+.date-selector-option-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.date-selector-option-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(0, 0, 0, 0.6);
+  margin-left: 4px;
+}
+
+.date-selector-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.date-selector-weekday-btn {
+  padding: 8px 4px;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color: rgba(0, 0, 0, 0.6);
+  text-align: center;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #1976d2;
+    background-color: rgba(25, 118, 210, 0.08);
+  }
+
+  &.selected {
+    background-color: #1976d2;
+    border-color: #1976d2;
+    color: white;
+    font-weight: 600;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #1976d2;
+    outline-offset: 2px;
+  }
+}
+
+/* 页脚范围显示 */
+.date-selector-footer-range {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  margin-right: auto;
+  padding: 0 8px;
+}
+
+.date-selector-footer-label {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(0, 0, 0, 0.6);
+  display: none;
+
+  @media (min-width: 768px) {
+    display: block;
+  }
+}
+
+.date-selector-footer-value {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  font-weight: 600;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+  }
+}
+
+.date-selector-footer-date {
+  color: rgba(0, 0, 0, 0.87);
+  white-space: nowrap;
+}
+
+.date-selector-footer-separator {
+  color: rgba(0, 0, 0, 0.6);
+  display: none;
+
+  @media (min-width: 768px) {
+    display: block;
+  }
+}

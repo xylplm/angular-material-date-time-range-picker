@@ -23,10 +23,10 @@ A powerful and flexible **date time range picker** component library.
 
 ## Description
 
-Built with **Angular 21**, **Angular Material**, and **Tailwind CSS v4**, providing the following features:
+Built with **Angular 21** and **Angular Material**, providing the following features:
 
 - 🎯 **Intuitive Date Range Selection Interface** - Support for quick presets and precise selection
-- 📱 **Responsive Design** - Automatically switches to BottomSheet on mobile, uses Dialog on desktop
+- 📱 **Responsive Design** - Automatically switches to fullscreen on mobile, uses Dialog on desktop
 - 🧭 **Complete Time Selection** - Support for precise selection of dates, hours, and minutes (24-hour format)
 - 📅 **Smart Presets** - Quick selection for relative time, fixed dates, and current periods
 - 💾 **Two-Way Data Binding** - Supports ControlValueAccessor and ngModel
@@ -296,7 +296,7 @@ A: This library is optimized for Angular 21+. Using it with Angular 20 may have 
 A: The current version uses a Chinese interface. Pull requests to add multi-language support are welcome.
 
 ### Q: Can I customize the styles?
-A: Yes. You can customize styles using Tailwind CSS and custom CSS.
+A: Yes. The component uses standard Material Design styles and supports customization through CSS variables and custom CSS.
 
 ### Q: How do I handle timezone issues?
 A: The component uses ISO 8601 format with full timezone support.

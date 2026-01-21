@@ -10,7 +10,8 @@ import {DOCUMENT} from '@angular/common';
 @Component({
   selector: 'app-root',
   imports: [DatePickerComponent, MatFormFieldModule, MatInputModule, MatIconModule, ReactiveFormsModule, FormsModule],
-  templateUrl: './app.component.html'
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
 export class App implements OnInit {
   readonly #document = inject(DOCUMENT);
@@ -41,12 +42,6 @@ export class App implements OnInit {
     const endDate = new Date(picker.end).toLocaleDateString('zh-CN');
     return `${startDate} ~ ${endDate}`;
   });
-
-  getThemeButtonClass = (theme: 'light' | 'dark') => {
-    return this.selectedTheme() === theme
-      ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-lg shadow-blue-500/20 dark:shadow-blue-500/30'
-      : 'bg-stone-50 dark:bg-zinc-700 text-slate-600 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-zinc-600';
-  };
 
   constructor() {
     // 当主题变化时，自动更新 DOM 和 localStorage

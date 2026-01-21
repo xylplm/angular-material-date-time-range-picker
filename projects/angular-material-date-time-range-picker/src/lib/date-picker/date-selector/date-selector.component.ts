@@ -10,13 +10,11 @@ import {
 import {MatInput} from '@angular/material/input';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {DatePipe, DecimalPipe} from '@angular/common';
-import {SmartDialogService} from '../../shared';
 import {MatTimepickerModule} from '@angular/material/timepicker';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatNativeDateModule, provideNativeDateAdapter} from '@angular/material/core';
 import {DatePickerModel, DateTimePickerValue, HourType, TimeRange, Weekday} from '../interfaces';
 import {TablerIconComponent} from '@luoxiao123/angular-tabler-icons';
-import {IconInfoCircle, IconCalendarDue} from '@luoxiao123/angular-tabler-icons/icons';
 import {
   DateRange,
   DefaultMatCalendarRangeStrategy,
@@ -26,10 +24,12 @@ import {
 } from '@angular/material/datepicker';
 import {Container} from '../components';
 import {DateTimeInputComponent} from '../components';
+import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 @Component({
   selector: 'date-time-picker-selector',
   templateUrl: './date-selector.component.html',
+  styleUrls: ['./date-selector.component.scss'],
   styles: `:host {
     display: block;
     height: 100%;
@@ -47,9 +47,11 @@ import {DateTimeInputComponent} from '../components';
 })
 export class DateSelector implements OnInit {
   readonly #cdr = inject(ChangeDetectorRef);
-  readonly #smartDialog = inject(SmartDialogService);
+  readonly #dialogRef = inject(MatDialogRef<DateSelector>);
+  readonly #data = inject(MAT_DIALOG_DATA) as DatePickerModel;
   readonly #selectionModel = inject(MatRangeDateSelectionModel<Date>);
-  public data = this.#smartDialog.getData() as DatePickerModel;
+
+  public data = this.#data;
 
   // 从 data 中获取格式，如果没有则使用默认值
   dateFormat = this.data?.dateFormat ?? 'yyyy年M月d日 HH:mm';
@@ -359,11 +361,11 @@ export class DateSelector implements OnInit {
     };
 
     this.data = {...this.data, dateTimePicker: result};
-    this.#smartDialog.close(this.data);
+    this.#dialogRef.close(this.data);
   }
 
   dismiss(): void {
-    this.#smartDialog.close(undefined);
+    this.#dialogRef.close(undefined);
   }
 
   getHours(): number[] {

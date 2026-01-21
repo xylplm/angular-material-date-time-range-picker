@@ -1,5 +1,4 @@
 @use '@angular/material' as mat;
-@use "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -22,6 +21,7 @@ html.dark {
 html, body {
   height: 100%;
   margin: 0;
+  padding: 0;
 }
 
 body {
@@ -34,24 +34,41 @@ body {
 }
 
 button {
-  @apply select-none cursor-pointer;
+  user-select: none;
+  cursor: pointer;
 }
 
 a {
-  @apply cursor-pointer;
+  cursor: pointer;
 }
 
 [disabled] {
-  @apply cursor-not-allowed opacity-60;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
-/* Demo-specific Utility Styles */
+/* Utility Styles */
 .flex-center {
-  @apply flex justify-center items-center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .date-range-picker {
   max-width: 400px;
   margin: auto;
   text-align: center;
+}
+
+/* Material Dialog Customization */
+::ng-deep .date-time-picker-dialog {
+  .mdc-dialog__container {
+    max-height: 90vh;
+  }
+
+  .mdc-dialog__surface {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
 }

@@ -13,6 +13,7 @@ import {DecimalPipe} from '@angular/common';
 @Component({
   selector: 'date-time-input',
   templateUrl: './date-time-input.component.html',
+  styleUrls: ['./date-time-input.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [

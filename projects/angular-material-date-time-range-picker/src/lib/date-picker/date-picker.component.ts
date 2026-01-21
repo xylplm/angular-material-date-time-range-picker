@@ -17,7 +17,6 @@ import {
 import {take, tap} from 'rxjs';
 import {DateSelector} from './date-selector';
 import {DatePipe} from '@angular/common';
-import {SmartDialogService} from '../shared';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DateRange, MatDatepickerModule} from '@angular/material/datepicker';
 import {DatePickerModel, DateTimePickerValue} from './interfaces';
@@ -35,6 +34,7 @@ import {
   MatFormFieldControl,
   MatFormField
 } from '@angular/material/form-field';
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import {Subject} from 'rxjs';
 import {FocusMonitor} from '@angular/cdk/a11y';
 
@@ -44,7 +44,7 @@ import {FocusMonitor} from '@angular/cdk/a11y';
   styleUrls: ['./date-picker.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TablerIconComponent, MatDatepickerModule, DatePipe],
+  imports: [TablerIconComponent, MatDatepickerModule, DatePipe, MatDialogModule],
   providers: [
     provideTablerIcons({IconCalendarDue, IconX}),
     {
@@ -60,7 +60,7 @@ import {FocusMonitor} from '@angular/cdk/a11y';
 })
 export class DatePickerComponent implements ControlValueAccessor, MatFormFieldControl<DateTimePickerValue | null> {
   readonly #breakpoints = inject(BreakpointObserver);
-  readonly #smartDialog = inject(SmartDialogService);
+  readonly #dialog = inject(MatDialog);
   readonly #focusMonitor = inject(FocusMonitor);
   readonly #elementRef = inject(ElementRef);
   readonly #matFormField = inject(MatFormField, {optional: true});
@@ -76,6 +76,7 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   @Input() dateFormat: string = 'yyyy年M月d日 HH:mm';
   @Input() valueFormat: string = 'yyyy-MM-dd HH:mm:ss';
   @Input() dateTimePicker: DateTimePickerValue | undefined;
+  @Input() placeholder: string = '';
   optionalFeatures = input<boolean>(true);
   future = input<boolean>(false);
 
@@ -94,7 +95,6 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   readonly #shouldLabelFloatSignal = signal(false);
   readonly #focusedSignal = signal(false);
   readonly #id = signal<string>(`date-time-picker-${Math.random().toString(36).substr(2, 9)}`);
-  readonly placeholder = '';
 
   // ControlValueAccessor 回调函数
   private onChange?: (value: any) => void;
@@ -143,10 +143,15 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
       dateFormat: this.dateFormat,
       valueFormat: this.valueFormat
     };
-    const dialogRef = this.#smartDialog.open(DateSelector, {
-      width: '850px',
-      height: isMobile ? '90vh' : '470px',
-      data
+    
+    const dialogRef = this.#dialog.open(DateSelector, {
+      width: isMobile ? '100%' : '850px',
+      height: isMobile ? '90vh' : '520px',
+      maxWidth: '100vw',
+      maxHeight: '100vh',
+      data,
+      disableClose: false,
+      panelClass: 'date-time-picker-dialog'
     });
 
     dialogRef.afterOpened().pipe(
