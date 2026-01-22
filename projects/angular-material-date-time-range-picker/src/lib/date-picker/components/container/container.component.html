@@ -1,0 +1,55 @@
+<aside class="container-wrapper">
+  @if (hasHeader()) {
+    <header class="container-header">
+      <div class="container-header-start">
+        <i-tabler name="clock" strokeWidth="2px" size="18px" class="container-header-icon" />
+
+        @if (headerTitle()) {
+          <h2 class="container-header-title">{{ headerTitle() }}</h2>
+        }
+      </div>
+
+      @if (headerExtraContent()) {
+        <div class="container-header-extra">
+          <ng-container *ngTemplateOutlet="headerExtraContent() ?? null"></ng-container>
+        </div>
+      }
+
+      <button (click)="dismiss.emit()" type="button" class="container-header-close" [attr.aria-label]="'关闭'" tabindex="0">
+        <i-tabler name="x" strokeWidth="2.5px" size="18px" class="container-header-close-icon" />
+      </button>
+    </header>
+  }
+
+  <main class="container-main">
+    <ng-content />
+  </main>
+
+  @if (hasFooter()) {
+    <footer class="container-footer">
+      @if (footerExtraContent()) {
+        <div class="container-footer-extra">
+          <ng-container *ngTemplateOutlet="footerExtraContent() ?? null"></ng-container>
+        </div>
+      }
+
+      <div class="container-footer-actions">
+        @if (hasDismiss()) {
+          <button mat-stroked-button color="primary" (click)="dismiss.emit()" type="button"> 取消 </button>
+        }
+
+        @if (hasSecondaryButton()) {
+          <button mat-stroked-button color="primary" (click)="secondaryButton.emit()" type="button" [disabled]="disabledSecondaryButton()">
+            {{ secondaryButtonTitle() }}
+          </button>
+        }
+
+        @if (hasSubmit()) {
+          <button mat-raised-button color="primary" (click)="submit.emit()" type="button" [disabled]="disabledSubmit()">
+            {{ submitTitle() }}
+          </button>
+        }
+      </div>
+    </footer>
+  }
+</aside>

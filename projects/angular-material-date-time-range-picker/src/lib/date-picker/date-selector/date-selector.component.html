@@ -1,0 +1,131 @@
+<date-time-picker-container
+  headerTitle="日期时间选择器"
+  submitTitle="应用"
+  [disabledSubmit]="!selectedDateRange"
+  [footerExtraContent]="footerExtraContent"
+  (submit)="submit()"
+  (dismiss)="dismiss()"
+>
+  <!-- 左侧快捷选择面板 -->
+  <aside class="date-selector-sidebar" dir="rtl">
+    <div class="date-selector-sidebar-inner" dir="ltr">
+      <div class="date-selector-sidebar-header">
+        <span class="date-selector-sidebar-title">快捷选择</span>
+      </div>
+      <ul class="date-selector-sidebar-list">
+        @for (timeRangeItem of timeRanges(); track timeRangeItem) {
+          <li class="date-selector-sidebar-item">
+            <button
+              type="button"
+              (click)="selectTimeRange(timeRangeItem)"
+              [class.selected]="selectedTimeRange() && selectedTimeRange()?.start === timeRangeItem.start && selectedTimeRange()?.end === timeRangeItem.end"
+              class="date-selector-sidebar-btn"
+            >
+              <span class="date-selector-sidebar-text">{{ timeRangeItem.label }}</span>
+            </button>
+          </li>
+        }
+      </ul>
+    </div>
+  </aside>
+  <!-- 左侧快捷选择面板结束 -->
+
+  <!-- 主要内容区域 -->
+  <div class="date-selector-main">
+    <div class="date-selector-content">
+      <!-- 日历容器 -->
+      <section class="date-selector-calendar-section">
+        <div class="date-selector-calendar-wrapper">
+          <mat-calendar [maxDate]="!future() ? now : undefined" [(selected)]="selectedDateRange" (selectedChange)="rangeChanged($event)" class="date-selector-calendar" />
+
+          <div class="date-selector-hint">
+            <i-tabler name="info-circle" strokeWidth="2px" class="date-selector-hint-icon"></i-tabler>
+            <span class="date-selector-hint-text">如果要选择一天，请双击该天。</span>
+          </div>
+        </div>
+      </section>
+      <!-- 日历容器结束 -->
+
+      <!-- 时间设置容器 -->
+      <section class="date-selector-time-section">
+        <!-- 开始和结束输入日期 -->
+        <div class="date-selector-inputs">
+          <!-- 从日期 -->
+          <date-time-input
+            label="开始日期"
+            [dateValue]="startDate()"
+            [hourValue]="startHour()"
+            [minuteValue]="startMinute()"
+            [hours]="getHours()"
+            [minutes]="getMinutes()"
+            (dateChange)="changeDatePart('start', $event)"
+            (timeChange)="updateStartTime()"
+          />
+
+          <!-- 结束日期 -->
+          <date-time-input
+            label="结束日期"
+            [dateValue]="endDate()"
+            [hourValue]="endHour()"
+            [minuteValue]="endMinute()"
+            [hours]="getHours()"
+            [minutes]="getMinutes()"
+            (dateChange)="changeDatePart('end', $event)"
+            (timeChange)="updateEndTime()"
+          />
+        </div>
+
+        @if (optionalFeatures()) {
+          <!-- 自定义选项 -->
+          <div class="date-selector-options">
+            <!-- 自定义天数 -->
+            <div class="date-selector-option-group">
+              <mat-checkbox [(ngModel)]="allDays" class="date-selector-option-checkbox">
+                <span class="date-selector-option-label">所有天</span>
+              </mat-checkbox>
+
+              @if (!allDays()) {
+                <div class="date-selector-weekdays">
+                  @for (day of weekdays(); track day.value) {
+                    <button type="button" (click)="day.selected = !day.selected" [class.selected]="day.selected" class="date-selector-weekday-btn">
+                      {{ day.label }}
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- 自定义小时 -->
+            <div class="date-selector-option-group">
+              <mat-checkbox [(ngModel)]="allHours" class="date-selector-option-checkbox">
+                <span class="date-selector-option-label">所有小时</span>
+              </mat-checkbox>
+            </div>
+          </div>
+        }
+      </section>
+    </div>
+  </div>
+</date-time-picker-container>
+
+<ng-template #footerExtraContent>
+  <div class="date-selector-footer-range">
+    <span class="date-selector-footer-label">范围：</span>
+
+    @if (selectedDateRange) {
+      <div class="date-selector-footer-value">
+        @if (selectedDateRange.start) {
+          <span class="date-selector-footer-date">{{ selectedDateRange.start | date: dateFormat }}</span>
+        }
+
+        @if (selectedDateRange.start && selectedDateRange.end) {
+          <span class="date-selector-footer-separator">-</span>
+        }
+
+        @if (selectedDateRange.end) {
+          <span class="date-selector-footer-date">{{ selectedDateRange.end | date: dateFormat }}</span>
+        }
+      </div>
+    }
+  </div>
+</ng-template>

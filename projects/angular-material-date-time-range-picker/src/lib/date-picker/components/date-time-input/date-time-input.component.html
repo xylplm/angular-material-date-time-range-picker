@@ -1,0 +1,50 @@
+<div class="date-time-input-wrapper">
+  <label class="date-time-input-label">{{ label() }}</label>
+
+  <div class="date-time-input-container">
+    <!-- 日期部分 -->
+    <div class="date-time-input-date">
+      <input
+        type="text"
+        matInput
+        [ngModel]="dateValue()"
+        (ngModelChange)="onDateChange($event)"
+        [matDatepicker]="datePicker"
+        (click)="datePicker.open()"
+        (focus)="datePicker.open()"
+        placeholder="选择日期"
+        class="date-time-input-field"
+      />
+      <mat-datepicker #datePicker></mat-datepicker>
+
+      <button type="button" class="date-time-input-icon-btn" tabindex="-1" aria-hidden="true">
+        <i-tabler name="calendar-due" strokeWidth="2px" size="16px" />
+      </button>
+    </div>
+
+    <!-- 分隔符 -->
+    <div class="date-time-input-divider"></div>
+
+    <!-- 时间部分 -->
+    <div class="date-time-input-time">
+      <!-- 小时 -->
+      <select class="date-time-input-select date-time-input-select-hour" [ngModel]="hourValue()" (ngModelChange)="onHourChange($event)" [attr.aria-label]="'小时'">
+        <option [value]="null" disabled>--</option>
+        @for (hour of hours(); track hour) {
+          <option [value]="hour">{{ hour | number: '2.0-0' }}</option>
+        }
+      </select>
+
+      <!-- 分隔符 -->
+      <span class="date-time-input-separator">:</span>
+
+      <!-- 分钟 -->
+      <select class="date-time-input-select date-time-input-select-minute" [ngModel]="minuteValue()" (ngModelChange)="onMinuteChange($event)" [attr.aria-label]="'分钟'">
+        <option [value]="null" disabled>--</option>
+        @for (minute of minutes(); track minute) {
+          <option [value]="minute">{{ minute | number: '2.0-0' }}</option>
+        }
+      </select>
+    </div>
+  </div>
+</div>

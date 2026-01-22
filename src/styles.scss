@@ -1,0 +1,74 @@
+@use '@angular/material' as mat;
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+// Apply Material theme with light and dark mode support
+html {
+  color-scheme: light dark;
+  @include mat.theme((
+    color: mat.$blue-palette,
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+// Override color-scheme for dark mode when .dark class is present
+html.dark {
+  color-scheme: dark;
+}
+
+/* Global Styles */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Focus and Basic Interactions */
+:focus {
+  outline: none;
+}
+
+button {
+  user-select: none;
+  cursor: pointer;
+}
+
+a {
+  cursor: pointer;
+}
+
+[disabled] {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Utility Styles */
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.date-range-picker {
+  max-width: 400px;
+  margin: auto;
+  text-align: center;
+}
+
+/* Material Dialog Customization */
+::ng-deep .date-time-picker-dialog {
+  .mdc-dialog__container {
+    max-height: 90vh;
+  }
+
+  .mdc-dialog__surface {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+}

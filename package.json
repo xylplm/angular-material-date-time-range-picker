@@ -1,0 +1,51 @@
+{
+  "name": "angular-material-date-time-range-picker-workspace",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve demo-app --port=4290",
+    "lib:copy-assets": "cp README.md LICENSE dist/angular-material-date-time-range-picker",
+    "lib:build": "ng build angular-material-date-time-range-picker --configuration production && npm run lib:copy-assets",
+    "lib:publish": "npm publish dist/angular-material-date-time-range-picker",
+    "build": "ng build demo-app",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test angular-material-date-time-range-picker",
+    "lint": "ng lint",
+    "contributors:add": "all-contributors add",
+    "contributors:generate": "all-contributors generate"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/cdk": "^21.1.0",
+    "@angular/common": "^21.1.0",
+    "@angular/compiler": "^21.1.0",
+    "@angular/core": "^21.1.0",
+    "@angular/forms": "^21.1.0",
+    "@angular/material": "^21.1.0",
+    "@angular/platform-browser": "^21.1.0",
+    "@angular/router": "^21.1.0",
+    "@luoxiao123/angular-tabler-icons": "^3.36.2",
+    "rxjs": "~7.8.2",
+    "tslib": "^2.8.1"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^21.1.0",
+    "@angular/build": "^21.1.0",
+    "@angular/cli": "^21.1.0",
+    "@angular/compiler-cli": "^21.1.0",
+    "@angular/language-service": "^21.1.0",
+    "@types/hammerjs": "^2.0.46",
+    "@types/node": "^25.0.9",
+    "@vitest/ui": "^4.0.17",
+    "angular-eslint": "21.1.0",
+    "eslint": "^9.39.2",
+    "hammerjs": "^2.0.8",
+    "jsdom": "^27.4.0",
+    "ng-packagr": "^21.1.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "8.53.1",
+    "vitest": "^4.0.17",
+    "vitest-globals": "^9.9.0"
+  }
+}
