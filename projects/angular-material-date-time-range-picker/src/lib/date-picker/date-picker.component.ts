@@ -49,8 +49,8 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
 
   @Input() required: boolean = false;
   @Input() disabled: boolean = false;
-  @Input() dateFormat: string = 'yyyy年M月d日 HH:mm';
-  @Input() valueFormat: string = 'yyyy-MM-dd HH:mm:ss';
+  @Input() dateFormat: string = 'yyyy-MM-dd HH:mm';
+  @Input() valueFormat: string = 'yyyy-MM-dd HH:mm';
   @Input() dateTimePicker: DateTimePickerValue | undefined;
   @Input() placeholder: string = '';
   optionalFeatures = input<boolean>(true);

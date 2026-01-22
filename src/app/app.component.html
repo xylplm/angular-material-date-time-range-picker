@@ -65,7 +65,8 @@
               </div>
             }
 
-            @if (selectedDateRangeFormField() && dateRangeForm.valid) {
+            <!-- 修改这里的条件判断，即使表单无效也显示已选择的日期 -->
+            @if (selectedDateRangeFormField()) {
               <div class="app-info-message">
                 <span class="app-info-icon">🎉</span>
                 <div class="app-info-content">
@@ -74,6 +75,14 @@
                 </div>
               </div>
             }
+            
+            <!-- 填充测试按钮 -->
+            <div class="app-section">
+              <label class="app-label">🔧 填充测试</label>
+              <button type="button" class="app-fill-test-button" (click)="fillWithYesterdayToNow()">
+                填充昨天到现在的时间范围
+              </button>
+            </div>
           </form>
         </div>
       </div>

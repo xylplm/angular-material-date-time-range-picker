@@ -11,7 +11,7 @@ import { DOCUMENT } from '@angular/common';
   selector: 'app-root',
   imports: [DatePickerComponent, MatFormFieldModule, MatInputModule, MatIconModule, ReactiveFormsModule, FormsModule],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class App implements OnInit {
   readonly #document = inject(DOCUMENT);
@@ -28,6 +28,7 @@ export class App implements OnInit {
     if (!picker?.start || !picker?.end) {
       return '';
     }
+    // 将字符串转换为Date对象以进行格式化
     const startDate = new Date(picker.start).toLocaleDateString('zh-CN');
     const endDate = new Date(picker.end).toLocaleDateString('zh-CN');
     return `${startDate} ~ ${endDate}`;
@@ -38,6 +39,7 @@ export class App implements OnInit {
     if (!picker?.start || !picker?.end) {
       return '';
     }
+    // 将字符串转换为Date对象以进行格式化
     const startDate = new Date(picker.start).toLocaleDateString('zh-CN');
     const endDate = new Date(picker.end).toLocaleDateString('zh-CN');
     return `${startDate} ~ ${endDate}`;
@@ -76,6 +78,42 @@ export class App implements OnInit {
       this.dateRangeForm.get('dateRange')?.markAsTouched();
       console.log('Form value updated:', dateTimePicker);
     }
+  }
+
+  /**
+   * 填充昨天到现在的日期时间范围
+   */
+  fillWithYesterdayToNow(): void {
+    const now = new Date();
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+    
+    // 设置时间为昨天的00:00:00
+    yesterday.setHours(0, 0, 0, 0);
+    
+    // 将日期转换为 ISO 字符串格式
+    const dateRange: DateTimePickerValue = {
+      start: yesterday.toISOString(),
+      end: now.toISOString()
+    };
+    
+    // 更新基础用法的模型值
+    this.dateTimePicker.set(dateRange);
+    
+    // 更新表单中的值
+    this.dateRangeForm.patchValue({
+      dateRange: dateRange
+    });
+    
+    // 确保表单控件标记为已触摸，以触发验证
+    this.dateRangeForm.get('dateRange')?.markAsTouched();
+    
+    // 手动触发验证状态更新
+    this.dateRangeForm.get('dateRange')?.updateValueAndValidity();
+    
+    console.log('Filled with yesterday to now:', dateRange);
+    console.log('Form value after update:', this.dateRangeForm.get('dateRange')?.value);
+    console.log('Form valid?', this.dateRangeForm.valid);
   }
 
   /**
