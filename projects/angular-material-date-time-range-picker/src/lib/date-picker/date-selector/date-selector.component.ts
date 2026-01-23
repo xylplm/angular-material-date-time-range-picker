@@ -103,14 +103,14 @@ export class DateSelector implements OnInit {
     { label: '最近1年', start: 'offset:-1years', end: 'offset:now' },
     { label: '最近2年', start: 'offset:-2years', end: 'offset:now' },
     { label: '最近5年', start: 'offset:-5years', end: 'offset:now' },
-    { label: '昨天', start: 'offset:-1days/day', end: 'offset:-1days/day' },
-    { label: '前天', start: 'offset:-2days/day', end: 'offset:-2days/day' },
-    { label: '上周同一天', start: 'offset:-7days/day', end: 'offset:-7days/day' },
-    { label: '今天', start: 'offset:today', end: 'offset:today' },
-    { label: '今天至今', start: 'offset:today', end: 'offset:now' },
-    { label: '本周至今', start: 'offset:thisweek', end: 'offset:now' },
-    { label: '本月至今', start: 'offset:thismonth', end: 'offset:now' },
-    { label: '今年至今', start: 'offset:thisyear', end: 'offset:now' }
+    { label: '昨天', start: 'offset:-1days/start', end: 'offset:-1days/end' },
+    { label: '前天', start: 'offset:-2days/start', end: 'offset:-2days/end' },
+    { label: '上周同一天', start: 'offset:-7days/start', end: 'offset:-7days/end' },
+    { label: '今天', start: 'offset:0days/start', end: 'offset:0days/end' },
+    { label: '今天至今', start: 'offset:0days/start', end: 'offset:now' },
+    { label: '本周至今', start: 'startof:week', end: 'offset:now' },
+    { label: '本月至今', start: 'startof:month', end: 'offset:now' },
+    { label: '今年至今', start: 'startof:year', end: 'offset:now' }
   ];
   selectedTimeRange = model<TimeRange | undefined>(undefined);
 
@@ -184,45 +184,95 @@ export class DateSelector implements OnInit {
     const now = new Date();
     const parseTime = (time: string): Date => {
       if (!time) return new Date(now);
-      if (time.startsWith('offset:')) {
-        const offset = time.replace('offset:', '').trim();
-        if (offset === 'now') return new Date(now);
 
-        const regex = /([+-]?)(\d+)(months?|days?|years?|weeks?|hours?|minutes?)/i;
-        const match = regex.exec(offset);
-        if (!match) return new Date(now);
-
-        const sign = match[1] === '-' ? -1 : 1;
-        const value = parseInt(match[2], 10) * sign;
-        const unit = match[3].toLowerCase();
+      // 处理 startof: 前缀 (本周/本月/今年)
+      if (time.startsWith('startof:')) {
+        const unit = time.replace('startof:', '').trim().toLowerCase();
         const result = new Date(now);
+        result.setHours(0, 0, 0, 0);
 
         switch (unit) {
-          case 'minutes':
-          case 'minute':
-            result.setMinutes(result.getMinutes() + value);
-            break;
-          case 'hours':
-          case 'hour':
-            result.setHours(result.getHours() + value);
-            break;
-          case 'days':
-          case 'day':
-            result.setDate(result.getDate() + value);
-            break;
-          case 'weeks':
           case 'week':
-            result.setDate(result.getDate() + value * 7);
+            // 假设周一为一周的开始
+            const day = result.getDay() || 7; // 0是周日，改为7
+            if (day !== 1) {
+              result.setHours(-24 * (day - 1));
+            }
             break;
-          case 'months':
           case 'month':
-            result.setMonth(result.getMonth() + value);
+            result.setDate(1);
             break;
-          case 'years':
           case 'year':
-            result.setFullYear(result.getFullYear() + value);
+            result.setMonth(0, 1);
             break;
         }
+        return result;
+      }
+
+      // 处理 offset: 前缀
+      if (time.startsWith('offset:')) {
+        const offsetStr = time.replace('offset:', '').trim();
+        if (offsetStr === 'now') return new Date(now);
+
+        // 检查是否有 /start 或 /end 后缀
+        let suffix = '';
+        let cleanOffset = offsetStr;
+        if (offsetStr.endsWith('/start')) {
+          suffix = 'start';
+          cleanOffset = offsetStr.replace('/start', '');
+        } else if (offsetStr.endsWith('/end')) {
+          suffix = 'end';
+          cleanOffset = offsetStr.replace('/end', '');
+        }
+
+        const regex = /([+-]?)(\d+)(months?|days?|years?|weeks?|hours?|minutes?)/i;
+        const match = regex.exec(cleanOffset);
+        
+        // 如果没有匹配到数字偏移量，但有后缀（例如 offset:0days/start），尝试解析
+        // 注意：上面的正则也能匹配 0days
+        
+        const result = new Date(now);
+        
+        if (match) {
+          const sign = match[1] === '-' ? -1 : 1;
+          const value = parseInt(match[2], 10) * sign;
+          const unit = match[3].toLowerCase();
+
+          switch (unit) {
+            case 'minutes':
+            case 'minute':
+              result.setMinutes(result.getMinutes() + value);
+              break;
+            case 'hours':
+            case 'hour':
+              result.setHours(result.getHours() + value);
+              break;
+            case 'days':
+            case 'day':
+              result.setDate(result.getDate() + value);
+              break;
+            case 'weeks':
+            case 'week':
+              result.setDate(result.getDate() + value * 7);
+              break;
+            case 'months':
+            case 'month':
+              result.setMonth(result.getMonth() + value);
+              break;
+            case 'years':
+            case 'year':
+              result.setFullYear(result.getFullYear() + value);
+              break;
+          }
+        }
+
+        // 应用后缀修正
+        if (suffix === 'start') {
+          result.setHours(0, 0, 0, 0);
+        } else if (suffix === 'end') {
+          result.setHours(23, 59, 59, 999);
+        }
+
         return result;
       }
       return new Date(time);
