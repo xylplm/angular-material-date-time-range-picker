@@ -160,20 +160,6 @@ import { DatePickerComponent } from '@luoxiao123/angular-material-date-time-rang
 export class DateRangeModule {}
 ```
 
-## Usage Guide
-
-### Standalone Components
-
-The recommended approach for modern Angular applications. Use it directly in your component's imports.
-
-### mat-form-field Integration
-
-The component is perfectly compatible with Angular Material's `mat-form-field` and automatically applies form styles and error messages.
-
-### Two-Way Data Binding
-
-Supports both `[(ngModel)]` and reactive forms with `[formControl]`.
-
 ## API Documentation
 
 ### Input Properties
@@ -183,6 +169,7 @@ Supports both `[(ngModel)]` and reactive forms with `[formControl]`.
 | `ngModel` / `formControl` | `DateTimePickerValue \| null` | - | Selected date time range (supports two-way binding) |
 | `required` | `boolean` | `false` | Whether the field is required |
 | `disabled` | `boolean` | `false` | Whether the component is disabled |
+| `placeholder` | `string` | `''` | Input placeholder text |
 | `future` | `boolean` | `false` | Whether to allow selecting future dates |
 
 ### Output Events
@@ -197,29 +184,10 @@ Supports both `[(ngModel)]` and reactive forms with `[formControl]`.
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `start` | `string` | Start date time (ISO 8601) |
-| `end` | `string` | End date time (ISO 8601) |
-
-#### TimeRange
-
-| Property | Type | Description |
-|----------|------|-------------|
-| `label` | `string` | Display label |
-| `start` | `string` | Start time expression |
-| `end` | `string` | End time expression |
+| `start` | `string` | Formatted start date time (based on MAT_DATE_FORMATS + HH:mm) |
+| `end` | `string` | Formatted end date time (based on MAT_DATE_FORMATS + HH:mm) |
 
 ## Configuration
-
-### Basic Example
-
-```typescript
-<date-time-picker 
-  [(ngModel)]="selectedRange"
-  [required]="true"
-  [disabled]="isLoading"
-  (selectionChange)="onRangeSelected($event)"
-/>
-```
 
 ### Customize Date Format
 
@@ -314,7 +282,7 @@ A: The current version uses a Chinese interface. Pull requests to add multi-lang
 A: Yes. The component uses standard Material Design styles and supports customization through CSS variables and custom CSS.
 
 ### Q: How do I handle timezone issues?
-A: The component uses ISO 8601 format with full timezone support.
+A: The component returns date-time strings based on local time, formatted according to `MAT_DATE_FORMATS`. If you need to handle time zones, it is recommended to use libraries like `date-fns` or `moment.js` to convert the values after retrieval.
 
 ## Contributing
 

@@ -160,20 +160,6 @@ import { DatePickerComponent } from '@luoxiao123/angular-material-date-time-rang
 export class DateRangeModule {}
 ```
 
-## 使用指南
-
-### Standalone Components
-
-推荐用于现代 Angular 应用的方式。直接在组件 imports 中使用。
-
-### mat-form-field 集成
-
-组件完美适配 Angular Material 的 `mat-form-field`，可自动应用表单样式和错误提示。
-
-### 双向数据绑定
-
-支持 `[(ngModel)]` 和响应式表单 `[formControl]`。
-
 ## API 文档
 
 ### 输入属性
@@ -183,6 +169,7 @@ export class DateRangeModule {}
 | `ngModel` / `formControl` | `DateTimePickerValue \| null` | - | 选中的日期时间范围（支持双向绑定） |
 | `required` | `boolean` | `false` | 是否为必填项 |
 | `disabled` | `boolean` | `false` | 是否禁用组件 |
+| `placeholder` | `string` | `''` | 输入框占位符 |
 | `future` | `boolean` | `false` | 是否允许选择未来日期 |
 
 ### 输出事件
@@ -197,30 +184,10 @@ export class DateRangeModule {}
 
 | 属性 | 类型 | 说明 |
 |------|------|------|
-| `start` | `string` | 开始日期时间 (ISO 8601) |
-| `end` | `string` | 结束日期时间 (ISO 8601) |
-
-#### TimeRange
-
-| 属性 | 类型 | 说明 |
-|------|------|------|
-| `label` | `string` | 显示标签 |
-| `start` | `string` | 开始时间表达式 |
-| `end` | `string` | 结束时间表达式 |
+| `start` | `string` | 格式化后的开始日期时间 (基于 MAT_DATE_FORMATS + HH:mm) |
+| `end` | `string` | 格式化后的结束日期时间 (基于 MAT_DATE_FORMATS + HH:mm) |
 
 ## 配置
-
-### 基础示例
-
-```typescript
-<date-time-picker 
-  [(ngModel)]="selectedRange"
-  [required]="true"
-  [disabled]="isLoading"
-  [future]="false"
-  (selectionChange)="onRangeSelected($event)"
-/>
-```
 
 ### 自定义日期格式
 
@@ -315,7 +282,7 @@ A: 当前版本使用中文界面。欢迎提交 PR 添加多语言支持。
 A: 支持。组件使用标准的 Material Design 样式，可通过 CSS 变量和自定义 CSS 进行定制。
 
 ### Q: 如何处理时区问题？
-A: 组件使用 ISO 8601 格式，完整支持时区信息。
+A: 组件返回的日期时间字符串基于本地时间（Local Time），格式化结果取决于 `MAT_DATE_FORMATS` 配置。如果需要处理时区，建议在获取值后使用 `date-fns` 或 `moment.js` 等库进行转换。
 
 ## 贡献
 
