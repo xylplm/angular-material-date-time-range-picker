@@ -12,12 +12,9 @@
 >
   @if (selectedDateRange()) {
     <div class="date-range-content">
-      <div class="date-range-primary">
-        {{ displayStart() }}
-      </div>
-      <div class="date-range-secondary">
-        {{ displayEnd() }}
-      </div>
+      <span class="date-range-value">{{ displayStart() }}</span>
+      <span class="date-range-separator"> ~ </span>
+      <span class="date-range-value">{{ displayEnd() }}</span>
     </div>
   } @else if (placeholder) {
     <span class="date-range-placeholder">{{ placeholder }}</span>

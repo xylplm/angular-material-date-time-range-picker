@@ -31,25 +31,22 @@
   .date-range-content {
     flex: 1;
     min-width: 0;
+    display: flex;
+    align-items: center;
+    height: 24px;
   }
 
-  .date-range-primary {
+  .date-range-value {
     font-size: 0.875rem;
-    font-weight: 500;
-    line-height: 1.5;
+    line-height: 24px;
     color: var(--mat-sys-on-surface, rgba(0, 0, 0, 0.87));
-    overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .date-range-secondary {
-    font-size: 0.75rem;
-    line-height: 1.5;
+  .date-range-separator {
+    margin: 0 4px;
     color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.6));
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    line-height: 24px;
   }
 
   .date-range-text,
