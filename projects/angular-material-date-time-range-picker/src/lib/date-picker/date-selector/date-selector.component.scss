@@ -118,7 +118,6 @@
 /* 日历容器 */
 .date-selector-calendar-section {
   width: 100%;
-  min-height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -145,23 +144,6 @@
 
 .date-selector-calendar {
   width: 100%;
-
-  ::ng-deep {
-    .mat-calendar-body-active {
-      .mat-calendar-body-cell-content {
-        background-color: var(--mat-datepicker-calendar-date-selected-state-background-color, var(--mat-sys-primary));
-        color: var(--mat-datepicker-calendar-date-selected-state-text-color, var(--mat-sys-on-primary));
-      }
-      &.mat-calendar-body-in-range {
-        color: var(--mat-datepicker-calendar-date-selected-state-text-color, var(--mat-sys-on-primary));
-      }
-      &:hover {
-        .mat-calendar-body-cell-content {
-          color: var(--mat-datepicker-calendar-date-text-color, var(--mat-sys-on-surface));
-        }
-      }
-    }
-  }
 }
 
 .date-selector-hint {
@@ -192,8 +174,6 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
-  overflow-x: hidden;
 
   @media (min-width: 768px) {
     width: 50%;
@@ -320,6 +300,7 @@
 }
 
 .date-selector-sidenav-container {
+  width: 100%;
   height: 100%;
   background-color: transparent;
 }
