@@ -86,62 +86,32 @@ export class DateSelector implements OnInit {
     return `${datePart} ${hours}:${minutes}`;
   }
 
-  relativeDurations = [
-    ['最近5分钟', '-5minutes'],
-    ['最近15分钟', '-15minutes'],
-    ['最近30分钟', '-30minutes'],
-    ['最近1小时', '-1hours'],
-    ['最近3小时', '-3hours'],
-    ['最近6小时', '-6hours'],
-    ['最近12小时', '-12hours'],
-    ['最近24小时', '-24hours'],
-    ['最近2天', '-2days'],
-    ['最近7天', '-7days'],
-    ['最近30天', '-30days'],
-    ['最近90天', '-90days'],
-    ['最近6个月', '-6months'],
-    ['最近1年', '-1years'],
-    ['最近2年', '-2years'],
-    ['最近5年', '-5years'],
-    ['上周', '-1weeks'],
-    ['上个月', '-1months'],
-    ['去年', '-1years']
+  timeRanges: TimeRange[] = [
+    { label: '最近5分钟', start: 'offset:-5minutes', end: 'offset:now' },
+    { label: '最近15分钟', start: 'offset:-15minutes', end: 'offset:now' },
+    { label: '最近30分钟', start: 'offset:-30minutes', end: 'offset:now' },
+    { label: '最近1小时', start: 'offset:-1hours', end: 'offset:now' },
+    { label: '最近3小时', start: 'offset:-3hours', end: 'offset:now' },
+    { label: '最近6小时', start: 'offset:-6hours', end: 'offset:now' },
+    { label: '最近12小时', start: 'offset:-12hours', end: 'offset:now' },
+    { label: '最近24小时', start: 'offset:-24hours', end: 'offset:now' },
+    { label: '最近2天', start: 'offset:-2days', end: 'offset:now' },
+    { label: '最近7天', start: 'offset:-7days', end: 'offset:now' },
+    { label: '最近30天', start: 'offset:-30days', end: 'offset:now' },
+    { label: '最近90天', start: 'offset:-90days', end: 'offset:now' },
+    { label: '最近6个月', start: 'offset:-6months', end: 'offset:now' },
+    { label: '最近1年', start: 'offset:-1years', end: 'offset:now' },
+    { label: '最近2年', start: 'offset:-2years', end: 'offset:now' },
+    { label: '最近5年', start: 'offset:-5years', end: 'offset:now' },
+    { label: '昨天', start: 'offset:-1days/day', end: 'offset:-1days/day' },
+    { label: '前天', start: 'offset:-2days/day', end: 'offset:-2days/day' },
+    { label: '上周同一天', start: 'offset:-7days/day', end: 'offset:-7days/day' },
+    { label: '今天', start: 'offset:today', end: 'offset:today' },
+    { label: '今天至今', start: 'offset:today', end: 'offset:now' },
+    { label: '本周至今', start: 'offset:thisweek', end: 'offset:now' },
+    { label: '本月至今', start: 'offset:thismonth', end: 'offset:now' },
+    { label: '今年至今', start: 'offset:thisyear', end: 'offset:now' }
   ];
-
-  fixedDays = [
-    ['昨天', '-1days/day'],
-    ['前天', '-2days/day'],
-    ['上周同一天', '-7days/day'],
-    ['上周', '-1weeks/week'],
-    ['上个月', '-1months/month'],
-    ['去年', '-1years/year']
-  ];
-
-  currentPeriods = [
-    ['今天', 'today', 'today'],
-    ['今天至今', 'today', 'now'],
-    ['本周至今', 'thisweek', 'now'],
-    ['本月至今', 'thismonth', 'now'],
-    ['今年至今', 'thisyear', 'now']
-  ];
-
-  timeRanges = signal<TimeRange[]>([
-    ...this.relativeDurations.map(([label, offset]) => ({
-      label,
-      start: `offset:${offset}`,
-      end: 'offset:now'
-    })),
-    ...this.fixedDays.map(([label, point]) => ({
-      label,
-      start: `offset:${point}`,
-      end: `offset:${point}`
-    })),
-    ...this.currentPeriods.map(([label, start, end]) => ({
-      label,
-      start: `offset:${start}`,
-      end: `offset:${end}`
-    }))
-  ]);
   selectedTimeRange = model<TimeRange | undefined>(undefined);
 
   selectedDateRange: DateRange<Date> | null = null;
@@ -188,10 +158,10 @@ export class DateSelector implements OnInit {
           { label: '未来1月', start: 'offset:now', end: 'offset:+1months' },
           { label: '未来3月', start: 'offset:now', end: 'offset:+3months' }
         ];
-        this.timeRanges.update(ranges => [...ranges, ...futureOffsets]);
+        this.timeRanges = [...this.timeRanges, ...futureOffsets];
       }
     } else {
-      this.selectTimeRange(this.timeRanges()[5]);
+      this.selectTimeRange(this.timeRanges[5]);
     }
   }
 

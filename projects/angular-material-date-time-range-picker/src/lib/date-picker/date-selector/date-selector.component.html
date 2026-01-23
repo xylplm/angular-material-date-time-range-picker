@@ -8,13 +8,7 @@
 >
   <mat-sidenav-container class="date-selector-sidenav-container">
     <!-- 左侧快捷选择面板 -->
-    <mat-sidenav
-      #sidenav
-      [mode]="isMobile() ? 'over' : 'side'"
-      [opened]="!isMobile()"
-      class="date-selector-sidebar"
-      dir="rtl"
-    >
+    <mat-sidenav #sidenav [mode]="isMobile() ? 'over' : 'side'" [opened]="!isMobile()" class="date-selector-sidebar" dir="rtl">
       <div class="date-selector-sidebar-inner" dir="ltr">
         <div class="date-selector-sidebar-header">
           <span class="date-selector-sidebar-title">快捷选择</span>
@@ -25,7 +19,7 @@
           }
         </div>
         <ul class="date-selector-sidebar-list">
-          @for (timeRangeItem of timeRanges(); track timeRangeItem) {
+          @for (timeRangeItem of timeRanges; track timeRangeItem) {
             <li class="date-selector-sidebar-item">
               <button
                 type="button"
@@ -101,11 +95,10 @@
                 <span class="date-selector-hint-text">如果要选择一天，请双击该天。</span>
               </div>
             </div>
-
-      </section>
-    </div>
-  </div>
-  </mat-sidenav-content>
+          </section>
+        </div>
+      </div>
+    </mat-sidenav-content>
   </mat-sidenav-container>
 </date-time-picker-container>
 
