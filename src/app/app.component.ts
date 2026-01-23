@@ -137,13 +137,12 @@ export class App implements OnInit {
     console.log('Form valid?', this.dateRangeForm.valid);
   }
 
-  toggleDisable() {
-    const control = this.dateRangeForm.get('dateRange');
-    if (control?.disabled) {
-      control.enable();
-    } else {
-      control?.disable();
-    }
+  enableControl() {
+    this.dateRangeForm.get('dateRange')?.enable();
+  }
+
+  disableControl() {
+    this.dateRangeForm.get('dateRange')?.disable();
   }
 
   triggerValidation() {

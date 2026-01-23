@@ -6,7 +6,7 @@
   (click)="!disabled && openDateDialogSelector()"
   (keydown.enter)="!disabled && openDateDialogSelector()"
   (keydown.space)="!disabled && openDateDialogSelector()"
-  tabindex="0"
+  [tabindex]="disabled ? -1 : 0"
   [attr.role]="'button'"
   class="date-range-container"
 >
@@ -28,13 +28,14 @@
   <div class="date-range-actions">
     <i-tabler name="calendar-due" strokeWidth="2px" size="18px" class="date-range-icon" />
 
-    @if (selectedDateRange()) {
+    @if (selectedDateRange() && !disabled) {
       <button
         (click)="clear($event)"
         type="button"
         class="date-range-clear-btn"
         [attr.aria-label]="'清除日期选择'"
-        tabindex="0"
+        [tabindex]="disabled ? -1 : 0"
+        [disabled]="disabled"
         (keydown.enter)="clear($event)"
         (keydown.space)="clear($event)"
         [attr.role]="'button'"

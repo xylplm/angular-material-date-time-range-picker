@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, model, output, signal, ViewChild, ElementRef, Input, forwardRef, computed, Injector } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, model, output, signal, ViewChild, ElementRef, Input, forwardRef, computed, Injector, untracked } from '@angular/core';
 import { take, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateRange, MatDatepickerModule } from '@angular/material/datepicker';
@@ -51,7 +51,8 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   ngControl: NgControl | null = null;
 
   @Input() required: boolean = false;
-  @Input() disabled: boolean = false;
+  disabledInput = input<boolean>(false, { alias: 'disabled' });
+  private _formDisabled = signal(false);
   @Input() valueFormat: string = 'yyyy-MM-dd HH:mm';
   @Input() dateTimePicker: DateTimePickerValue | undefined;
   @Input() placeholder: string = '';
@@ -109,6 +110,11 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
           this.onTouched?.();
         }
       });
+
+    effect(() => {
+      this.disabledInput();
+      untracked(() => this.stateChanges.next());
+    });
   }
 
   ref = effect((): void => {
@@ -216,7 +222,12 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   }
 
   setDisabledState(isDisabled: boolean): void {
-    // 可以根据需要在这里处理禁用状态
+    this._formDisabled.set(isDisabled);
+    this.stateChanges.next();
+  }
+
+  get disabled(): boolean {
+    return this.disabledInput() || this._formDisabled();
   }
 
   // MatFormFieldControl 实现
