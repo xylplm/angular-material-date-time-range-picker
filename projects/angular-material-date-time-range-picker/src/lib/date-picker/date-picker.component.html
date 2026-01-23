@@ -13,10 +13,10 @@
   @if (selectedDateRange()) {
     <div class="date-range-content">
       <div class="date-range-primary">
-        {{ selectedDateRange()?.start | date: dateFormat }}
+        {{ displayStart() }}
       </div>
       <div class="date-range-secondary">
-        {{ selectedDateRange()?.end | date: dateFormat }}
+        {{ displayEnd() }}
       </div>
     </div>
   } @else if (placeholder) {

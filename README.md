@@ -62,16 +62,35 @@ yarn add @luoxiao123/angular-material-date-time-range-picker
 ```typescript
 import { Component } from '@angular/core';
 import { DatePickerComponent, DateTimePickerValue } from '@luoxiao123/angular-material-date-time-range-picker';
+import { provideDateFnsAdapter } from '@angular/material-date-fns-adapter';
+import { MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
+import { zhCN } from 'date-fns/locale';
+
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'yyyy-MM-dd',
+  },
+  display: {
+    dateInput: 'yyyy-MM-dd',
+    monthYearLabel: 'MMM yyyy',
+    dateA11yLabel: 'PP',
+    monthYearA11yLabel: 'MMMM yyyy',
+  },
+};
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [DatePickerComponent],
+  providers: [
+    provideDateFnsAdapter(),
+    { provide: MAT_DATE_LOCALE, useValue: zhCN },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
+  ],
   template: `
     <date-time-picker 
       [(ngModel)]="selectedRange"
       [required]="true"
-      [dateFormat]="'yyyy年M月d日 HH:mm'"
       (selectionChange)="onRangeSelected($event)"
     />
   `,
@@ -97,7 +116,6 @@ export class AppComponent {
     matInput
     [(ngModel)]="selectedRange"
     [required]="true"
-    [dateFormat]="'yyyy-MM-dd HH:mm'"
   />
   @if (formControl.hasError('required')) {
     <mat-error>此字段为必填</mat-error>
@@ -124,7 +142,6 @@ export class AppComponent {
 // 模板
 <date-time-picker 
   [formControl]="rangeControl"
-  [dateFormat]="'yyyy-MM-dd HH:mm'"
 />
 ```
 
@@ -166,7 +183,6 @@ export class DateRangeModule {}
 | `ngModel` / `formControl` | `DateTimePickerValue \| null` | - | 选中的日期时间范围（支持双向绑定） |
 | `required` | `boolean` | `false` | 是否为必填项 |
 | `disabled` | `boolean` | `false` | 是否禁用组件 |
-| `dateFormat` | `string` | `'yyyy年M月d日 HH:mm'` | 日期显示格式（DatePipe 格式） |
 | `valueFormat` | `string` | `'yyyy-MM-dd HH:mm:ss'` | 值的输出格式（DatePipe 格式） |
 | `future` | `boolean` | `false` | 是否允许选择未来日期 |
 
@@ -203,28 +219,41 @@ export class DateRangeModule {}
   [required]="true"
   [disabled]="isLoading"
   [future]="false"
-  [dateFormat]="'yyyy-MM-dd HH:mm'"
   (selectionChange)="onRangeSelected($event)"
 />
 ```
 
 ### 自定义日期格式
 
+组件使用 Angular Material 的 `DateAdapter` 和 `MAT_DATE_FORMATS` 进行日期格式化。您可以在应用或组件级别提供自定义的适配器和格式。
+
+推荐使用 `@angular/material-date-fns-adapter` 和 `date-fns`：
+
 ```typescript
-// 中文格式
-[dateFormat]="'yyyy年M月d日 HH:mm'"
+import { provideDateFnsAdapter } from '@angular/material-date-fns-adapter';
+import { MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
+import { zhCN } from 'date-fns/locale';
 
-// 英文格式
-[dateFormat]="'MMM d, yyyy HH:mm'"
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'yyyy-MM-dd',
+  },
+  display: {
+    dateInput: 'yyyy-MM-dd',
+    monthYearLabel: 'MMM yyyy',
+    dateA11yLabel: 'PP',
+    monthYearA11yLabel: 'MMMM yyyy',
+  },
+};
 
-// 标准格式
-[dateFormat]="'yyyy-MM-dd HH:mm:ss'"
-
-// 仅显示日期
-[dateFormat]="'yyyy-MM-dd'"
-
-// 仅显示时间
-[dateFormat]="'HH:mm'"
+@Component({
+  // ...
+  providers: [
+    provideDateFnsAdapter(),
+    { provide: MAT_DATE_LOCALE, useValue: zhCN },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
+  ]
+})
 ```
 
 ### 设置初始值

@@ -6,12 +6,32 @@ import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { DOCUMENT } from '@angular/common';
+import { MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
+import { provideDateFnsAdapter } from '@angular/material-date-fns-adapter';
+import { zhCN } from 'date-fns/locale';
+
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'yyyy-MM-dd',
+  },
+  display: {
+    dateInput: 'yyyy-MM-dd',
+    monthYearLabel: 'MMM yyyy',
+    dateA11yLabel: 'PP',
+    monthYearA11yLabel: 'MMMM yyyy',
+  },
+};
 
 @Component({
   selector: 'app-root',
   imports: [DatePickerComponent, MatFormFieldModule, MatInputModule, MatIconModule, ReactiveFormsModule, FormsModule],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  providers: [
+    provideDateFnsAdapter(),
+    { provide: MAT_DATE_LOCALE, useValue: zhCN },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
+  ]
 })
 export class App implements OnInit {
   readonly #document = inject(DOCUMENT);

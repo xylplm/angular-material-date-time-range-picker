@@ -69,7 +69,6 @@
               <!-- 从日期 -->
               <date-time-input
                 label="开始日期"
-                [dateFormat]="datePartFormat"
                 [dateValue]="startDate()"
                 [hourValue]="startHour()"
                 [minuteValue]="startMinute()"
@@ -82,7 +81,6 @@
               <!-- 结束日期 -->
               <date-time-input
                 label="结束日期"
-                [dateFormat]="datePartFormat"
                 [dateValue]="endDate()"
                 [hourValue]="endHour()"
                 [minuteValue]="endMinute()"
@@ -114,7 +112,7 @@
     @if (selectedDateRange) {
       <div class="date-selector-footer-value">
         @if (selectedDateRange.start) {
-          <span class="date-selector-footer-date">{{ selectedDateRange.start | date: dateFormat }}</span>
+          <span class="date-selector-footer-date">{{ displayStart() }}</span>
         }
 
         @if (selectedDateRange.start && selectedDateRange.end) {
@@ -122,7 +120,7 @@
         }
 
         @if (selectedDateRange.end) {
-          <span class="date-selector-footer-date">{{ selectedDateRange.end | date: dateFormat }}</span>
+          <span class="date-selector-footer-date">{{ displayEnd() }}</span>
         }
       </div>
     }

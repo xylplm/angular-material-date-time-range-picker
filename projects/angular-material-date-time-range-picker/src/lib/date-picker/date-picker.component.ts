@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, model, output, signal, ViewChild, ElementRef, Input, forwardRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, model, output, signal, ViewChild, ElementRef, Input, forwardRef, computed, Injector } from '@angular/core';
 import { take, tap } from 'rxjs';
-import { DatePipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateRange, MatDatepickerModule } from '@angular/material/datepicker';
 import { DatePickerModel, DateTimePickerValue } from './interfaces';
@@ -13,6 +12,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { DateSelector } from './date-selector/date-selector.component';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 
 @Component({
   selector: 'date-time-picker',
@@ -20,7 +20,7 @@ import { DateSelector } from './date-selector/date-selector.component';
   styleUrls: ['./date-picker.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TablerIconComponent, MatDatepickerModule, DatePipe, MatDialogModule],
+  imports: [TablerIconComponent, MatDatepickerModule, MatDialogModule],
   providers: [
     provideTablerIcons({ IconCalendarDue, IconX }),
     {
@@ -40,6 +40,9 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   readonly #focusMonitor = inject(FocusMonitor);
   readonly #elementRef = inject(ElementRef);
   readonly #matFormField = inject(MatFormField, { optional: true });
+  readonly #injector = inject(Injector);
+  private _dateAdapter = inject(DateAdapter);
+  private _dateFormats = inject(MAT_DATE_FORMATS);
 
   protected destroyRef = inject(DestroyRef);
 
@@ -49,7 +52,6 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
 
   @Input() required: boolean = false;
   @Input() disabled: boolean = false;
-  @Input() dateFormat: string = 'yyyy-MM-dd HH:mm';
   @Input() valueFormat: string = 'yyyy-MM-dd HH:mm';
   @Input() dateTimePicker: DateTimePickerValue | undefined;
   @Input() placeholder: string = '';
@@ -74,6 +76,25 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   // ControlValueAccessor 回调函数
   private onChange?: (value: any) => void;
   private onTouched?: () => void;
+
+  protected displayStart = computed(() => {
+    const range = this.selectedDateRange();
+    if (!range?.start) return '';
+    return this.formatDate(range.start);
+  });
+
+  protected displayEnd = computed(() => {
+    const range = this.selectedDateRange();
+    if (!range?.end) return '';
+    return this.formatDate(range.end);
+  });
+
+  private formatDate(date: Date): string {
+    const datePart = this._dateAdapter.format(date, this._dateFormats.display.dateInput);
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${datePart} ${hours}:${minutes}`;
+  }
 
   constructor() {
     // 监听 focus 事件
@@ -112,7 +133,6 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
     const data: DatePickerModel = {
       dateTimePicker: currentValue ?? undefined,
       future: this.future(),
-      dateFormat: this.dateFormat,
       valueFormat: this.valueFormat
     };
 
@@ -123,7 +143,8 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
       maxHeight: '100vh',
       data,
       disableClose: false,
-      panelClass: 'date-time-picker-dialog'
+      panelClass: 'date-time-picker-dialog',
+      injector: this.#injector
     });
 
     dialogRef

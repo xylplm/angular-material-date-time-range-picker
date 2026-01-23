@@ -1,9 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, model, OnInit, signal, ViewChild } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, model, OnInit, signal, ViewChild, computed } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
-import { provideDateFnsAdapter } from '@angular/material-date-fns-adapter';
-import { zhCN } from 'date-fns/locale';
 import { DatePickerModel, DateTimePickerValue, TimeRange } from '../interfaces';
 import { TablerIconComponent } from '@luoxiao123/angular-tabler-icons';
 import { DateRange, DefaultMatCalendarRangeStrategy, MatCalendar, MatDatepickerModule, MatRangeDateSelectionModel } from '@angular/material/datepicker';
@@ -14,6 +10,7 @@ import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 
 @Component({
   selector: 'date-time-picker-selector',
@@ -28,8 +25,6 @@ import { MatButtonModule } from '@angular/material/button';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    provideDateFnsAdapter(),
-    { provide: MAT_DATE_LOCALE, useValue: zhCN },
     DefaultMatCalendarRangeStrategy,
     MatRangeDateSelectionModel
   ],
@@ -39,7 +34,6 @@ import { MatButtonModule } from '@angular/material/button';
     MatDatepickerModule,
     ReactiveFormsModule,
     FormsModule,
-    DatePipe,
     Container,
     DateTimeInputComponent,
     MatSidenavModule,
@@ -52,19 +46,14 @@ export class DateSelector implements OnInit {
   readonly #data = inject(MAT_DIALOG_DATA) as DatePickerModel;
   readonly #selectionModel = inject(MatRangeDateSelectionModel<Date>);
   readonly #breakpoints = inject(BreakpointObserver);
+  private _dateAdapter = inject(DateAdapter);
+  private _dateFormats = inject(MAT_DATE_FORMATS);
 
   @ViewChild('sidenav') sidenav?: MatSidenav;
 
   isMobile = signal(false);
 
   public data = this.#data;
-
-  // 从 data 中获取格式，如果没有则使用默认值
-  dateFormat = this.data?.dateFormat ?? 'yyyy-MM-dd HH:mm';
-  
-  get datePartFormat(): string {
-    return this.dateFormat.split(' ')[0];
-  }
 
   valueFormat = this.data?.valueFormat ?? 'yyyy-MM-dd HH:mm';
 
@@ -77,6 +66,25 @@ export class DateSelector implements OnInit {
   endMinute = model<number | null>(null);
 
   future = model<boolean>(false);
+
+  displayStart = computed(() => {
+    const start = this.selectedDateRange?.start;
+    if (!start) return '';
+    return this.formatDate(start);
+  });
+
+  displayEnd = computed(() => {
+    const end = this.selectedDateRange?.end;
+    if (!end) return '';
+    return this.formatDate(end);
+  });
+
+  private formatDate(date: Date): string {
+    const datePart = this._dateAdapter.format(date, this._dateFormats.display.dateInput);
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${datePart} ${hours}:${minutes}`;
+  }
 
   relativeDurations = [
     ['最近5分钟', '-5minutes'],

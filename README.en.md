@@ -62,16 +62,35 @@ yarn add @luoxiao123/angular-material-date-time-range-picker
 ```typescript
 import { Component } from '@angular/core';
 import { DatePickerComponent, DateTimePickerValue } from '@luoxiao123/angular-material-date-time-range-picker';
+import { provideDateFnsAdapter } from '@angular/material-date-fns-adapter';
+import { MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
+import { enUS } from 'date-fns/locale';
+
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'yyyy-MM-dd',
+  },
+  display: {
+    dateInput: 'yyyy-MM-dd',
+    monthYearLabel: 'MMM yyyy',
+    dateA11yLabel: 'PP',
+    monthYearA11yLabel: 'MMMM yyyy',
+  },
+};
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [DatePickerComponent],
+  providers: [
+    provideDateFnsAdapter(),
+    { provide: MAT_DATE_LOCALE, useValue: enUS },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
+  ],
   template: `
     <date-time-picker 
       [(ngModel)]="selectedRange"
       [required]="true"
-      [dateFormat]="'MMM d, yyyy HH:mm'"
       (selectionChange)="onRangeSelected($event)"
     />
   `,
@@ -97,7 +116,6 @@ export class AppComponent {
     matInput
     [(ngModel)]="selectedRange"
     [required]="true"
-    [dateFormat]="'yyyy-MM-dd HH:mm'"
   />
   @if (formControl.hasError('required')) {
     <mat-error>This field is required</mat-error>
@@ -124,7 +142,6 @@ export class AppComponent {
 // Template
 <date-time-picker 
   [formControl]="rangeControl"
-  [dateFormat]="'yyyy-MM-dd HH:mm'"
 />
 ```
 
@@ -166,7 +183,6 @@ Supports both `[(ngModel)]` and reactive forms with `[formControl]`.
 | `ngModel` / `formControl` | `DateTimePickerValue \| null` | - | Selected date time range (supports two-way binding) |
 | `required` | `boolean` | `false` | Whether the field is required |
 | `disabled` | `boolean` | `false` | Whether the component is disabled |
-| `dateFormat` | `string` | `'MMM d, yyyy HH:mm'` | Date display format (DatePipe format) |
 | `valueFormat` | `string` | `'yyyy-MM-dd HH:mm:ss'` | Output value format (DatePipe format) |
 | `future` | `boolean` | `false` | Whether to allow selecting future dates |
 
@@ -209,21 +225,35 @@ Supports both `[(ngModel)]` and reactive forms with `[formControl]`.
 
 ### Customize Date Format
 
+The component uses Angular Material's `DateAdapter` and `MAT_DATE_FORMATS` for date formatting. You can provide custom adapter and formats at the application or component level.
+
+Recommended to use `@angular/material-date-fns-adapter` and `date-fns`:
+
 ```typescript
-// Chinese format
-[dateFormat]="'yyyy年M月d日 HH:mm'"
+import { provideDateFnsAdapter } from '@angular/material-date-fns-adapter';
+import { MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
+import { enUS } from 'date-fns/locale';
 
-// English format
-[dateFormat]="'MMM d, yyyy HH:mm'"
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'yyyy-MM-dd',
+  },
+  display: {
+    dateInput: 'yyyy-MM-dd',
+    monthYearLabel: 'MMM yyyy',
+    dateA11yLabel: 'PP',
+    monthYearA11yLabel: 'MMMM yyyy',
+  },
+};
 
-// Standard format
-[dateFormat]="'yyyy-MM-dd HH:mm:ss'"
-
-// Date only
-[dateFormat]="'yyyy-MM-dd'"
-
-// Time only
-[dateFormat]="'HH:mm'"
+@Component({
+  // ...
+  providers: [
+    provideDateFnsAdapter(),
+    { provide: MAT_DATE_LOCALE, useValue: enUS },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
+  ]
+})
 ```
 
 ### Set Initial Value
