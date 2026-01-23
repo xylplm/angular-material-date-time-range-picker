@@ -372,8 +372,17 @@ export class DateSelector implements OnInit {
   }
 
   submit(): void {
-    const start = new Date(this.selectedDateRange?.start ?? '');
-    const end = new Date(this.selectedDateRange?.end ?? '');
+    if (!this.selectedDateRange?.start || !this.selectedDateRange?.end) {
+      return;
+    }
+
+    const start = new Date(this.selectedDateRange.start);
+    const end = new Date(this.selectedDateRange.end);
+
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      return;
+    }
+
     const startISO = start.toISOString();
     const endISO = end.toISOString();
 
