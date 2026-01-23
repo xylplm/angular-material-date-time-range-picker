@@ -337,6 +337,22 @@ export class DateSelector implements OnInit {
     this.selectedDateRange = range;
     this.startDate.set(start?.toISOString() ?? '');
     this.endDate.set(end?.toISOString() ?? '');
+
+    if (start) {
+      this.startHour.set(start.getHours());
+      this.startMinute.set(start.getMinutes());
+    } else {
+      this.startHour.set(null);
+      this.startMinute.set(null);
+    }
+
+    if (end) {
+      this.endHour.set(end.getHours());
+      this.endMinute.set(end.getMinutes());
+    } else {
+      this.endHour.set(null);
+      this.endMinute.set(null);
+    }
   }
 
   rangeChanged(selectedDate: Date | null): void {
