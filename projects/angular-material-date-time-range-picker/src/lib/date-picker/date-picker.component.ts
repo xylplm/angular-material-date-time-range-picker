@@ -25,11 +25,6 @@ import { formatDate } from './until';
   providers: [
     provideTablerIcons({ IconCalendarDue, IconX }),
     {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DatePickerComponent),
-      multi: true
-    },
-    {
       provide: MatFormFieldControl,
       useExisting: forwardRef(() => DatePickerComponent)
     }
@@ -40,7 +35,6 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   readonly #dialog = inject(MatDialog);
   readonly #focusMonitor = inject(FocusMonitor);
   readonly #elementRef = inject(ElementRef);
-  readonly #matFormField = inject(MatFormField, { optional: true });
   readonly #injector = inject(Injector);
   private _dateAdapter = inject(DateAdapter);
   private _dateFormats = inject(MAT_DATE_FORMATS);
@@ -49,7 +43,7 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
 
   @ViewChild('dateRangeButton') dateRangeButton?: ElementRef<HTMLButtonElement>;
 
-  ngControl: NgControl | null = null;
+  ngControl = inject(NgControl, { optional: true, self: true });
 
   @Input() required: boolean = false;
   disabledInput = input<boolean>(false, { alias: 'disabled' });
@@ -88,6 +82,13 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   });
 
   constructor() {
+    if (this.ngControl) {
+      this.ngControl.valueAccessor = this;
+      this.ngControl.statusChanges?.pipe(takeUntilDestroyed()).subscribe(() => {
+        this.stateChanges.next();
+      });
+    }
+
     // 监听 focus 事件
     this.#focusMonitor
       .monitor(this.#elementRef, true)
@@ -220,7 +221,7 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   }
 
   get errorState(): boolean {
-    return this.#errorStateSignal();
+    return this.#errorStateSignal() || (!!this.ngControl?.invalid && (!!this.ngControl?.touched || !!this.ngControl?.dirty));
   }
 
   get shouldLabelFloat(): boolean {
