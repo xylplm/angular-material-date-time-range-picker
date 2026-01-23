@@ -53,13 +53,10 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   @Input() required: boolean = false;
   disabledInput = input<boolean>(false, { alias: 'disabled' });
   private _formDisabled = signal(false);
-  @Input() valueFormat: string = 'yyyy-MM-dd HH:mm';
   @Input() placeholder: string = '';
   future = input<boolean>(false);
 
   selectedDateRange = model<DateRange<Date> | undefined>();
-
-  toggle = signal<boolean>(false);
 
   selectionChange = output<DateTimePickerValue | undefined>();
 
@@ -129,8 +126,7 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
     const currentValue = this.#internalValue();
     const data: DatePickerModel = {
       dateTimePicker: currentValue ?? undefined,
-      future: this.future(),
-      valueFormat: this.valueFormat
+      future: this.future()
     };
 
     const dialogRef = this.#dialog.open(DateSelector, {
@@ -145,22 +141,11 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
     });
 
     dialogRef
-      .afterOpened()
-      .pipe(
-        take(1),
-        takeUntilDestroyed(this.destroyRef),
-        tap(() => this.toggle.update((status: boolean) => !status))
-      )
-      .subscribe();
-
-    dialogRef
       .afterClosed()
       .pipe(
         take(1),
         takeUntilDestroyed(this.destroyRef),
         tap((result: DatePickerModel | undefined): void => {
-          this.toggle.update((status: boolean) => !status);
-
           if (result && result.dateTimePicker) {
             const rangeValue: DateTimePickerValue = {
               start: result.dateTimePicker.start,

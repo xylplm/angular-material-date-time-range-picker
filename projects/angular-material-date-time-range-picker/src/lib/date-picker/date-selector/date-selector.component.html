@@ -68,8 +68,8 @@
                 (hourChange)="startHour.set($event)"
                 [minuteValue]="startMinute()"
                 (minuteChange)="startMinute.set($event)"
-                [hours]="getHours()"
-                [minutes]="getMinutes()"
+                [hours]="hours"
+                [minutes]="minutes"
                 (dateChange)="changeDatePart('start', $event)"
                 (timeChange)="updateStartTime()"
               />
@@ -82,8 +82,8 @@
                 (hourChange)="endHour.set($event)"
                 [minuteValue]="endMinute()"
                 (minuteChange)="endMinute.set($event)"
-                [hours]="getHours()"
-                [minutes]="getMinutes()"
+                [hours]="hours"
+                [minutes]="minutes"
                 (dateChange)="changeDatePart('end', $event)"
                 (timeChange)="updateEndTime()"
               />

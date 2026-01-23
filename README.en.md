@@ -183,7 +183,6 @@ Supports both `[(ngModel)]` and reactive forms with `[formControl]`.
 | `ngModel` / `formControl` | `DateTimePickerValue \| null` | - | Selected date time range (supports two-way binding) |
 | `required` | `boolean` | `false` | Whether the field is required |
 | `disabled` | `boolean` | `false` | Whether the component is disabled |
-| `valueFormat` | `string` | `'yyyy-MM-dd HH:mm:ss'` | Output value format (DatePipe format) |
 | `future` | `boolean` | `false` | Whether to allow selecting future dates |
 
 ### Output Events
@@ -218,7 +217,6 @@ Supports both `[(ngModel)]` and reactive forms with `[formControl]`.
   [(ngModel)]="selectedRange"
   [required]="true"
   [disabled]="isLoading"
-  [dateFormat]="'yyyy-MM-dd HH:mm'"
   (selectionChange)="onRangeSelected($event)"
 />
 ```

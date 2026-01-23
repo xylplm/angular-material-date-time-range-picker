@@ -55,8 +55,6 @@ export class DateSelector implements OnInit {
 
   public data = this.#data;
 
-  valueFormat = this.data?.valueFormat ?? 'yyyy-MM-dd HH:mm';
-
   startDate = model<string>('');
   endDate = model<string>('');
 
@@ -160,7 +158,9 @@ export class DateSelector implements OnInit {
         ];
         this.timeRanges = [...this.timeRanges, ...futureOffsets];
       }
-    } else {
+    }
+    
+    if (!this.data?.dateTimePicker) {
       this.selectTimeRange(this.timeRanges[5]);
     }
   }
@@ -461,13 +461,8 @@ export class DateSelector implements OnInit {
     this.#dialogRef.close(undefined);
   }
 
-  getHours(): number[] {
-    return Array.from({ length: 24 }, (_, i) => i);
-  }
-
-  getMinutes(): number[] {
-    return Array.from({ length: 60 }, (_, i) => i);
-  }
+  readonly hours = Array.from({ length: 24 }, (_, i) => i);
+  readonly minutes = Array.from({ length: 60 }, (_, i) => i);
 
   updateStartTime(): void {
     if (this.selectedDateRange?.start && this.startHour() !== null && this.startMinute() !== null) {

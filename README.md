@@ -183,7 +183,6 @@ export class DateRangeModule {}
 | `ngModel` / `formControl` | `DateTimePickerValue \| null` | - | 选中的日期时间范围（支持双向绑定） |
 | `required` | `boolean` | `false` | 是否为必填项 |
 | `disabled` | `boolean` | `false` | 是否禁用组件 |
-| `valueFormat` | `string` | `'yyyy-MM-dd HH:mm:ss'` | 值的输出格式（DatePipe 格式） |
 | `future` | `boolean` | `false` | 是否允许选择未来日期 |
 
 ### 输出事件
