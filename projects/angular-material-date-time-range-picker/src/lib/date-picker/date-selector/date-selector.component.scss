@@ -187,68 +187,7 @@
 }
 
 /* 自定义选项 */
-.date-selector-options {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  padding: 12px 16px;
-  border-top: 1px solid var(--mat-divider-color, rgba(0, 0, 0, 0.12));
-  background-color: var(--mat-sys-surface-container, #fafafa);
-}
 
-.date-selector-option-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.date-selector-option-label {
-  font-size: 0.75rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.6));
-  margin-left: 4px;
-}
-
-.date-selector-weekdays {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
-  margin-top: 4px;
-}
-
-.date-selector-weekday-btn {
-  padding: 8px 4px;
-  background-color: var(--mat-sys-surface, #fff);
-  border: 1px solid var(--mat-divider-color, rgba(0, 0, 0, 0.12));
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.75rem;
-  font-weight: 500;
-  line-height: 1.25;
-  color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.6));
-  text-align: center;
-  white-space: nowrap;
-  transition: all 0.2s ease;
-
-  &:hover {
-    border-color: var(--mat-sys-primary, #1976d2);
-    background-color: var(--mat-sys-primary-container, rgba(25, 118, 210, 0.08));
-  }
-
-  &.selected {
-    background-color: var(--mat-sys-primary, #1976d2);
-    border-color: var(--mat-sys-primary, #1976d2);
-    color: var(--mat-sys-on-primary, white);
-    font-weight: 600;
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--mat-sys-primary, #1976d2);
-    outline-offset: 2px;
-  }
-}
 
 /* 页脚范围显示 */
 .date-selector-footer-range {

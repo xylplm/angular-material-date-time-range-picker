@@ -72,7 +72,6 @@ import { DatePickerComponent, DateTimePickerValue } from '@luoxiao123/angular-ma
       [(ngModel)]="selectedRange"
       [required]="true"
       [dateFormat]="'yyyy年M月d日 HH:mm'"
-      [optionalFeatures]="true"
       (selectionChange)="onRangeSelected($event)"
     />
   `,
@@ -169,7 +168,6 @@ export class DateRangeModule {}
 | `disabled` | `boolean` | `false` | 是否禁用组件 |
 | `dateFormat` | `string` | `'yyyy年M月d日 HH:mm'` | 日期显示格式（DatePipe 格式） |
 | `valueFormat` | `string` | `'yyyy-MM-dd HH:mm:ss'` | 值的输出格式（DatePipe 格式） |
-| `optionalFeatures` | `boolean` | `true` | 是否启用星期选择和小时范围选择 |
 | `future` | `boolean` | `false` | 是否允许选择未来日期 |
 
 ### 输出事件
@@ -204,7 +202,6 @@ export class DateRangeModule {}
   [(ngModel)]="selectedRange"
   [required]="true"
   [disabled]="isLoading"
-  [optionalFeatures]="true"
   [future]="false"
   [dateFormat]="'yyyy-MM-dd HH:mm'"
   (selectionChange)="onRangeSelected($event)"
@@ -260,15 +257,6 @@ ngOnInit() {
 <date-time-picker 
   [(ngModel)]="selectedRange"
   [future]="true"
-/>
-```
-
-### 禁用可选功能（星期和小时选择）
-
-```typescript
-<date-time-picker 
-  [(ngModel)]="selectedRange"
-  [optionalFeatures]="false"
 />
 ```
 

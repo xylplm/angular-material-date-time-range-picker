@@ -58,11 +58,6 @@
           <section class="date-selector-calendar-section">
             <div class="date-selector-calendar-wrapper">
               <mat-calendar [maxDate]="!future() ? now : undefined" [(selected)]="selectedDateRange" (selectedChange)="rangeChanged($event)" class="date-selector-calendar" />
-
-              <div class="date-selector-hint">
-                <i-tabler name="info-circle" strokeWidth="2px" class="date-selector-hint-icon"></i-tabler>
-                <span class="date-selector-hint-text">如果要选择一天，请双击该天。</span>
-              </div>
             </div>
           </section>
           <!-- 日历容器结束 -->
@@ -96,34 +91,11 @@
               />
             </div>
 
-            @if (optionalFeatures()) {
-              <!-- 自定义选项 -->
-              <div class="date-selector-options">
-                <!-- 自定义天数 -->
-                <div class="date-selector-option-group">
-                  <mat-checkbox [(ngModel)]="allDays" class="date-selector-option-checkbox">
-                    <span class="date-selector-option-label">所有天</span>
-                  </mat-checkbox>
-
-                  @if (!allDays()) {
-                    <div class="date-selector-weekdays">
-                      @for (day of weekdays(); track day.value) {
-                        <button type="button" (click)="day.selected = !day.selected" [class.selected]="day.selected" class="date-selector-weekday-btn">
-                          {{ day.label }}
-                        </button>
-                      }
-                    </div>
-                  }
-                </div>
-
-                <!-- 自定义小时 -->
-                <div class="date-selector-option-group">
-                  <mat-checkbox [(ngModel)]="allHours" class="date-selector-option-checkbox">
-                <span class="date-selector-option-label">所有小时</span>
-              </mat-checkbox>
+            <div class="date-selector-hint">
+              <i-tabler name="info-circle" strokeWidth="2px" class="date-selector-hint-icon"></i-tabler>
+              <span class="date-selector-hint-text">如果要选择一天，请双击该天。</span>
             </div>
-          </div>
-        }
+
       </section>
     </div>
   </div>

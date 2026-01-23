@@ -72,7 +72,6 @@ import { DatePickerComponent, DateTimePickerValue } from '@luoxiao123/angular-ma
       [(ngModel)]="selectedRange"
       [required]="true"
       [dateFormat]="'MMM d, yyyy HH:mm'"
-      [optionalFeatures]="true"
       (selectionChange)="onRangeSelected($event)"
     />
   `,
@@ -169,7 +168,6 @@ Supports both `[(ngModel)]` and reactive forms with `[formControl]`.
 | `disabled` | `boolean` | `false` | Whether the component is disabled |
 | `dateFormat` | `string` | `'MMM d, yyyy HH:mm'` | Date display format (DatePipe format) |
 | `valueFormat` | `string` | `'yyyy-MM-dd HH:mm:ss'` | Output value format (DatePipe format) |
-| `optionalFeatures` | `boolean` | `true` | Whether to enable week selection and hour range selection |
 | `future` | `boolean` | `false` | Whether to allow selecting future dates |
 
 ### Output Events
@@ -204,8 +202,6 @@ Supports both `[(ngModel)]` and reactive forms with `[formControl]`.
   [(ngModel)]="selectedRange"
   [required]="true"
   [disabled]="isLoading"
-  [optionalFeatures]="true"
-  [future]="false"
   [dateFormat]="'yyyy-MM-dd HH:mm'"
   (selectionChange)="onRangeSelected($event)"
 />
@@ -260,15 +256,6 @@ ngOnInit() {
 <date-time-picker 
   [(ngModel)]="selectedRange"
   [future]="true"
-/>
-```
-
-### Disable Optional Features (Week and Hour Selection)
-
-```typescript
-<date-time-picker 
-  [(ngModel)]="selectedRange"
-  [optionalFeatures]="false"
 />
 ```
 

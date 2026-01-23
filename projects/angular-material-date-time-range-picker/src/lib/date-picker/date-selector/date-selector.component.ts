@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, model, OnInit, signal, ViewChild } from '@angular/core';
-import { MatCheckbox } from '@angular/material/checkbox';
 import { DatePipe } from '@angular/common';
-import { MatTimepickerModule } from '@angular/material/timepicker';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
-import { DatePickerModel, DateTimePickerValue, HourType, TimeRange, Weekday } from '../interfaces';
+import { DatePickerModel, DateTimePickerValue, TimeRange } from '../interfaces';
 import { TablerIconComponent } from '@luoxiao123/angular-tabler-icons';
 import { DateRange, DefaultMatCalendarRangeStrategy, MatCalendar, MatDatepickerModule, MatRangeDateSelectionModel } from '@angular/material/datepicker';
 import { Container } from '../components';
@@ -35,9 +33,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatNativeDateModule,
     ReactiveFormsModule,
     FormsModule,
-    MatCheckbox,
     DatePipe,
-    MatTimepickerModule,
     Container,
     DateTimeInputComponent,
     MatSidenavModule,
@@ -70,7 +66,6 @@ export class DateSelector implements OnInit {
   endMinute = model<number | null>(null);
 
   future = model<boolean>(false);
-  optionalFeatures = model<boolean>(true);
 
   relativeDurations = [
     ['最近5分钟', '-5minutes'],
@@ -130,24 +125,6 @@ export class DateSelector implements OnInit {
   ]);
   selectedTimeRange = model<TimeRange | undefined>(undefined);
 
-  allDays = model<boolean>(true);
-  weekdays = model<Weekday[]>([
-    { label: '六', data: 'Saturday', value: 0, selected: false },
-    { label: '日', data: 'Sunday', value: 1, selected: false },
-    { label: '一', data: 'Monday', value: 2, selected: false },
-    { label: '二', data: 'Tuesday', value: 3, selected: false },
-    { label: '三', data: 'Wednesday', value: 4, selected: false },
-    { label: '四', data: 'Thursday', value: 5, selected: false },
-    { label: '五', data: 'Friday', value: 6, selected: false }
-  ]);
-
-  allHours = model<boolean>(true);
-  hourTypes = signal<HourType[]>([
-    { label: '全部', value: 0, selected: false },
-    { label: '忙碌时间', value: 1, selected: false },
-    { label: '自定义', value: 2, selected: true }
-  ]);
-
   selectedDateRange: DateRange<Date> | null = null;
   now = new Date();
   selectingStart = true;
@@ -163,7 +140,6 @@ export class DateSelector implements OnInit {
 
   ngOnInit(): void {
     if (this.data) {
-      this.optionalFeatures.set(this.data.optionalFeatures);
       this.future.set(this.data.future);
 
       const picker = this.data.dateTimePicker;

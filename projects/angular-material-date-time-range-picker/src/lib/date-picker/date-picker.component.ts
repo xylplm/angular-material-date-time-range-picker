@@ -53,7 +53,6 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   @Input() valueFormat: string = 'yyyy-MM-dd HH:mm';
   @Input() dateTimePicker: DateTimePickerValue | undefined;
   @Input() placeholder: string = '';
-  optionalFeatures = input<boolean>(true);
   future = input<boolean>(false);
 
   selectedDateRange = model<DateRange<Date> | undefined>();
@@ -111,7 +110,6 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
     const isMobile = this.#breakpoints.isMatched([Breakpoints.Handset, Breakpoints.Tablet]);
     const currentValue = this.#internalValue();
     const data: DatePickerModel = {
-      optionalFeatures: this.optionalFeatures(),
       dateTimePicker: currentValue ?? undefined,
       future: this.future(),
       dateFormat: this.dateFormat,
