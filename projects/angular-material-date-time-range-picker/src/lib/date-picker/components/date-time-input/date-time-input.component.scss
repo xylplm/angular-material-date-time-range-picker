@@ -6,6 +6,10 @@
     flex-direction: column;
     gap: 8px;
     padding: 12px 16px;
+
+    @media (max-width: 767px) {
+      padding-bottom: 0px;
+    }
   }
 
   .date-time-input-label {
