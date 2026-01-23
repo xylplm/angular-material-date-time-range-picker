@@ -152,13 +152,23 @@
 .date-selector-calendar {
   width: 100%;
 
-  ::ng-deep .mat-calendar-body-active .mat-calendar-body-cell-content {
-    background-color: var(--mat-datepicker-calendar-date-selected-state-background-color, var(--mat-sys-primary));
-    color: var(--mat-datepicker-calendar-date-selected-state-text-color, var(--mat-sys-on-primary));
+  ::ng-deep {
+    .mat-calendar-body-active {
+      .mat-calendar-body-cell-content {
+        background-color: var(--mat-datepicker-calendar-date-selected-state-background-color, var(--mat-sys-primary));
+        color: var(--mat-datepicker-calendar-date-selected-state-text-color, var(--mat-sys-on-primary));
+      }
+      &.mat-calendar-body-in-range {
+        color: var(--mat-datepicker-calendar-date-selected-state-text-color, var(--mat-sys-on-primary));
+      }
+      &:hover {
+        .mat-calendar-body-cell-content {
+          color: var(--mat-datepicker-calendar-date-text-color, var(--mat-sys-on-surface));
+        }
+      }
+    }
   }
 }
-
-
 
 .date-selector-hint {
   display: flex;
