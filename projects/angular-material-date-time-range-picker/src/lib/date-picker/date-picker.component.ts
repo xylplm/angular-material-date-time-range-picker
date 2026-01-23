@@ -61,7 +61,6 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   // MatFormFieldControl 属性
   readonly stateChanges = new Subject<void>();
   readonly #errorStateSignal = signal(false);
-  readonly #shouldLabelFloatSignal = signal(false);
   readonly #focusedSignal = signal(false);
   readonly #id = signal<string>(`date-time-picker-${Math.random().toString(36).substr(2, 9)}`);
 
@@ -109,11 +108,9 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   }
 
   ref = effect((): void => {
-    const dateRange = this.selectedDateRange();
-
+    this.selectedDateRange();
     // 触发 MatFormField 更新
-    this.stateChanges.next();
-    this.#shouldLabelFloatSignal.set(!!dateRange);
+    untracked(() => this.stateChanges.next());
   });
 
   openDateDialogSelector(): void {
@@ -213,7 +210,7 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   }
 
   get shouldPlaceholderFloat(): boolean {
-    return this.#shouldLabelFloatSignal();
+    return this.shouldLabelFloat;
   }
 
   get focused(): boolean {
@@ -225,7 +222,7 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   }
 
   get shouldLabelFloat(): boolean {
-    return this.#shouldLabelFloatSignal();
+    return this.focused || !this.empty;
   }
 
   get id(): string {
