@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, model, OnInit, signal, ViewChild, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, model, OnInit, signal, ViewChild, computed } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePickerModel, DateTimePickerValue, TimeRange } from '../interfaces';
 import { TablerIconComponent } from '@luoxiao123/angular-tabler-icons';
