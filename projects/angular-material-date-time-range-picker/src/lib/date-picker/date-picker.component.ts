@@ -54,7 +54,6 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   disabledInput = input<boolean>(false, { alias: 'disabled' });
   private _formDisabled = signal(false);
   @Input() valueFormat: string = 'yyyy-MM-dd HH:mm';
-  @Input() dateTimePicker: DateTimePickerValue | undefined;
   @Input() placeholder: string = '';
   future = input<boolean>(false);
 
@@ -123,14 +122,6 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
     // 触发 MatFormField 更新
     this.stateChanges.next();
     this.#shouldLabelFloatSignal.set(!!dateRange);
-
-    // 通知 ControlValueAccessor（当通过 model 更新时）
-    if (dateRange && this.onChange) {
-      const value = this.#internalValue();
-      if (value) {
-        this.onChange(value);
-      }
-    }
   });
 
   openDateDialogSelector(): void {
