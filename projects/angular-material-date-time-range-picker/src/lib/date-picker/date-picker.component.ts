@@ -13,6 +13,7 @@ import { Subject } from 'rxjs';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { DateSelector } from './date-selector/date-selector.component';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { formatDate } from './until';
 
 @Component({
   selector: 'date-time-picker',
@@ -77,21 +78,14 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   protected displayStart = computed(() => {
     const range = this.selectedDateRange();
     if (!range?.start) return '';
-    return this.formatDate(range.start);
+    return formatDate(range.start, this._dateAdapter, this._dateFormats);
   });
 
   protected displayEnd = computed(() => {
     const range = this.selectedDateRange();
     if (!range?.end) return '';
-    return this.formatDate(range.end);
+    return formatDate(range.end, this._dateAdapter, this._dateFormats);
   });
-
-  private formatDate(date: Date): string {
-    const datePart = this._dateAdapter.format(date, this._dateFormats.display.dateInput);
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `${datePart} ${hours}:${minutes}`;
-  }
 
   constructor() {
     // 监听 focus 事件
@@ -147,13 +141,19 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
         takeUntilDestroyed(this.destroyRef),
         tap((result: DatePickerModel | undefined): void => {
           if (result && result.dateTimePicker) {
+            const start = new Date(result.dateTimePicker.start);
+            const end = new Date(result.dateTimePicker.end);
+            
+            const startStr = formatDate(start, this._dateAdapter, this._dateFormats);
+            const endStr = formatDate(end, this._dateAdapter, this._dateFormats);
+
             const rangeValue: DateTimePickerValue = {
-              start: result.dateTimePicker.start,
-              end: result.dateTimePicker.end
+              start: startStr,
+              end: endStr
             };
             this.#internalValue.set(rangeValue);
             // 更新显示用的日期范围
-            this.selectedDateRange.set(new DateRange(new Date(result.dateTimePicker.start), new Date(result.dateTimePicker.end)));
+            this.selectedDateRange.set(new DateRange(start, end));
             // 发出用户手动选择的值
             this.selectionChange.emit(rangeValue);
             // 通知表单控件
