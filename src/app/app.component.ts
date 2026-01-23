@@ -105,43 +105,31 @@ export class App implements OnInit {
    * 填充昨天到现在的日期时间范围
    */
   fillWithYesterdayToNow(): void {
-    const now = new Date();
-    const yesterday = new Date(now);
-    yesterday.setDate(now.getDate() - 1);
-    
-    // 设置时间为昨天的00:00:00
-    yesterday.setHours(0, 0, 0, 0);
-    
-    // 将日期转换为 ISO 字符串格式
-    const dateRange: DateTimePickerValue = {
-      start: yesterday.toISOString(),
-      end: now.toISOString()
-    };
-    
-    // 更新表单中的值
-    this.dateRangeForm.patchValue({
-      dateRange: dateRange
-    });
+    const end = new Date();
+    const start = new Date();
+    start.setDate(start.getDate() - 1);
 
-    // 更新信号以触发 computed 更新
-    this.dateTimePickerValue.set(dateRange);
-    
-    // 确保表单控件标记为已触摸，以触发验证
-    this.dateRangeForm.get('dateRange')?.markAsTouched();
-    
-    // 手动触发验证状态更新
-    this.dateRangeForm.get('dateRange')?.updateValueAndValidity();
-    
-    console.log('Filled with yesterday to now:', dateRange);
-    console.log('Form value after update:', this.dateRangeForm.get('dateRange')?.value);
-    console.log('Form valid?', this.dateRangeForm.valid);
+    const value: DateTimePickerValue = {
+      start: start.toISOString(),
+      end: end.toISOString()
+    };
+
+    this.dateRangeForm.patchValue({
+      dateRange: value
+    });
+    this.dateTimePickerValue.set(value);
   }
 
-  enableControl() {
+  resetForm(): void {
+    this.dateRangeForm.reset();
+    this.dateTimePickerValue.set(undefined);
+  }
+
+  enableControl(): void {
     this.dateRangeForm.get('dateRange')?.enable();
   }
 
-  disableControl() {
+  disableControl(): void {
     this.dateRangeForm.get('dateRange')?.disable();
   }
 
