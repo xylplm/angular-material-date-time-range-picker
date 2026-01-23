@@ -68,15 +68,15 @@ export class DateSelector implements OnInit {
   future = model<boolean>(false);
 
   displayStart = computed(() => {
-    const start = this.selectedDateRange?.start;
-    if (!start) return '';
-    return this.formatDate(start);
+    const startStr = this.startDate();
+    if (!startStr) return '';
+    return this.formatDate(new Date(startStr));
   });
 
   displayEnd = computed(() => {
-    const end = this.selectedDateRange?.end;
-    if (!end) return '';
-    return this.formatDate(end);
+    const endStr = this.endDate();
+    if (!endStr) return '';
+    return this.formatDate(new Date(endStr));
   });
 
   private formatDate(date: Date): string {
@@ -165,18 +165,19 @@ export class DateSelector implements OnInit {
 
       if (picker) {
         if (picker.start && picker.end) {
-          this.selectedDateRange = {
-            start: new Date(picker.start),
-            end: new Date(picker.end)
-          } as DateRange<Date>;
+          const start = new Date(picker.start);
+          const end = new Date(picker.end);
+          this.selectedDateRange = new DateRange(start, end);
+
+          this.#selectionModel.updateSelection(this.selectedDateRange, this);
 
           // 初始化时间值
-          const startDate = new Date(picker.start);
-          const endDate = new Date(picker.end);
-          this.startHour.set(startDate.getHours());
-          this.startMinute.set(startDate.getMinutes());
-          this.endHour.set(endDate.getHours());
-          this.endMinute.set(endDate.getMinutes());
+          this.startDate.set(picker.start);
+          this.endDate.set(picker.end);
+          this.startHour.set(start.getHours());
+          this.startMinute.set(start.getMinutes());
+          this.endHour.set(end.getHours());
+          this.endMinute.set(end.getMinutes());
         }
       }
 
@@ -341,8 +342,8 @@ export class DateSelector implements OnInit {
       this.endHour.set(null);
       this.endMinute.set(null);
       this.selectedTimeRange.set(undefined);
-      this.selectedDateRange = null;
-      this.#selectionModel.updateSelection(new DateRange(dateWithCurrentTime, null), this);
+      this.selectedDateRange = new DateRange(dateWithCurrentTime, null);
+      this.#selectionModel.updateSelection(this.selectedDateRange, this);
       this.selectingStart = false;
     } else {
       const start = this.#selectionModel.selection.start;

@@ -71,7 +71,9 @@
                 label="开始日期"
                 [dateValue]="startDate()"
                 [hourValue]="startHour()"
+                (hourChange)="startHour.set($event)"
                 [minuteValue]="startMinute()"
+                (minuteChange)="startMinute.set($event)"
                 [hours]="getHours()"
                 [minutes]="getMinutes()"
                 (dateChange)="changeDatePart('start', $event)"
@@ -83,7 +85,9 @@
                 label="结束日期"
                 [dateValue]="endDate()"
                 [hourValue]="endHour()"
+                (hourChange)="endHour.set($event)"
                 [minuteValue]="endMinute()"
+                (minuteChange)="endMinute.set($event)"
                 [hours]="getHours()"
                 [minutes]="getMinutes()"
                 (dateChange)="changeDatePart('end', $event)"
@@ -109,17 +113,17 @@
   <div class="date-selector-footer-range">
     <span class="date-selector-footer-label">范围：</span>
 
-    @if (selectedDateRange) {
+    @if (startDate()) {
       <div class="date-selector-footer-value">
-        @if (selectedDateRange.start) {
+        @if (startDate()) {
           <span class="date-selector-footer-date">{{ displayStart() }}</span>
         }
 
-        @if (selectedDateRange.start && selectedDateRange.end) {
+        @if (startDate() && endDate()) {
           <span class="date-selector-footer-separator">-</span>
         }
 
-        @if (selectedDateRange.end) {
+        @if (endDate()) {
           <span class="date-selector-footer-date">{{ displayEnd() }}</span>
         }
       </div>
