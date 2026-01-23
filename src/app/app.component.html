@@ -78,10 +78,18 @@
             
             <!-- 填充测试按钮 -->
             <div class="app-section">
-              <label class="app-label">🔧 填充测试</label>
-              <button type="button" class="app-fill-test-button" (click)="fillWithYesterdayToNow()">
-                填充昨天到现在的时间范围
-              </button>
+              <label class="app-label">🔧 表单测试</label>
+              <div style="display: flex; gap: 10px;">
+                <button type="button" class="app-fill-test-button" (click)="fillWithYesterdayToNow()">
+                  填充昨天到现在的时间范围
+                </button>
+                <button type="button" class="app-fill-test-button" (click)="toggleDisable()">
+                  禁用/启用
+                </button>
+                <button type="button" class="app-fill-test-button" (click)="triggerValidation()">
+                  触发验证
+                </button>
+              </div>
             </div>
           </form>
         </div>

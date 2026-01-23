@@ -30,13 +30,13 @@
 
     @if (selectedDateRange()) {
       <button
-        (click)="selectedDateRange.set(undefined); $event.stopPropagation()"
+        (click)="clear($event)"
         type="button"
         class="date-range-clear-btn"
         [attr.aria-label]="'清除日期选择'"
         tabindex="0"
-        (keydown.enter)="selectedDateRange.set(undefined); $event.stopPropagation()"
-        (keydown.space)="selectedDateRange.set(undefined); $event.stopPropagation()"
+        (keydown.enter)="clear($event)"
+        (keydown.space)="clear($event)"
         [attr.role]="'button'"
       >
         <i-tabler name="x" strokeWidth="2.5px" size="18px" class="date-range-icon" />

@@ -55,7 +55,7 @@ export class App implements OnInit {
   });
 
   selectedDateRangeFormField = computed(() => {
-    const picker = this.dateRangeForm?.get('dateRange')?.value;
+    const picker = this.dateTimePickerValue();
     if (!picker?.start || !picker?.end) {
       return '';
     }
@@ -117,13 +117,13 @@ export class App implements OnInit {
       end: now.toISOString()
     };
     
-    // 更新基础用法的模型值
-    this.dateTimePicker.set(dateRange);
-    
     // 更新表单中的值
     this.dateRangeForm.patchValue({
       dateRange: dateRange
     });
+
+    // 更新信号以触发 computed 更新
+    this.dateTimePickerValue.set(dateRange);
     
     // 确保表单控件标记为已触摸，以触发验证
     this.dateRangeForm.get('dateRange')?.markAsTouched();
@@ -134,6 +134,20 @@ export class App implements OnInit {
     console.log('Filled with yesterday to now:', dateRange);
     console.log('Form value after update:', this.dateRangeForm.get('dateRange')?.value);
     console.log('Form valid?', this.dateRangeForm.valid);
+  }
+
+  toggleDisable() {
+    const control = this.dateRangeForm.get('dateRange');
+    if (control?.disabled) {
+      control.enable();
+    } else {
+      control?.disable();
+    }
+  }
+
+  triggerValidation() {
+    this.dateRangeForm.markAllAsTouched();
+    this.dateRangeForm.updateValueAndValidity();
   }
 
   /**

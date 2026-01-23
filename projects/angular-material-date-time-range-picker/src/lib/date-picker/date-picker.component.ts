@@ -267,4 +267,14 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
       this.dateRangeButton?.nativeElement.focus();
     }
   }
+
+  clear(event?: Event): void {
+    event?.stopPropagation();
+    this.selectedDateRange.set(undefined);
+    this.#internalValue.set(null);
+    this.onChange?.(null);
+    this.onTouched?.();
+    this.selectionChange.emit(undefined);
+    this.stateChanges.next();
+  }
 }
