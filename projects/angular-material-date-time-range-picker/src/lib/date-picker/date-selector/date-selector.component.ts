@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, model, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, model, OnInit, signal, ViewChild } from '@angular/core';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { DatePipe } from '@angular/common';
 import { MatTimepickerModule } from '@angular/material/timepicker';
@@ -10,6 +10,10 @@ import { DateRange, DefaultMatCalendarRangeStrategy, MatCalendar, MatDatepickerM
 import { Container } from '../components';
 import { DateTimeInputComponent } from '../components';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'date-time-picker-selector',
@@ -35,7 +39,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
     DatePipe,
     MatTimepickerModule,
     Container,
-    DateTimeInputComponent
+    DateTimeInputComponent,
+    MatSidenavModule,
+    MatButtonModule
   ]
 })
 export class DateSelector implements OnInit {
@@ -43,6 +49,11 @@ export class DateSelector implements OnInit {
   readonly #dialogRef = inject(MatDialogRef<DateSelector>);
   readonly #data = inject(MAT_DIALOG_DATA) as DatePickerModel;
   readonly #selectionModel = inject(MatRangeDateSelectionModel<Date>);
+  readonly #breakpoints = inject(BreakpointObserver);
+
+  @ViewChild('sidenav') sidenav?: MatSidenav;
+
+  isMobile = signal(false);
 
   public data = this.#data;
 
@@ -140,6 +151,15 @@ export class DateSelector implements OnInit {
   selectedDateRange: DateRange<Date> | null = null;
   now = new Date();
   selectingStart = true;
+
+  constructor() {
+    this.#breakpoints
+      .observe([Breakpoints.Handset, Breakpoints.Tablet])
+      .pipe(takeUntilDestroyed())
+      .subscribe(result => {
+        this.isMobile.set(result.matches);
+      });
+  }
 
   ngOnInit(): void {
     if (this.data) {

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, model, output, TemplateRef } from '@angular/core';
 import { TablerIconComponent, provideTablerIcons } from '@luoxiao123/angular-tabler-icons';
-import { IconX, IconClock, IconCalendarDue, IconInfoCircle } from '@luoxiao123/angular-tabler-icons/icons';
+import { IconX, IconClock, IconCalendarDue, IconInfoCircle, IconLayoutSidebarLeftCollapse, IconMenu2 } from '@luoxiao123/angular-tabler-icons/icons';
 import { NgTemplateOutlet } from '@angular/common';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,7 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TablerIconComponent, NgTemplateOutlet, MatButtonModule],
-  providers: [provideTablerIcons({ IconInfoCircle, IconCalendarDue, IconX, IconClock })]
+  providers: [provideTablerIcons({ IconInfoCircle, IconCalendarDue, IconX, IconClock, IconLayoutSidebarLeftCollapse })]
 })
 export class Container {
   readonly #breakpoints = inject(BreakpointObserver);
