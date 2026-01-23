@@ -7,7 +7,7 @@
       <input
         type="text"
         matInput
-        [ngModel]="dateValue()"
+        [ngModel]="dateObj()"
         (ngModelChange)="onDateChange($event)"
         [matDatepicker]="datePicker"
         (click)="datePicker.open()"

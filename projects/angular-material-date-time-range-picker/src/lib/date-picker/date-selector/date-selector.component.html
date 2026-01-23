@@ -69,6 +69,7 @@
               <!-- 从日期 -->
               <date-time-input
                 label="开始日期"
+                [dateFormat]="datePartFormat"
                 [dateValue]="startDate()"
                 [hourValue]="startHour()"
                 [minuteValue]="startMinute()"
@@ -81,6 +82,7 @@
               <!-- 结束日期 -->
               <date-time-input
                 label="结束日期"
+                [dateFormat]="datePartFormat"
                 [dateValue]="endDate()"
                 [hourValue]="endHour()"
                 [minuteValue]="endMinute()"

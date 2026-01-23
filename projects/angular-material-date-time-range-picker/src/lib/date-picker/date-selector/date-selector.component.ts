@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, model, OnInit, signal, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { provideDateFnsAdapter } from '@angular/material-date-fns-adapter';
+import { zhCN } from 'date-fns/locale';
 import { DatePickerModel, DateTimePickerValue, TimeRange } from '../interfaces';
 import { TablerIconComponent } from '@luoxiao123/angular-tabler-icons';
 import { DateRange, DefaultMatCalendarRangeStrategy, MatCalendar, MatDatepickerModule, MatRangeDateSelectionModel } from '@angular/material/datepicker';
@@ -25,12 +27,16 @@ import { MatButtonModule } from '@angular/material/button';
   `,
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [provideNativeDateAdapter(), DefaultMatCalendarRangeStrategy, MatRangeDateSelectionModel],
+  providers: [
+    provideDateFnsAdapter(),
+    { provide: MAT_DATE_LOCALE, useValue: zhCN },
+    DefaultMatCalendarRangeStrategy,
+    MatRangeDateSelectionModel
+  ],
   imports: [
     MatCalendar,
     TablerIconComponent,
     MatDatepickerModule,
-    MatNativeDateModule,
     ReactiveFormsModule,
     FormsModule,
     DatePipe,
@@ -54,8 +60,13 @@ export class DateSelector implements OnInit {
   public data = this.#data;
 
   // 从 data 中获取格式，如果没有则使用默认值
-  dateFormat = this.data?.dateFormat ?? 'yyyy年M月d日 HH:mm';
-  valueFormat = this.data?.valueFormat ?? 'yyyy-MM-dd HH:mm:ss';
+  dateFormat = this.data?.dateFormat ?? 'yyyy-MM-dd HH:mm';
+  
+  get datePartFormat(): string {
+    return this.dateFormat.split(' ')[0];
+  }
+
+  valueFormat = this.data?.valueFormat ?? 'yyyy-MM-dd HH:mm';
 
   startDate = model<string>('');
   endDate = model<string>('');

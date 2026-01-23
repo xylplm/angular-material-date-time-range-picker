@@ -23,9 +23,11 @@
     "@angular/core": "^21.1.1",
     "@angular/forms": "^21.1.1",
     "@angular/material": "^21.1.1",
+    "@angular/material-date-fns-adapter": "^21.1.1",
     "@angular/platform-browser": "^21.1.1",
     "@angular/router": "^21.1.1",
     "@luoxiao123/angular-tabler-icons": "^3.36.2",
+    "date-fns": "^4.1.0",
     "rxjs": "~7.8.2",
     "tslib": "^2.8.1"
   },
