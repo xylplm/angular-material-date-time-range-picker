@@ -1,14 +1,11 @@
 @use '@angular/material' as mat;
 
-@custom-variant dark (&:where(.dark, .dark *));
-
-// Apply Material theme with light and dark mode support
 html {
-  color-scheme: light dark;
+  color-scheme: light;
   @include mat.theme((
     color: mat.$blue-palette,
     typography: Roboto,
-    density: 0,
+    density: 0
   ));
 }
 
@@ -45,30 +42,4 @@ a {
 [disabled] {
   cursor: not-allowed;
   opacity: 0.6;
-}
-
-/* Utility Styles */
-.flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.date-range-picker {
-  max-width: 400px;
-  margin: auto;
-  text-align: center;
-}
-
-/* Material Dialog Customization */
-::ng-deep .date-time-picker-dialog {
-  .mdc-dialog__container {
-    max-height: 90vh;
-  }
-
-  .mdc-dialog__surface {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
 }
