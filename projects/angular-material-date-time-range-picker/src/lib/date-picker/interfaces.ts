@@ -6,7 +6,6 @@ export interface DateTimePickerValue {
 export interface DatePickerModel {
   dateTimePicker?: DateTimePickerValue | null;
   future: boolean;
-  dateFormat?: string;
 }
 
 export interface TimeRange {

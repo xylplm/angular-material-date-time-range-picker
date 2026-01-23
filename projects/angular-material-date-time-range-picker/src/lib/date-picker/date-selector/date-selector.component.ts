@@ -43,7 +43,6 @@ import { DEFAULT_TIME_RANGES, FUTURE_TIME_RANGES } from '../constants';
   ]
 })
 export class DateSelector implements OnInit {
-  readonly #cdr = inject(ChangeDetectorRef);
   readonly #dialogRef = inject(MatDialogRef<DateSelector>);
   readonly #data = inject(MAT_DIALOG_DATA) as DatePickerModel;
   readonly #selectionModel = inject(MatRangeDateSelectionModel<Date>);

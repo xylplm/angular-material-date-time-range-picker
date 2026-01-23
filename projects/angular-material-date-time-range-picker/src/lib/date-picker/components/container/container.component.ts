@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject, model, output, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model, output, TemplateRef } from '@angular/core';
 import { TablerIconComponent, provideTablerIcons } from '@luoxiao123/angular-tabler-icons';
-import { IconX, IconClock, IconCalendarDue, IconInfoCircle, IconLayoutSidebarLeftCollapse, IconMenu2 } from '@luoxiao123/angular-tabler-icons/icons';
+import { IconX, IconClock, IconCalendarDue, IconInfoCircle, IconLayoutSidebarLeftCollapse } from '@luoxiao123/angular-tabler-icons/icons';
 import { NgTemplateOutlet } from '@angular/common';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -19,10 +18,6 @@ import { MatButtonModule } from '@angular/material/button';
   providers: [provideTablerIcons({ IconInfoCircle, IconCalendarDue, IconX, IconClock, IconLayoutSidebarLeftCollapse })]
 })
 export class Container {
-  readonly #breakpoints = inject(BreakpointObserver);
-
-  public isMobile = this.#breakpoints.isMatched([Breakpoints.Handset, Breakpoints.Tablet]);
-
   hasHeader = model<boolean | undefined>(true);
   hasFooter = model<boolean | undefined>(true);
   headerTitle = model<string>('');
