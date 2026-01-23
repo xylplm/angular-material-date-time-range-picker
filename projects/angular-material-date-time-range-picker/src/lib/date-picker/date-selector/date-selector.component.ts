@@ -341,40 +341,66 @@ export class DateSelector implements OnInit {
 
   rangeChanged(selectedDate: Date | null): void {
     if (!selectedDate) return;
-    
-    // 创建一个新日期对象，保留日期部分，但使用当前时间作为时间部分
-    const now = new Date();
-    const dateWithCurrentTime = new Date(
-      selectedDate.getFullYear(),
-      selectedDate.getMonth(),
-      selectedDate.getDate(),
-      now.getHours(),
-      now.getMinutes(),
-      now.getSeconds(),
-      now.getMilliseconds()
-    );
 
     if (this.selectingStart) {
-      this.startDate.set(dateWithCurrentTime.toISOString());
+      // 正在选择开始日期
+      let h = 0, m = 0, s = 0, ms = 0;
+      // 尝试保留之前的开始时间
+      if (this.selectedDateRange?.start) {
+        h = this.selectedDateRange.start.getHours();
+        m = this.selectedDateRange.start.getMinutes();
+        s = this.selectedDateRange.start.getSeconds();
+      }
+
+      const newStart = new Date(selectedDate);
+      newStart.setHours(h, m, s, ms);
+
+      this.startDate.set(newStart.toISOString());
       this.endDate.set('');
-      this.startHour.set(dateWithCurrentTime.getHours());
-      this.startMinute.set(dateWithCurrentTime.getMinutes());
+      this.startHour.set(newStart.getHours());
+      this.startMinute.set(newStart.getMinutes());
       this.endHour.set(null);
       this.endMinute.set(null);
       this.selectedTimeRange.set(undefined);
-      this.selectedDateRange = new DateRange(dateWithCurrentTime, null);
+      this.selectedDateRange = new DateRange(newStart, null);
       this.#selectionModel.updateSelection(this.selectedDateRange, this);
       this.selectingStart = false;
     } else {
+      // 正在选择结束日期
       const start = this.#selectionModel.selection.start;
       if (!start) return;
 
-      const range =
-        start.toDateString() === selectedDate.toDateString()
-          ? new DateRange(start, start)
-          : new DateRange(start < dateWithCurrentTime ? start : dateWithCurrentTime, start < dateWithCurrentTime ? dateWithCurrentTime : start);
+      const startDay = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+      const selectedDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
 
-      this.updateSelection(range.start, range.end);
+      let newStart: Date;
+      let newEnd: Date;
+
+      if (selectedDay.getTime() < startDay.getTime()) {
+        // 用户选了一个比 Start 更早的日期 -> 交换角色
+        // 新 Start (selectedDate) 设为 00:00
+        newStart = new Date(selectedDate);
+        newStart.setHours(0, 0, 0, 0);
+
+        // 新 End (旧 start) 设为 23:59
+        newEnd = new Date(start);
+        newEnd.setHours(23, 59, 59, 999);
+      } else {
+        // 正常顺序 (selectedDate >= start)
+        // Start 保持原样
+        newStart = new Date(start);
+
+        // End (selectedDate) 设为 23:59
+        newEnd = new Date(selectedDate);
+        newEnd.setHours(23, 59, 59, 999);
+        
+        // 如果是同一天，确保 Start <= End
+        if (newStart.getTime() > newEnd.getTime()) {
+           newStart.setHours(0, 0, 0, 0);
+        }
+      }
+
+      this.updateSelection(newStart, newEnd);
       this.selectingStart = true;
     }
   }
