@@ -90,8 +90,9 @@ export class App implements OnInit {
   }
 
   onDateRangeSelected(dateTimePicker: DateTimePickerValue | undefined | null): void {
+    this.dateTimePickerValue.set(dateTimePicker || undefined);
+    
     if (dateTimePicker) {
-      this.dateTimePickerValue.set(dateTimePicker);
       this.dateRangeForm.patchValue({
         dateRange: dateTimePicker
       });
