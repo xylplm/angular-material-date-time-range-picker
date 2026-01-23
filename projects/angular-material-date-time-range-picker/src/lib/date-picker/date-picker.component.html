@@ -26,8 +26,6 @@
   }
 
   <div class="date-range-actions">
-    <i-tabler name="calendar-due" strokeWidth="2px" size="18px" class="date-range-icon" />
-
     @if (selectedDateRange() && !disabled) {
       <button
         (click)="clear($event)"
@@ -43,5 +41,7 @@
         <i-tabler name="x" strokeWidth="2.5px" size="18px" class="date-range-icon" />
       </button>
     }
+
+    <i-tabler name="calendar-due" strokeWidth="2px" size="18px" class="date-range-icon" />
   </div>
 </div>

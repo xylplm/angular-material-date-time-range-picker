@@ -78,7 +78,7 @@
   }
 
   .date-range-clear-btn {
-    display: flex;
+    display: none; // 默认隐藏
     align-items: center;
     justify-content: center;
     width: 24px;
@@ -98,6 +98,13 @@
     &:focus-visible {
       outline: 2px solid var(--mat-sys-primary, #1976d2);
       outline-offset: 2px;
+    }
+  }
+
+  // Hover 状态下显示清除按钮
+  .date-range-container:hover {
+    .date-range-clear-btn {
+      display: flex;
     }
   }
 }
