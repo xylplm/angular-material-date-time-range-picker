@@ -113,7 +113,6 @@ export class AppComponent {
 <mat-form-field>
   <mat-label>Select Date Time Range</mat-label>
   <date-time-picker
-    matInput
     [(ngModel)]="selectedRange"
     [required]="true"
   />
