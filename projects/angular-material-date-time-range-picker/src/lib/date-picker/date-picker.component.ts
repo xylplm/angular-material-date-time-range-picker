@@ -51,6 +51,7 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   @Input() placeholder: string = '';
   future = input<boolean>(false);
   isTimestamp = input<boolean>(false);
+  isMillisecondTimestamp = input<boolean>(false);
 
   selectedDateRange = model<DateRange<Date> | undefined>();
 
@@ -163,8 +164,13 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
             if (this.isTimestamp()) {
               start.setSeconds(0, 0);
               end.setSeconds(0, 0);
-              startVal = start.getTime();
-              endVal = end.getTime();
+              if (this.isMillisecondTimestamp()) {
+                startVal = start.getTime();
+                endVal = end.getTime();
+              } else {
+                startVal = Math.floor(start.getTime() / 1000);
+                endVal = Math.floor(end.getTime() / 1000);
+              }
             } else {
               startVal = formatDate(start, this._dateAdapter, this._dateFormats);
               endVal = formatDate(end, this._dateAdapter, this._dateFormats);

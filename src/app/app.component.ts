@@ -47,6 +47,8 @@ export class App implements OnInit {
   dateRangeForm!: FormGroup;
 
   isTimestamp = signal(false);
+  isMillisecondTimestamp = signal(false);
+  isFuture = signal(false);
 
   selectedDateRange = computed(() => {
     const picker = this.dateTimePicker();
@@ -124,8 +126,8 @@ export class App implements OnInit {
       start.setSeconds(0, 0);
       end.setSeconds(0, 0);
       value = {
-        start: start.getTime(),
-        end: end.getTime()
+        start: Math.floor(start.getTime() / 1000),
+        end: Math.floor(end.getTime() / 1000)
       };
     } else {
       value = {
