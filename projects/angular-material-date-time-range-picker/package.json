@@ -1,6 +1,6 @@
 {
   "name": "@luoxiao123/angular-material-date-time-range-picker",
-  "version": "21.1.5",
+  "version": "21.1.6",
   "description": "An Angular Material date-time range picker library component",
   "type": "module",
   "keywords": [
