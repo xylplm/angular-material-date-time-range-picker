@@ -1,4 +1,5 @@
 import { Component, model, OnInit, signal, computed, effect, inject } from '@angular/core';
+import { JsonPipe } from '@angular/common';
 import { DatePickerComponent, DateTimePickerValue, formatDate } from '@luoxiao123/angular-material-date-time-range-picker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -25,7 +26,7 @@ export const MY_DATE_FORMATS = {
 
 @Component({
   selector: 'app-root',
-  imports: [DatePickerComponent, MatFormFieldModule, MatInputModule, MatIconModule, MatSlideToggleModule, ReactiveFormsModule, FormsModule],
+  imports: [DatePickerComponent, MatFormFieldModule, MatInputModule, MatIconModule, MatSlideToggleModule, ReactiveFormsModule, FormsModule, JsonPipe],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   providers: [
@@ -104,10 +105,6 @@ export class App implements OnInit {
     this.dateTimePickerValue.set(dateTimePicker || undefined);
     
     if (dateTimePicker) {
-      this.dateRangeForm.patchValue({
-        dateRange: dateTimePicker
-      });
-      this.dateRangeForm.get('dateRange')?.markAsTouched();
       console.log('Form value updated:', dateTimePicker);
     }
   }

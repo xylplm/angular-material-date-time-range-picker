@@ -80,6 +80,15 @@
                 </div>
               </div>
             }
+
+            <!-- 显示 formControlName="dateRange" 的原始值 -->
+            <div class="app-info-message">
+              <span class="app-info-icon">🛠️</span>
+              <div class="app-info-content">
+                <p class="app-info-text"><strong>原始值：</strong> {{ dateRangeForm.get('dateRange')?.value | json }}</p>
+                <p class="app-info-subtext">（formControlName="dateRange" 的原始数据，便于调试）</p>
+              </div>
+            </div>
             
             <!-- 填充测试按钮 -->
             <div class="app-section">
