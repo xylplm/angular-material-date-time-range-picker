@@ -100,8 +100,8 @@ export class AppComponent {
 
   onRangeSelected(range: DateTimePickerValue | undefined) {
     if (range) {
-      console.log('Start:', range.start);  // ISO 8601 format
-      console.log('End:', range.end);      // ISO 8601 format
+      console.log('Start:', range.start);  // Formatted string (e.g., "2024-01-24 14:30") or timestamp
+      console.log('End:', range.end);      // Formatted string (e.g., "2024-01-24 14:30") or timestamp
     }
   }
 }
@@ -171,6 +171,7 @@ export class DateRangeModule {}
 | `disabled` | `boolean` | `false` | Whether the component is disabled |
 | `placeholder` | `string` | `''` | Input placeholder text |
 | `future` | `boolean` | `false` | Whether to allow selecting future dates |
+| `isTimestamp` | `boolean` | `false` | Whether to use timestamp (milliseconds) for input/output values |
 
 ### Output Events
 
@@ -184,8 +185,8 @@ export class DateRangeModule {}
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `start` | `string` | Formatted start date time (based on MAT_DATE_FORMATS + HH:mm) |
-| `end` | `string` | Formatted end date time (based on MAT_DATE_FORMATS + HH:mm) |
+| `start` | `string \| number` | Formatted date time string (e.g., "2024-01-24 14:30") or timestamp (milliseconds) |
+| `end` | `string \| number` | Formatted date time string (e.g., "2024-01-24 14:30") or timestamp (milliseconds) |
 
 ## Configuration
 
@@ -230,10 +231,17 @@ ngOnInit() {
   const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
   const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
   
+  // Default mode (string)
   this.selectedRange = {
-    start: startDate.toISOString(),
+    start: startDate.toISOString(), // Recommended to use ISO string for initial value
     end: endDate.toISOString()
   };
+
+  // Timestamp mode (if isTimestamp="true" is enabled)
+  // this.selectedRange = {
+  //   start: startDate.getTime(),
+  //   end: endDate.getTime()
+  // };
 }
 ```
 
@@ -282,7 +290,10 @@ A: The current version uses a Chinese interface. Pull requests to add multi-lang
 A: Yes. The component uses standard Material Design styles and supports customization through CSS variables and custom CSS.
 
 ### Q: How do I handle timezone issues?
-A: The component returns date-time strings based on local time, formatted according to `MAT_DATE_FORMATS`. If you need to handle time zones, it is recommended to use libraries like `date-fns` or `moment.js` to convert the values after retrieval.
+A: 
+- **Default Mode**: The component returns date-time strings based on local time, formatted according to `MAT_DATE_FORMATS`.
+- **Timestamp Mode**: If `isTimestamp="true"` is enabled, the component returns UTC timestamps (milliseconds).
+If you need to handle time zone conversions, it is recommended to use libraries like `date-fns` or `moment.js` after retrieval.
 
 ## Contributing
 

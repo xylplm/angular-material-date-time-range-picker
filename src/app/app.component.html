@@ -55,7 +55,7 @@
           <form class="form" autocomplete="off" [formGroup]="dateRangeForm" #formDirective="ngForm">
             <mat-form-field class="app-form-field" appearance="outline">
               <mat-label>日期时间范围</mat-label>
-              <date-time-picker formControlName="dateRange" (selectionChange)="onDateRangeSelected($event)" />
+              <date-time-picker formControlName="dateRange" [isTimestamp]="isTimestamp()" (selectionChange)="onDateRangeSelected($event)" />
             </mat-form-field>
 
             @if (dateRangeForm.get('dateRange')?.hasError('required') && dateRangeForm.get('dateRange')?.touched) {
@@ -79,7 +79,10 @@
             <!-- 填充测试按钮 -->
             <div class="app-section">
               <label class="app-label">🔧 表单测试</label>
-              <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                <mat-slide-toggle [checked]="isTimestamp()" (change)="isTimestamp.set($event.checked)">
+                  启用时间戳
+                </mat-slide-toggle>
                 <button type="button" class="app-fill-test-button" (click)="fillWithYesterdayToNow()">
                   填充昨天到现在的时间范围
                 </button>

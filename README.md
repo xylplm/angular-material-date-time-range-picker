@@ -100,8 +100,8 @@ export class AppComponent {
 
   onRangeSelected(range: DateTimePickerValue | undefined) {
     if (range) {
-      console.log('Start:', range.start);  // ISO 8601 format
-      console.log('End:', range.end);      // ISO 8601 format
+      console.log('Start:', range.start);  // 格式化后的字符串 (如 "2024-01-24 14:30") 或时间戳
+      console.log('End:', range.end);      // 格式化后的字符串 (如 "2024-01-24 14:30") 或时间戳
     }
   }
 }
@@ -171,6 +171,7 @@ export class DateRangeModule {}
 | `disabled` | `boolean` | `false` | 是否禁用组件 |
 | `placeholder` | `string` | `''` | 输入框占位符 |
 | `future` | `boolean` | `false` | 是否允许选择未来日期 |
+| `isTimestamp` | `boolean` | `false` | 是否使用时间戳（毫秒）作为输入/输出值 |
 
 ### 输出事件
 
@@ -184,8 +185,8 @@ export class DateRangeModule {}
 
 | 属性 | 类型 | 说明 |
 |------|------|------|
-| `start` | `string` | 格式化后的开始日期时间 (基于 MAT_DATE_FORMATS + HH:mm) |
-| `end` | `string` | 格式化后的结束日期时间 (基于 MAT_DATE_FORMATS + HH:mm) |
+| `start` | `string \| number` | 格式化后的日期时间字符串 (如 "2024-01-24 14:30") 或时间戳 (毫秒) |
+| `end` | `string \| number` | 格式化后的日期时间字符串 (如 "2024-01-24 14:30") 或时间戳 (毫秒) |
 
 ## 配置
 
@@ -230,10 +231,17 @@ ngOnInit() {
   const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
   const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
   
+  // 默认模式（字符串）
   this.selectedRange = {
-    start: startDate.toISOString(),
+    start: startDate.toISOString(), // 推荐使用 ISO 字符串作为初始值
     end: endDate.toISOString()
   };
+
+  // 时间戳模式（如果启用了 isTimestamp="true"）
+  // this.selectedRange = {
+  //   start: startDate.getTime(),
+  //   end: endDate.getTime()
+  // };
 }
 ```
 
@@ -282,7 +290,10 @@ A: 当前版本使用中文界面。欢迎提交 PR 添加多语言支持。
 A: 支持。组件使用标准的 Material Design 样式，可通过 CSS 变量和自定义 CSS 进行定制。
 
 ### Q: 如何处理时区问题？
-A: 组件返回的日期时间字符串基于本地时间（Local Time），格式化结果取决于 `MAT_DATE_FORMATS` 配置。如果需要处理时区，建议在获取值后使用 `date-fns` 或 `moment.js` 等库进行转换。
+A: 
+- **默认模式**：组件返回的日期时间字符串基于本地时间（Local Time），格式化结果取决于 `MAT_DATE_FORMATS` 配置。
+- **时间戳模式**：如果启用了 `isTimestamp="true"`，组件返回的是 UTC 时间戳（毫秒）。
+如果需要处理时区转换，建议在获取值后使用 `date-fns` 或 `moment.js` 等库。
 
 ## 贡献
 

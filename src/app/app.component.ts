@@ -1,12 +1,13 @@
 import { Component, model, OnInit, signal, computed, effect, inject } from '@angular/core';
-import { DatePickerComponent, DateTimePickerValue } from '@luoxiao123/angular-material-date-time-range-picker';
+import { DatePickerComponent, DateTimePickerValue, formatDate } from '@luoxiao123/angular-material-date-time-range-picker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { DOCUMENT } from '@angular/common';
-import { MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MAT_DATE_FORMATS, DateAdapter } from '@angular/material/core';
 import { provideDateFnsAdapter } from '@angular/material-date-fns-adapter';
 import { zhCN } from 'date-fns/locale';
 
@@ -24,7 +25,7 @@ export const MY_DATE_FORMATS = {
 
 @Component({
   selector: 'app-root',
-  imports: [DatePickerComponent, MatFormFieldModule, MatInputModule, MatIconModule, ReactiveFormsModule, FormsModule],
+  imports: [DatePickerComponent, MatFormFieldModule, MatInputModule, MatIconModule, MatSlideToggleModule, ReactiveFormsModule, FormsModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   providers: [
@@ -36,12 +37,16 @@ export const MY_DATE_FORMATS = {
 export class App implements OnInit {
   readonly #document = inject(DOCUMENT);
   readonly #builder = inject(FormBuilder);
+  private _dateAdapter = inject(DateAdapter);
+  private _dateFormats = inject(MAT_DATE_FORMATS);
 
   dateTimePicker = model<DateTimePickerValue | undefined>();
   dateTimePickerValue = signal<DateTimePickerValue | undefined>(undefined);
   themes = signal<('light' | 'dark')[]>(['light', 'dark']);
   selectedTheme = signal<'light' | 'dark'>('light');
   dateRangeForm!: FormGroup;
+
+  isTimestamp = signal(false);
 
   selectedDateRange = computed(() => {
     const picker = this.dateTimePicker();
@@ -59,10 +64,14 @@ export class App implements OnInit {
     if (!picker?.start || !picker?.end) {
       return '';
     }
-    // 将字符串转换为Date对象以进行格式化
-    const startDate = new Date(picker.start).toLocaleDateString('zh-CN');
-    const endDate = new Date(picker.end).toLocaleDateString('zh-CN');
-    return `${startDate} ~ ${endDate}`;
+    
+    if (this.isTimestamp()) {
+      const startDate = new Date(picker.start).toLocaleString('zh-CN');
+      const endDate = new Date(picker.end).toLocaleString('zh-CN');
+      return `${picker.start} ~ ${picker.end} (${startDate} ~ ${endDate})`;
+    }
+
+    return `${picker.start} ~ ${picker.end}`;
   });
 
   constructor() {
@@ -109,10 +118,21 @@ export class App implements OnInit {
     const start = new Date();
     start.setDate(start.getDate() - 1);
 
-    const value: DateTimePickerValue = {
-      start: start.toISOString(),
-      end: end.toISOString()
-    };
+    let value: DateTimePickerValue;
+
+    if (this.isTimestamp()) {
+      start.setSeconds(0, 0);
+      end.setSeconds(0, 0);
+      value = {
+        start: start.getTime(),
+        end: end.getTime()
+      };
+    } else {
+      value = {
+        start: formatDate(start, this._dateAdapter, this._dateFormats),
+        end: formatDate(end, this._dateAdapter, this._dateFormats)
+      };
+    }
 
     this.dateRangeForm.patchValue({
       dateRange: value

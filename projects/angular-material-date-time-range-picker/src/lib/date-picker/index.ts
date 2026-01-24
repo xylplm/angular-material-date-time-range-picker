@@ -1,3 +1,4 @@
 export { DatePickerComponent } from './date-picker.component';
 export { DateSelector } from './date-selector/date-selector.component';
+export { formatDate } from './until';
 export type { DateTimePickerValue, DatePickerModel, TimeRange } from './interfaces';

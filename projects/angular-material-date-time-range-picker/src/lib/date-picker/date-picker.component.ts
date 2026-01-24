@@ -50,6 +50,7 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   private _formDisabled = signal(false);
   @Input() placeholder: string = '';
   future = input<boolean>(false);
+  isTimestamp = input<boolean>(false);
 
   selectedDateRange = model<DateRange<Date> | undefined>();
 
@@ -141,13 +142,23 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
           if (result && result.dateTimePicker) {
             const start = new Date(result.dateTimePicker.start);
             const end = new Date(result.dateTimePicker.end);
-            
-            const startStr = formatDate(start, this._dateAdapter, this._dateFormats);
-            const endStr = formatDate(end, this._dateAdapter, this._dateFormats);
+
+            let startVal: string | number;
+            let endVal: string | number;
+
+            if (this.isTimestamp()) {
+              start.setSeconds(0, 0);
+              end.setSeconds(0, 0);
+              startVal = start.getTime();
+              endVal = end.getTime();
+            } else {
+              startVal = formatDate(start, this._dateAdapter, this._dateFormats);
+              endVal = formatDate(end, this._dateAdapter, this._dateFormats);
+            }
 
             const rangeValue: DateTimePickerValue = {
-              start: startStr,
-              end: endStr
+              start: startVal,
+              end: endVal
             };
             this.#internalValue.set(rangeValue);
             // 更新显示用的日期范围
