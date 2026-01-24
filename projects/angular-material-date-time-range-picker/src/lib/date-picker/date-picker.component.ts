@@ -117,8 +117,22 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   openDateDialogSelector(): void {
     const isMobile = this.#breakpoints.isMatched([Breakpoints.Handset, Breakpoints.Tablet]);
     const currentValue = this.#internalValue();
+    
+    // 确保传递给 DateSelector 的值是标准的 ISO 字符串格式
+    let dialogValue: DateTimePickerValue | undefined;
+    if (currentValue && currentValue.start && currentValue.end) {
+      const s = new Date(currentValue.start);
+      const e = new Date(currentValue.end);
+      if (!isNaN(s.getTime()) && !isNaN(e.getTime())) {
+        dialogValue = {
+          start: s.toISOString(),
+          end: e.toISOString()
+        };
+      }
+    }
+
     const data: DatePickerModel = {
-      dateTimePicker: currentValue ?? undefined,
+      dateTimePicker: dialogValue,
       future: this.future()
     };
 

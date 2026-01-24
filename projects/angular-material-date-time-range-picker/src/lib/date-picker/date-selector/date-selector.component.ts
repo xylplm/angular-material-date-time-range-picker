@@ -109,8 +109,9 @@ export class DateSelector implements OnInit {
           this.#selectionModel.updateSelection(this.selectedDateRange, this);
 
           // 初始化时间值
-          this.startDate.set(!isNaN(start.getTime()) ? start.toISOString() : String(picker.start));
-          this.endDate.set(!isNaN(end.getTime()) ? end.toISOString() : String(picker.end));
+          // 此时 picker.start/end 已经是 ISO 字符串，可以直接使用
+          this.startDate.set(String(picker.start));
+          this.endDate.set(String(picker.end));
           this.startHour.set(start.getHours());
           this.startMinute.set(start.getMinutes());
           this.endHour.set(end.getHours());
