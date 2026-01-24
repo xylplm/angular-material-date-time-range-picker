@@ -170,7 +170,8 @@ export class DateRangeModule {}
 | `disabled` | `boolean` | `false` | 是否禁用组件 |
 | `placeholder` | `string` | `''` | 输入框占位符 |
 | `future` | `boolean` | `false` | 是否允许选择未来日期 |
-| `isTimestamp` | `boolean` | `false` | 是否使用时间戳（毫秒）作为输入/输出值 |
+| `isTimestamp` | `boolean` | `false` | 是否使用时间戳作为输入/输出值（配合 isMillisecondTimestamp 控制精度） |
+| `isMillisecondTimestamp` | `boolean` | `false` | 是否为毫秒级时间戳（仅 isTimestamp=true 时生效，默认秒级） |
 
 ### 输出事件
 
@@ -184,8 +185,8 @@ export class DateRangeModule {}
 
 | 属性 | 类型 | 说明 |
 |------|------|------|
-| `start` | `string \| number` | 格式化后的日期时间字符串 (如 "2024-01-24 14:30") 或时间戳 (毫秒) |
-| `end` | `string \| number` | 格式化后的日期时间字符串 (如 "2024-01-24 14:30") 或时间戳 (毫秒) |
+| `start` | `string \| number` | 格式化后的日期时间字符串 (如 "2024-01-24 14:30") 或时间戳（秒/毫秒，取决于 isMillisecondTimestamp） |
+| `end` | `string \| number` | 格式化后的日期时间字符串 (如 "2024-01-24 14:30") 或时间戳（秒/毫秒，取决于 isMillisecondTimestamp） |
 
 ## 配置
 
@@ -237,6 +238,12 @@ ngOnInit() {
   };
 
   // 时间戳模式（如果启用了 isTimestamp="true"）
+  // 秒级：
+  // this.selectedRange = {
+  //   start: Math.floor(startDate.getTime() / 1000),
+  //   end: Math.floor(endDate.getTime() / 1000)
+  // };
+  // 毫秒级：
   // this.selectedRange = {
   //   start: startDate.getTime(),
   //   end: endDate.getTime()
@@ -259,7 +266,9 @@ ngOnInit() {
 <date-time-picker 
   [(ngModel)]="selectedRange"
   [future]="true"
-/>
+  [isTimestamp]="true"
+  [isMillisecondTimestamp]="true"
+/> 
 ```
 
 ## Angular 版本兼容性
@@ -288,11 +297,21 @@ A: 当前版本使用中文界面。欢迎提交 PR 添加多语言支持。
 ### Q: 可以自定义样式吗？
 A: 支持。组件使用标准的 Material Design 样式，可通过 CSS 变量和自定义 CSS 进行定制。
 
-### Q: 如何处理时区问题？
+### Q: 如何处理时区和时间戳精度问题？
 A: 
 - **默认模式**：组件返回的日期时间字符串基于本地时间（Local Time），格式化结果取决于 `MAT_DATE_FORMATS` 配置。
-- **时间戳模式**：如果启用了 `isTimestamp="true"`，组件返回的是 UTC 时间戳（毫秒）。
-如果需要处理时区转换，建议在获取值后使用 `date-fns` 或 `moment.js` 等库。
+- **时间戳模式**：
+  - `isTimestamp=true` 且 `isMillisecondTimestamp=false` 时，返回秒级时间戳（如 1706016000）。
+  - `isTimestamp=true` 且 `isMillisecondTimestamp=true` 时，返回毫秒级时间戳（如 1706016000000）。
+  - 需要处理时区转换，建议在获取值后使用 `date-fns` 或 `moment.js` 等库。
+
+### Q: 如何切换秒/毫秒级时间戳？
+A: 
+- 通过 `[isTimestamp]` 控制是否输出时间戳，通过 `[isMillisecondTimestamp]` 控制精度（默认 false，输出秒级，true 输出毫秒级）。
+
+### Q: 表单如何动态切换时间戳和精度？
+A: 
+- 参考 Demo 页的“表单测试”区域，使用 `mat-slide-toggle` 控制 `[isTimestamp]` 和 `[isMillisecondTimestamp]`，即可实时切换输出格式。
 
 ## 贡献
 

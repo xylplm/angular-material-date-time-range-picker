@@ -170,7 +170,8 @@ export class DateRangeModule {}
 | `disabled` | `boolean` | `false` | Whether the component is disabled |
 | `placeholder` | `string` | `''` | Input placeholder text |
 | `future` | `boolean` | `false` | Whether to allow selecting future dates |
-| `isTimestamp` | `boolean` | `false` | Whether to use timestamp (milliseconds) for input/output values |
+| `isTimestamp` | `boolean` | `false` | Whether to use timestamp for input/output values (precision controlled by isMillisecondTimestamp) |
+| `isMillisecondTimestamp` | `boolean` | `false` | Whether to use millisecond timestamp (only effective when isTimestamp=true, default is seconds) |
 
 ### Output Events
 
@@ -184,8 +185,8 @@ export class DateRangeModule {}
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `start` | `string \| number` | Formatted date time string (e.g., "2024-01-24 14:30") or timestamp (milliseconds) |
-| `end` | `string \| number` | Formatted date time string (e.g., "2024-01-24 14:30") or timestamp (milliseconds) |
+| `start` | `string \| number` | Formatted date time string (e.g., "2024-01-24 14:30") or timestamp (seconds/milliseconds, depending on isMillisecondTimestamp) |
+| `end` | `string \| number` | Formatted date time string (e.g., "2024-01-24 14:30") or timestamp (seconds/milliseconds, depending on isMillisecondTimestamp) |
 
 ## Configuration
 
@@ -237,6 +238,12 @@ ngOnInit() {
   };
 
   // Timestamp mode (if isTimestamp="true" is enabled)
+  // Seconds:
+  // this.selectedRange = {
+  //   start: Math.floor(startDate.getTime() / 1000),
+  //   end: Math.floor(endDate.getTime() / 1000)
+  // };
+  // Milliseconds:
   // this.selectedRange = {
   //   start: startDate.getTime(),
   //   end: endDate.getTime()
@@ -259,7 +266,9 @@ ngOnInit() {
 <date-time-picker 
   [(ngModel)]="selectedRange"
   [future]="true"
-/>
+  [isTimestamp]="true"
+  [isMillisecondTimestamp]="true"
+/> 
 ```
 
 ## Angular Version Compatibility
@@ -291,8 +300,18 @@ A: Yes. The component uses standard Material Design styles and supports customiz
 ### Q: How do I handle timezone issues?
 A: 
 - **Default Mode**: The component returns date-time strings based on local time, formatted according to `MAT_DATE_FORMATS`.
-- **Timestamp Mode**: If `isTimestamp="true"` is enabled, the component returns UTC timestamps (milliseconds).
-If you need to handle time zone conversions, it is recommended to use libraries like `date-fns` or `moment.js` after retrieval.
+- **Timestamp Mode**:
+  - `isTimestamp=true` and `isMillisecondTimestamp=false`: returns second-level timestamp (e.g., 1706016000).
+  - `isTimestamp=true` and `isMillisecondTimestamp=true`: returns millisecond-level timestamp (e.g., 1706016000000).
+  - For timezone conversion, use libraries like `date-fns` or `moment.js` after retrieval.
+
+### Q: How to switch between second/millisecond timestamp?
+A: 
+- Use `[isTimestamp]` to control timestamp output, and `[isMillisecondTimestamp]` to control precision (default false for seconds, true for milliseconds).
+
+### Q: How to dynamically switch timestamp and precision in forms?
+A: 
+- Refer to the "Form Test" area in the demo page, use `mat-slide-toggle` to control `[isTimestamp]` and `[isMillisecondTimestamp]` for real-time output format switching.
 
 ## Contributing
 
