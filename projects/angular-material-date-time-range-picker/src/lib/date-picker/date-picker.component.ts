@@ -109,10 +109,106 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
     });
   }
 
+  /**
+   * 将时间戳转换为 Date 对象
+   * @param timestamp 时间戳（秒级或毫秒级）
+   * @returns Date 对象
+   */
+  #timestampToDate(timestamp: number): Date {
+    // 判断是否为秒级时间戳（< 100000000000 表示秒级）
+    const isSeconds = timestamp < 100000000000;
+    return new Date(isSeconds ? timestamp * 1000 : timestamp);
+  }
+
+  /**
+   * 根据当前的时间戳模式转换时间戳对到 Date 对象
+   * @param startTs 开始时间戳
+   * @param endTs 结束时间戳
+   * @returns [startDate, endDate]
+   */
+  #timesToampPairToDateRange(startTs: number, endTs: number): [Date, Date] {
+    if (this.isMillisecondTimestamp()) {
+      return [new Date(startTs), new Date(endTs)];
+    } else {
+      return [new Date(startTs * 1000), new Date(endTs * 1000)];
+    }
+  }
+
+  /**
+   * 检查值是否看起来像秒级或毫秒级时间戳
+   * @param value 值
+   * @returns { looksLikeSeconds, looksLikeMilliseconds }
+   */
+  #analyzeTimestampType(value: number): { looksLikeSeconds: boolean; looksLikeMilliseconds: boolean } {
+    const looksLikeSeconds = value > 0 && value < 100000000000;
+    const looksLikeMilliseconds = value >= 100000000000;
+    return { looksLikeSeconds, looksLikeMilliseconds };
+  }
+
+  /**
+   * 如果时间戳模式不匹配，自动转换值
+   * @param value 值
+   * @returns 转换后的值，如果不需要转换则返回原值
+   */
+  #convertTimestampIfNeeded(value: DateTimePickerValue): DateTimePickerValue {
+    if (!this.isTimestamp() || typeof value.start !== 'number' || typeof value.end !== 'number') {
+      return value;
+    }
+
+    const startNum = value.start as number;
+    const endNum = value.end as number;
+    const { looksLikeSeconds: startLooksLikeSeconds } = this.#analyzeTimestampType(startNum);
+    const { looksLikeSeconds: endLooksLikeSeconds } = this.#analyzeTimestampType(endNum);
+
+    let newStart = startNum;
+    let newEnd = endNum;
+
+    // 如果当前要求毫秒级，但数据看起来是秒级，则乘以1000
+    if (this.isMillisecondTimestamp() && startLooksLikeSeconds) {
+      newStart = startNum * 1000;
+      newEnd = endNum * 1000;
+    }
+    // 如果当前要求秒级，但数据看起来是毫秒级，则除以1000
+    else if (!this.isMillisecondTimestamp() && !startLooksLikeSeconds) {
+      newStart = Math.floor(startNum / 1000);
+      newEnd = Math.floor(endNum / 1000);
+    }
+
+    // 如果值改变了，返回新值；否则返回原值
+    if (newStart !== startNum || newEnd !== endNum) {
+      return { start: newStart, end: newEnd };
+    }
+    return value;
+  }
+
   ref = effect((): void => {
     this.selectedDateRange();
     // 触发 MatFormField 更新
     untracked(() => this.stateChanges.next());
+  });
+
+  // 监听时间戳模式参数变化，当参数改变时自动转换已有的值
+  timestampModeEffect = effect((): void => {
+    this.isTimestamp();
+    this.isMillisecondTimestamp();
+    const currentValue = this.#internalValue();
+
+    if (currentValue && currentValue.start && currentValue.end && typeof currentValue.start === 'number' && typeof currentValue.end === 'number') {
+      const convertedValue = this.#convertTimestampIfNeeded(currentValue);
+      
+      // 如果值改变了，更新内部值
+      if (convertedValue !== currentValue) {
+        untracked(() => {
+          this.#internalValue.set(convertedValue);
+          // 同时更新显示范围
+          const [s, e] = this.#timesToampPairToDateRange(convertedValue.start as number, convertedValue.end as number);
+          this.selectedDateRange.set(new DateRange(s, e));
+          // 通知表单控件值已改变
+          this.onChange?.(convertedValue);
+          this.stateChanges.next();
+        });
+      }
+    }
   });
 
   openDateDialogSelector(): void {
@@ -122,8 +218,19 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
     // 确保传递给 DateSelector 的值是标准的 ISO 字符串格式
     let dialogValue: DateTimePickerValue | undefined;
     if (currentValue && currentValue.start && currentValue.end) {
-      const s = new Date(currentValue.start);
-      const e = new Date(currentValue.end);
+      let s: Date;
+      let e: Date;
+      
+      // 处理时间戳类型的值
+      if (this.isTimestamp() && (typeof currentValue.start === 'number' || typeof currentValue.end === 'number')) {
+        const startNum = typeof currentValue.start === 'number' ? currentValue.start : parseFloat(String(currentValue.start));
+        const endNum = typeof currentValue.end === 'number' ? currentValue.end : parseFloat(String(currentValue.end));
+        [s, e] = this.#timesToampPairToDateRange(startNum, endNum);
+      } else {
+        s = new Date(currentValue.start);
+        e = new Date(currentValue.end);
+      }
+      
       if (!isNaN(s.getTime()) && !isNaN(e.getTime())) {
         dialogValue = {
           start: s.toISOString(),
@@ -207,8 +314,20 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
       this.#internalValue.set(value);
       // 尝试转换为 Date 对象以显示在选择器中
       try {
-        const startDate = new Date(value.start);
-        const endDate = new Date(value.end);
+        let startDate: Date;
+        let endDate: Date;
+
+        // 处理时间戳类型的值
+        if (this.isTimestamp() && (typeof value.start === 'number' || typeof value.end === 'number')) {
+          const startNum = typeof value.start === 'number' ? value.start : parseFloat(value.start);
+          const endNum = typeof value.end === 'number' ? value.end : parseFloat(value.end);
+          [startDate, endDate] = this.#timesToampPairToDateRange(startNum, endNum);
+        } else {
+          // 其他情况（ISO 字符串等）直接创建 Date 对象
+          startDate = new Date(value.start);
+          endDate = new Date(value.end);
+        }
+
         if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
           this.selectedDateRange.set(new DateRange(startDate, endDate));
         }
@@ -265,7 +384,20 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
       this.#internalValue.set(null);
     } else {
       this.#internalValue.set(val);
-      this.selectedDateRange.set(new DateRange(new Date(val.start), new Date(val.end)));
+      // 处理时间戳类型的值
+      let startDate: Date;
+      let endDate: Date;
+
+      if (this.isTimestamp() && (typeof val.start === 'number' || typeof val.end === 'number')) {
+        const startNum = typeof val.start === 'number' ? val.start : parseFloat(String(val.start));
+        const endNum = typeof val.end === 'number' ? val.end : parseFloat(String(val.end));
+        [startDate, endDate] = this.#timesToampPairToDateRange(startNum, endNum);
+      } else {
+        startDate = new Date(val.start);
+        endDate = new Date(val.end);
+      }
+      
+      this.selectedDateRange.set(new DateRange(startDate, endDate));
     }
     this.stateChanges.next();
   }
