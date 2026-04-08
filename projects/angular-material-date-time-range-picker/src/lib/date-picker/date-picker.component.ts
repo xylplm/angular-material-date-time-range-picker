@@ -189,16 +189,16 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
 
   // 监听时间戳模式参数变化，当参数改变时自动转换已有的值
   timestampModeEffect = effect((): void => {
-    this.isTimestamp();
-    this.isMillisecondTimestamp();
+    const isTs = this.isTimestamp();
+    const isMs = this.isMillisecondTimestamp();
     const currentValue = this.#internalValue();
 
-    if (currentValue && currentValue.start && currentValue.end && typeof currentValue.start === 'number' && typeof currentValue.end === 'number') {
-      const convertedValue = this.#convertTimestampIfNeeded(currentValue);
-      
-      // 如果值改变了，更新内部值
-      if (convertedValue !== currentValue) {
-        untracked(() => {
+    untracked(() => {
+      if (currentValue && currentValue.start && currentValue.end && typeof currentValue.start === 'number' && typeof currentValue.end === 'number') {
+        const convertedValue = this.#convertTimestampIfNeeded(currentValue);
+        
+        // 如果值改变了，更新内部值
+        if (convertedValue !== currentValue) {
           this.#internalValue.set(convertedValue);
           // 同时更新显示范围
           const [s, e] = this.#timesToampPairToDateRange(convertedValue.start as number, convertedValue.end as number);
@@ -206,9 +206,9 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
           // 通知表单控件值已改变
           this.onChange?.(convertedValue);
           this.stateChanges.next();
-        });
+        }
       }
-    }
+    });
   });
 
   openDateDialogSelector(): void {
