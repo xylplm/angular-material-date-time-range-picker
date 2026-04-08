@@ -110,14 +110,17 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   }
 
   /**
-   * 将时间戳转换为 Date 对象
-   * @param timestamp 时间戳（秒级或毫秒级）
-   * @returns Date 对象
+   * 检查值是否看起来像秒级或毫秒级时间戳
+   * 秒级时间戳 (1970 ~ 3000年): 0 ~ 100000000000
+   * 毫秒级时间戳 (1970 ~ 3000年): 0 ~ 100000000000000
+   * @param value 值
+   * @returns { looksLikeSeconds, looksLikeMilliseconds }
    */
-  #timestampToDate(timestamp: number): Date {
-    // 判断是否为秒级时间戳（< 100000000000 表示秒级）
-    const isSeconds = timestamp < 100000000000;
-    return new Date(isSeconds ? timestamp * 1000 : timestamp);
+  #analyzeTimestampType(value: number): { looksLikeSeconds: boolean; looksLikeMilliseconds: boolean } {
+    // 时间戳为0或负数时，认为是秒级（因为通常不会是毫秒级的0）
+    const looksLikeSeconds = value < 100000000000;
+    const looksLikeMilliseconds = value >= 100000000000;
+    return { looksLikeSeconds, looksLikeMilliseconds };
   }
 
   /**
@@ -135,30 +138,18 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
   }
 
   /**
-   * 检查值是否看起来像秒级或毫秒级时间戳
-   * @param value 值
-   * @returns { looksLikeSeconds, looksLikeMilliseconds }
-   */
-  #analyzeTimestampType(value: number): { looksLikeSeconds: boolean; looksLikeMilliseconds: boolean } {
-    const looksLikeSeconds = value > 0 && value < 100000000000;
-    const looksLikeMilliseconds = value >= 100000000000;
-    return { looksLikeSeconds, looksLikeMilliseconds };
-  }
-
-  /**
    * 如果时间戳模式不匹配，自动转换值
    * @param value 值
-   * @returns 转换后的值，如果不需要转换则返回原值
+   * @returns { converted, changed } 转换后的值及是否改变
    */
-  #convertTimestampIfNeeded(value: DateTimePickerValue): DateTimePickerValue {
+  #convertTimestampIfNeeded(value: DateTimePickerValue): { converted: DateTimePickerValue; changed: boolean } {
     if (!this.isTimestamp() || typeof value.start !== 'number' || typeof value.end !== 'number') {
-      return value;
+      return { converted: value, changed: false };
     }
 
     const startNum = value.start as number;
     const endNum = value.end as number;
     const { looksLikeSeconds: startLooksLikeSeconds } = this.#analyzeTimestampType(startNum);
-    const { looksLikeSeconds: endLooksLikeSeconds } = this.#analyzeTimestampType(endNum);
 
     let newStart = startNum;
     let newEnd = endNum;
@@ -174,11 +165,12 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
       newEnd = Math.floor(endNum / 1000);
     }
 
-    // 如果值改变了，返回新值；否则返回原值
-    if (newStart !== startNum || newEnd !== endNum) {
-      return { start: newStart, end: newEnd };
+    // 值改变了才返回新对象
+    const changed = newStart !== startNum || newEnd !== endNum;
+    if (changed) {
+      return { converted: { start: newStart, end: newEnd }, changed: true };
     }
-    return value;
+    return { converted: value, changed: false };
   }
 
   ref = effect((): void => {
@@ -195,16 +187,16 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
 
     untracked(() => {
       if (currentValue && currentValue.start && currentValue.end && typeof currentValue.start === 'number' && typeof currentValue.end === 'number') {
-        const convertedValue = this.#convertTimestampIfNeeded(currentValue);
+        const { converted, changed } = this.#convertTimestampIfNeeded(currentValue);
         
-        // 如果值改变了，更新内部值
-        if (convertedValue !== currentValue) {
-          this.#internalValue.set(convertedValue);
+        // 只在值真正改变时才更新，避免不必要的信号更新
+        if (changed) {
+          this.#internalValue.set(converted);
           // 同时更新显示范围
-          const [s, e] = this.#timesToampPairToDateRange(convertedValue.start as number, convertedValue.end as number);
+          const [s, e] = this.#timesToampPairToDateRange(converted.start as number, converted.end as number);
           this.selectedDateRange.set(new DateRange(s, e));
           // 通知表单控件值已改变
-          this.onChange?.(convertedValue);
+          this.onChange?.(converted);
           this.stateChanges.next();
         }
       }
@@ -262,21 +254,25 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
         takeUntilDestroyed(this.destroyRef),
         tap((result: DatePickerModel | undefined): void => {
           if (result && result.dateTimePicker) {
-            const start = new Date(result.dateTimePicker.start);
-            const end = new Date(result.dateTimePicker.end);
+            let start = new Date(result.dateTimePicker.start);
+            let end = new Date(result.dateTimePicker.end);
 
             let startVal: string | number;
             let endVal: string | number;
 
             if (this.isTimestamp()) {
-              start.setSeconds(0, 0);
-              end.setSeconds(0, 0);
+              // 创建新的Date对象用于时间戳计算，避免修改原始日期
+              const startForTimestamp = new Date(start);
+              const endForTimestamp = new Date(end);
+              startForTimestamp.setSeconds(0, 0);
+              endForTimestamp.setSeconds(0, 0);
+              
               if (this.isMillisecondTimestamp()) {
-                startVal = start.getTime();
-                endVal = end.getTime();
+                startVal = startForTimestamp.getTime();
+                endVal = endForTimestamp.getTime();
               } else {
-                startVal = Math.floor(start.getTime() / 1000);
-                endVal = Math.floor(end.getTime() / 1000);
+                startVal = Math.floor(startForTimestamp.getTime() / 1000);
+                endVal = Math.floor(endForTimestamp.getTime() / 1000);
               }
             } else {
               startVal = formatDate(start, this._dateAdapter, this._dateFormats);
