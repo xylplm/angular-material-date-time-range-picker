@@ -122,10 +122,19 @@ export class App implements OnInit {
     if (this.isTimestamp()) {
       start.setSeconds(0, 0);
       end.setSeconds(0, 0);
-      value = {
-        start: Math.floor(start.getTime() / 1000),
-        end: Math.floor(end.getTime() / 1000)
-      };
+      if (this.isMillisecondTimestamp()) {
+        // 毫秒级时间戳
+        value = {
+          start: start.getTime(),
+          end: end.getTime()
+        };
+      } else {
+        // 秒级时间戳
+        value = {
+          start: Math.floor(start.getTime() / 1000),
+          end: Math.floor(end.getTime() / 1000)
+        };
+      }
     } else {
       value = {
         start: formatDate(start, this._dateAdapter, this._dateFormats),
