@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
   selector: 'date-time-input',
   templateUrl: './date-time-input.component.html',
   styleUrls: ['./date-time-input.component.scss'],
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatDatepickerModule, FormsModule, TablerIconComponent, CommonModule]
 })

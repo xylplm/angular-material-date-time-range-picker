@@ -1,7 +1,7 @@
 <date-time-picker-container
   headerTitle="日期时间选择器"
   submitTitle="应用"
-  [disabledSubmit]="!selectedDateRange"
+  [disabledSubmit]="!selectedDateRange()"
   [footerExtraContent]="footerExtraContent"
   (submit)="submit()"
   (dismiss)="dismiss()"
@@ -19,7 +19,7 @@
           }
         </div>
         <ul class="date-selector-sidebar-list">
-          @for (timeRangeItem of timeRanges; track timeRangeItem) {
+          @for (timeRangeItem of timeRanges(); track timeRangeItem) {
             <li class="date-selector-sidebar-item">
               <button
                 type="button"

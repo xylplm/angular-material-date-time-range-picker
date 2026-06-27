@@ -4,23 +4,23 @@ on:
   workflow_dispatch:
 
 permissions:
-  id-token: write  # Required for OIDC
-  contents: write  # Required for creating releases
+  id-token: write
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      # Setup .npmrc file to publish to npm
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
         with:
-          node-version: '24.x'
-          registry-url: 'https://registry.npmjs.org'
-          # 启用来源证明和OIDC身份
+          node-version: "24.x"
+          cache: npm
+          registry-url: https://registry.npmjs.org
           provenance: true
-          # 可选但推荐：指定生成者的ID（你的GitHub用户名/组织）
-          generate-release-notes: false
 
       - name: Install dependencies
         run: npm ci
@@ -34,20 +34,15 @@ jobs:
       - name: Build Angular library
         run: npm run lib:build
 
-      - name: Publish package to NPM with OIDC
+      - name: Publish package to NPM
         working-directory: ./dist/angular-material-date-time-range-picker
-        run: npm publish --access public
+        run: npm publish --access public --provenance
 
       - name: Create GitHub Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.version.outputs.current-version }}
-          release_name: Release v${{ steps.version.outputs.current-version }}
-          body: |
-            ## Changes in this Release
-            
-            For detailed changes, please refer to the [CHANGELOG](https://github.com/${{ github.repository }}/blob/master/CHANGELOG.md).
+          name: Release v${{ steps.version.outputs.current-version }}
+          generate_release_notes: true
           draft: false
           prerelease: false

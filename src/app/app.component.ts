@@ -1,4 +1,4 @@
-import { Component, model, OnInit, signal, computed, effect, inject } from '@angular/core';
+import { Component, model, OnInit, signal, computed, effect, inject, ChangeDetectionStrategy } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 import { DatePickerComponent, DateTimePickerValue, formatDate } from '@luoxiao123/angular-material-date-time-range-picker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -29,6 +29,7 @@ export const MY_DATE_FORMATS = {
   imports: [DatePickerComponent, MatFormFieldModule, MatInputModule, MatIconModule, MatSlideToggleModule, ReactiveFormsModule, FormsModule, JsonPipe],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     provideDateFnsAdapter(),
     { provide: MAT_DATE_LOCALE, useValue: zhCN },

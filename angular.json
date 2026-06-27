@@ -10,7 +10,7 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "builder": "@angular/build:ng-packagr",
           "options": {
             "project": "projects/angular-material-date-time-range-picker/ng-package.json"
           },
@@ -27,14 +27,20 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "include": ["projects/angular-material-date-time-range-picker/src/**/*.spec.ts"],
-            "setupFiles": ["projects/angular-material-date-time-range-picker/src/test.ts"]
+            "buildTarget": "angular-material-date-time-range-picker:build:development",
+            "tsConfig": "projects/angular-material-date-time-range-picker/tsconfig.spec.json",
+            "include": [
+              "projects/angular-material-date-time-range-picker/src/**/*.spec.ts"
+            ],
+            "watch": false
           }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["projects/angular-material-date-time-range-picker/**/*.ts"]
+            "lintFilePatterns": [
+              "projects/angular-material-date-time-range-picker/**/*.ts"
+            ]
           }
         }
       }
@@ -117,7 +123,9 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src/**/*.ts"]
+            "lintFilePatterns": [
+              "src/**/*.ts"
+            ]
           }
         }
       }

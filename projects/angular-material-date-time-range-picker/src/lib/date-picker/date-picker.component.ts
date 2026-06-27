@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, model, output, signal, ViewChild, ElementRef, Input, forwardRef, computed, Injector, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, model, output, signal, ViewChild, ElementRef, forwardRef, computed, Injector, untracked } from '@angular/core';
 import { take, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateRange, MatDatepickerModule } from '@angular/material/datepicker';
@@ -19,7 +19,6 @@ import { formatDate } from './until';
   selector: 'date-time-picker',
   templateUrl: './date-picker.component.html',
   styleUrls: ['./date-picker.component.scss'],
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TablerIconComponent, MatDatepickerModule, MatDialogModule],
   providers: [
@@ -45,10 +44,18 @@ export class DatePickerComponent implements ControlValueAccessor, MatFormFieldCo
 
   ngControl = inject(NgControl, { optional: true, self: true });
 
-  @Input() required: boolean = false;
+  readonly requiredInput = input<boolean>(false, { alias: 'required' });
   disabledInput = input<boolean>(false, { alias: 'disabled' });
   private _formDisabled = signal(false);
-  @Input() placeholder: string = '';
+  readonly placeholderInput = input<string>('', { alias: 'placeholder' });
+
+  get required(): boolean {
+    return this.requiredInput();
+  }
+
+  get placeholder(): string {
+    return this.placeholderInput();
+  }
   future = input<boolean>(false);
   isTimestamp = input<boolean>(false);
   isMillisecondTimestamp = input<boolean>(false);
