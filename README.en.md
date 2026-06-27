@@ -23,7 +23,7 @@ A powerful and flexible **date time range picker** component library.
 
 ## Description
 
-Built with **Angular 21** and **Angular Material**, providing the following features:
+Built with **Angular 22** and **Angular Material**, providing the following features:
 
 - 🎯 **Intuitive Date Range Selection Interface** - Support for quick presets and precise selection
 - 📱 **Responsive Design** - Automatically switches to fullscreen on mobile, uses Dialog on desktop
@@ -289,7 +289,7 @@ ngOnInit() {
 ## Frequently Asked Questions
 
 ### Q: Can I use this with Angular 20?
-A: This library is optimized for Angular 21+. Using it with Angular 20 may have compatibility issues.
+A: Current releases target **Angular 22+**. For Angular 21, install `@luoxiao123/angular-material-date-time-range-picker@21.2.6`. Angular 20 is not supported.
 
 ### Q: Does it support internationalization?
 A: The current version uses a Chinese interface. Pull requests to add multi-language support are welcome.

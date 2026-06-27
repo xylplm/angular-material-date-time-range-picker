@@ -23,7 +23,7 @@
 
 ## 描述
 
-基于 **Angular 21** 和 **Angular Material** 构建，提供以下功能：
+基于 **Angular 22** 和 **Angular Material** 构建，提供以下功能：
 
 - 🎯 **直观的日期范围选择界面** - 支持快速预设和精确选择
 - 📱 **响应式设计** - 移动设备自动切换为全屏，桌面使用 Dialog
@@ -289,7 +289,7 @@ ngOnInit() {
 ## 常见问题
 
 ### Q: 可以在 Angular 20 中使用吗？
-A: 本库针对 Angular 21+ 优化。使用 Angular 20 可能存在兼容性问题。
+A: 当前主线面向 **Angular 22+**。若仍为 Angular 21，请安装 `@luoxiao123/angular-material-date-time-range-picker@21.2.6`。Angular 20 不支持。
 
 ### Q: 支持国际化吗？
 A: 当前版本使用中文界面。欢迎提交 PR 添加多语言支持。
